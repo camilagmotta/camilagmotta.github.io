@@ -12,7 +12,7 @@
   --sage:#7D8F64;
 
   --text: #6A4782;
-  --muted: rgba(247, 243, 127, 0.992);
+  --muted: rgba(21, 103, 158, 0.992);
 
   --card: rgba(250, 160, 255, 0.893);
   --border: rgba(241,230,211,0.18);
@@ -34,7 +34,6 @@ body{
     radial-gradient(900px 520px at 18% 12%, rgba(174,142,54,0.22), transparent 55%),
     radial-gradient(820px 520px at 86% 86%, rgba(139,124,147,0.20), transparent 58%),
     radial-gradient(760px 520px at 72% 18%, rgba(125,143,100,0.18), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.22)),
     var(--bg);
 
   line-height:1.45;
@@ -91,7 +90,7 @@ button:focus-visible{
   padding: 14px 20px;
   border-bottom: 1px solid rgba(241,230,211,0.14);
 
-  background: linear-gradient(90deg, rgba(174,142,54,0.14), rgba(139,124,147,0.14));
+  background: linear-gradient(90deg, rgba(255, 160, 238, 0.523), rgba(198, 93, 255, 0.426));
   backdrop-filter: blur(8px);
 }
 
@@ -158,6 +157,17 @@ button:focus-visible{
 {
   transform: scale(1.08);
   filter: brightness(1.1);
+}
+
+.nav-link.nav-icon{
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.nav-link.nav-icon:hover{
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 /* --- About page --- */
@@ -583,4 +593,43 @@ button:focus-visible{
     pointer-events: none;
     visibility: hidden;
   }
+}
+
+/* =========================================================
+   Light lavender theme patch
+   ========================================================= */
+
+:root{
+  --text: #2b2230;
+  --muted: rgba(43,34,48,0.70);
+}
+
+/* Remove the “dark wash” over the lavender */
+body{
+  background:
+    radial-gradient(900px 520px at 18% 12%, rgba(174,142,54,0.14), transparent 55%),
+    radial-gradient(820px 520px at 86% 86%, rgba(139,124,147,0.12), transparent 58%),
+    radial-gradient(760px 520px at 72% 18%, rgba(125,143,100,0.10), transparent 55%),
+    var(--bg);
+}
+
+/* Readability overrides (you had many hard-coded beige values) */
+.role,
+.bio,
+.contact-line,
+.desc,
+.mini,
+.post-content p,
+.bullets,
+.back,
+.meta
+{
+  color: var(--text) !important;
+}
+
+.sub,
+.hint,
+.footer
+{
+  color: var(--muted) !important;
 }
