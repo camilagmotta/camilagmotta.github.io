@@ -148,10 +148,16 @@ button:focus-visible{
 .nav-icon{
   padding: 0;
 }
-.nav-icon img{
-  height: 28px;   /* make smaller here */
-  width: auto;
-  display:block;
+.nav-icon img 
+{
+  height: 28px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.nav-icon img:hover
+{
+  transform: scale(1.08);
+  filter: brightness(1.1);
 }
 
 /* --- About page --- */
