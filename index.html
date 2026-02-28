@@ -1,163 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Portfolio · Home</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Camila G. Motta — Portfolio</title>
+  <meta name="description" content="Game Designer | Puzzle Designer — Portfolio" />
   <link rel="stylesheet" href="styles.css" />
-  <!-- Optional Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="page-home">
-  <a href="#main" class="skip-link">Skip to content</a>
+
+<body class="page-home" id="top">
+  <!-- Background blobs -->
+  <div class="bg" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="blob b4"></span>
+    <span class="grain"></span>
+  </div>
 
   <header class="site-header">
-    <div class="shell">
-      <div class="nav-inner">
-        <a href="index.html" class="brand" aria-label="Home">
-          <span class="logo-mark" aria-hidden="true">
-            <span class="logo-orbit"></span>
-            <span class="logo-core"></span>
-          </span>
-          <span class="brand-text">
-            <span class="brand-name">Camila Motta</span>
-            <span class="brand-role">Game Designer · 3D Artist</span>
+    <a class="brand" href="index.html" aria-label="Home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Camila</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-link is-active" href="index.html">Home</a>
+      <a class="nav-link" href="projects.html">Projects</a>
+      <a class="nav-link" href="art.html">Art</a>
+      <a class="nav-link" href="blog.html">Blog</a>
+    </nav>
+
+    <a class="btn btn-chip" href="#contact">Contact</a>
+  </header>
+
+  <main class="shell">
+    <section class="hero reveal">
+      <div class="hero-card">
+        <p class="kicker">Game Designer · Puzzle Designer</p>
+        <h1 class="title">
+          Hi, I’m <span class="accent">Camila G. Motta</span> — I build playful
+          puzzle experiences and interactive learning games.
+        </h1>
+
+        <p class="subtitle">
+          I like clean design, clever mechanics, and colorful UI that feels like a cartoon sticker book —
+          simple, readable, and fun.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="projects.html">View My Work</a>
+          <a class="btn btn-ghost" href="art.html">See My Art</a>
+          <a class="btn btn-ghost" href="blog.html">Read My Blog</a>
+        </div>
+
+        <div class="hero-mini-grid">
+          <a class="mini-card" href="projects.html">
+            <span class="mini-emoji" aria-hidden="true">🎮</span>
+            <span>
+              <strong>Game Projects</strong>
+              <span class="muted">Bento grid + details</span>
+            </span>
+          </a>
+
+          <a class="mini-card" href="art.html">
+            <span class="mini-emoji" aria-hidden="true">🎨</span>
+            <span>
+              <strong>Art Gallery</strong>
+              <span class="muted">CSS-only filters</span>
+            </span>
+          </a>
+
+          <a class="mini-card" href="blog.html">
+            <span class="mini-emoji" aria-hidden="true">📝</span>
+            <span>
+              <strong>Monthly Blog</strong>
+              <span class="muted">Sticky month index</span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <aside class="hero-side reveal">
+        <div class="sticker-card">
+          <div class="sticker-top">
+            <span class="pill">Available for</span>
+            <span class="pill alt">Portfolio / internships</span>
+          </div>
+
+          <div class="sticker-art" aria-hidden="true">
+            <div class="sticker-illus"></div>
+          </div>
+
+          <div class="sticker-meta">
+            <p class="sticker-title">Quick Info</p>
+            <ul class="chips" aria-label="Skills">
+              <li class="chip">Unity</li>
+              <li class="chip">Puzzle Design</li>
+              <li class="chip">Localization</li>
+              <li class="chip">UI/UX</li>
+            </ul>
+
+            <a class="btn btn-primary btn-wide" href="projects.html">Explore Projects</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal" id="about">
+      <div class="section-head">
+        <h2>About Me</h2>
+        <p class="muted">Short, clear, and focused — like a good tutorial.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>What I do</h3>
+          <p>
+            I design puzzle-forward game experiences with strong readability and satisfying feedback.
+            I’m especially interested in language-learning mechanics, cultural adaptation, and “small mysteries”
+            that unfold through interactions.
+          </p>
+
+          <div class="divider"></div>
+
+          <h3>What I’m aiming for</h3>
+          <p>
+            Roles around game design, puzzle design, narrative systems, or localization puzzle editing —
+            where clarity and playful problem-solving matter.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h3>Skills</h3>
+          <ul class="skill-list">
+            <li><span class="dot d1"></span> Unity (Prototyping, UI, iteration)</li>
+            <li><span class="dot d2"></span> Puzzle Design & Level Editing</li>
+            <li><span class="dot d3"></span> Localization & Cultural Adaptation</li>
+            <li><span class="dot d4"></span> Writing, documentation, learning diaries</li>
+            <li><span class="dot d5"></span> HTML/CSS (for portfolios & small prototypes)</li>
+          </ul>
+
+          <div class="divider"></div>
+
+          <div class="cta-row">
+            <a class="btn btn-ghost" href="projects.html">Projects</a>
+            <a class="btn btn-ghost" href="art.html">Art</a>
+            <a class="btn btn-ghost" href="blog.html">Blog</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <div class="section-head">
+        <h2>Contact</h2>
+        <p class="muted">Let’s build something playful (and readable).</p>
+      </div>
+
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:YOUR_EMAIL_HERE">
+          <span class="contact-emoji" aria-hidden="true">✉️</span>
+          <span>
+            <strong>Email</strong>
+            <span class="muted">YOUR_EMAIL_HERE</span>
           </span>
         </a>
 
-        <nav class="site-nav" aria-label="Primary">
-          <ul>
-            <li><a class="nav-link is-active" href="index.html">Home</a></li>
-            <li><a class="nav-link" href="projects.html">Projects</a></li>
-            <li><a class="nav-link" href="art.html">Art</a></li>
-            <li><a class="nav-link" href="blog.html">Blog</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </header>
+        <a class="contact-card" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
+          <span class="contact-emoji" aria-hidden="true">💼</span>
+          <span>
+            <strong>LinkedIn</strong>
+            <span class="muted">Add your link</span>
+          </span>
+        </a>
 
-  <main id="main">
-    <!-- Hero -->
-    <section class="section hero" aria-labelledby="hero-title">
-      <div class="hero-aurora" aria-hidden="true"></div>
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Portfolio 2025</p>
-          <h1 id="hero-title">Hi, I’m <span class="highlight">Your Name</span>.</h1>
-          <p class="hero-subtitle">
-            A game-focused front-end developer and visual designer crafting playful, performant experiences.
-          </p>
-          <div class="hero-ctas">
-            <a class="btn btn-primary" href="projects.html">View Game Projects</a>
-            <a class="btn btn-ghost" href="art.html">Browse Art</a>
-            <a class="btn btn-text" href="blog.html">Read the Blog</a>
-          </div>
-        </div>
-
-        <div class="hero-side">
-          <div class="hero-card">
-            <div class="hero-avatar" aria-hidden="true">
-              <div class="avatar-gradient"></div>
-              <svg class="avatar-shape" viewBox="0 0 120 120" aria-hidden="true">
-                <defs>
-                  <linearGradient id="avatarGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#ff7a7a"/>
-                    <stop offset="50%" stop-color="#ffb347"/>
-                    <stop offset="100%" stop-color="#5b8dff"/>
-                  </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="100" height="100" rx="28" fill="url(#avatarGrad)"/>
-                <circle cx="60" cy="48" r="18" fill="#0b1020"/>
-                <rect x="32" y="70" width="56" height="20" rx="10" fill="#0b1020"/>
-              </svg>
-            </div>
-            <dl class="hero-meta">
-              <div>
-                <dt>Focus</dt>
-                <dd>Game UI · Front-end · Interaction</dd>
-              </div>
-              <div>
-                <dt>Currently</dt>
-                <dd>Building playful prototypes & tools</dd>
-              </div>
-              <div>
-                <dt>Based in</dt>
-                <dd>Remote · Open to collaboration</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
+        <a class="contact-card" href="https://github.com/" target="_blank" rel="noreferrer">
+          <span class="contact-emoji" aria-hidden="true">🐙</span>
+          <span>
+            <strong>GitHub</strong>
+            <span class="muted">Add your link</span>
+          </span>
+        </a>
       </div>
     </section>
 
-    <!-- About -->
-    <section class="section" id="about">
-      <div class="shell section-header">
-        <h2>About me</h2>
-        <p class="section-kicker">A quick snapshot</p>
-      </div>
-      <div class="shell about-grid">
-        <div class="about-text">
-          <p>
-            I design and build expressive interfaces for games, tools, and interactive stories.
-            My work balances <span class="highlight">clarity</span>, <span class="highlight">color</span>,
-            and <span class="highlight">playfulness</span> while staying accessible and performant.
-          </p>
-          <p>
-            I enjoy translating complex systems into intuitive flows, crafting UI animation,
-            and collaborating with teams that care about polish and feel.
-          </p>
-        </div>
-        <ul class="about-list">
-          <li>
-            <span class="pill">Game UI</span>
-            <p>Menus, HUDs, inventories, and interaction systems that feel responsive and readable.</p>
-          </li>
-          <li>
-            <span class="pill pill-alt">Front-end</span>
-            <p>Modern, accessible web experiences with thoughtful motion and micro-interactions.</p>
-          </li>
-          <li>
-            <span class="pill pill-soft">Art</span>
-            <p>Stylized characters, environments, and UI iconography for prototypes and shipped titles.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section" id="contact">
-      <div class="shell contact-card">
-        <div>
-          <h2>Let’s build something playful.</h2>
-          <p>
-            Whether you need UI for a prototype, a game landing page, or a front-end partner,
-            I’d love to hear from you.
-          </p>
-        </div>
-        <div class="contact-actions">
-          <a class="btn btn-primary" href="mailto:you@example.com">Email me</a>
-          <div class="contact-links" aria-label="Social links">
-            <a href="#" class="link-accent">Itch.io</a>
-            <a href="#" class="link-accent">GitHub</a>
-            <a href="#" class="link-accent">ArtStation</a>
-            <a href="#" class="link-accent">LinkedIn</a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <footer class="footer">
+      <p class="muted">© <span id="year">2026</span> Camila G. Motta — Built with HTML + CSS.</p>
+      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+    </footer>
   </main>
-
-  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
-
-  <footer class="site-footer" id="top">
-    <div class="shell footer-inner">
-      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
-      <p class="footer-note">Built with semantic HTML, modern CSS, and a bit of color.</p>
-    </div>
-  </footer>
 </body>
 </html>

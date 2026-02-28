@@ -1,135 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Portfolio · Blog</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog — Camila G. Motta</title>
+  <meta name="description" content="Monthly blog posts and devlogs." />
   <link rel="stylesheet" href="styles.css" />
-  <!-- Optional Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="page-blog">
-  <a href="#main" class="skip-link">Skip to content</a>
+
+<body class="page-blog" id="top">
+  <div class="bg" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="blob b4"></span>
+    <span class="grain"></span>
+  </div>
 
   <header class="site-header">
-    <div class="shell">
-      <div class="nav-inner">
-        <a href="index.html" class="brand" aria-label="Home">
-          <span class="logo-mark" aria-hidden="true">
-            <span class="logo-orbit"></span>
-            <span class="logo-core"></span>
-          </span>
-          <span class="brand-text">
-            <span class="brand-name">Your Name</span>
-            <span class="brand-role">Designer · Developer</span>
-          </span>
-        </a>
+    <a class="brand" href="index.html" aria-label="Home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Camila</span>
+    </a>
 
-        <nav class="site-nav" aria-label="Primary">
-          <ul>
-            <li><a class="nav-link" href="index.html">Home</a></li>
-            <li><a class="nav-link" href="projects.html">Projects</a></li>
-            <li><a class="nav-link" href="art.html">Art</a></li>
-            <li><a class="nav-link is-active" href="blog.html">Blog</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="projects.html">Projects</a>
+      <a class="nav-link" href="art.html">Art</a>
+      <a class="nav-link is-active" href="blog.html">Blog</a>
+    </nav>
+
+    <a class="btn btn-chip" href="index.html#contact">Contact</a>
   </header>
 
-  <main id="main" class="blog-main">
-    <section class="section">
-      <div class="shell section-header">
-        <h1>Notes &amp; devlogs</h1>
-        <p class="section-kicker">Process, prototypes, and small discoveries</p>
-      </div>
-
-      <div class="shell blog-layout">
-        <!-- Sticky TOC -->
-        <aside class="blog-toc" aria-label="Months table of contents">
-          <h2 class="toc-title">Jump to</h2>
-          <nav>
-            <a href="#april" class="toc-link">April</a>
-            <a href="#march" class="toc-link">March</a>
-            <a href="#february" class="toc-link">February</a>
-          </nav>
-        </aside>
-
-        <!-- Posts -->
-        <section class="blog-list" aria-label="Blog posts by month">
-          <section class="blog-month" id="april">
-            <h2>April</h2>
-            <ul>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">Designing UI motion that doesn’t get in the way</span>
-                  <span class="post-meta">Devlog · Motion · UI</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">Building a CSS-only project gallery for prototypes</span>
-                  <span class="post-meta">CSS · Prototyping</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-
-          <section class="blog-month" id="march">
-            <h2>March</h2>
-            <ul>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">What game UI can borrow from productivity tools</span>
-                  <span class="post-meta">Game UI · Systems</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">Color palettes for cozy sci-fi interfaces</span>
-                  <span class="post-meta">Color · Mood</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">Designing for localization from day one</span>
-                  <span class="post-meta">Localization · UX</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-
-          <section class="blog-month" id="february">
-            <h2>February</h2>
-            <ul>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">From sketchbook to HUD: iterating on a health bar</span>
-                  <span class="post-meta">Process · Sketches</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="post-link">
-                  <span class="post-title">Micro-interactions that make menus feel alive</span>
-                  <span class="post-meta">Interaction · Menus</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-        </section>
-      </div>
+  <main class="shell">
+    <section class="page-head reveal">
+      <h1>Blog</h1>
+      <p class="muted">Monthly devlogs. Replace the placeholder links with your real posts.</p>
     </section>
-  </main>
 
-  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
+    <div class="blog-layout reveal">
+      <aside class="blog-toc" aria-label="Month index">
+        <h2>Months</h2>
+        <nav class="toc-links">
+          <a href="#feb">February</a>
+          <a href="#mar">March</a>
+          <a href="#apr">April</a>
+          <a href="#may">May</a>
+          <a href="#jun">June</a>
+          <a href="#jul">July</a>
+        </nav>
+        <p class="muted tiny">Tip: keep each post short and visual.</p>
+      </aside>
 
-  <footer class="site-footer" id="top">
-    <div class="shell footer-inner">
-      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
-      <p class="footer-note">Placeholder posts for future devlogs and notes.</p>
+      <section class="blog-list" aria-label="Posts">
+        <section class="month" id="feb">
+          <h2>February</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 1 — Idea, scope, constraints</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 2 — Puzzle loop iteration</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 3 — UI readability pass</a></li>
+          </ul>
+        </section>
+
+        <section class="month" id="mar">
+          <h2>March</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 1 — Level beats + feedback</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 2 — Testing & ambiguity fixes</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Week 3 — Polish checklist</a></li>
+          </ul>
+        </section>
+
+        <section class="month" id="apr">
+          <h2>April</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — What I learned from playtests</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — UI kit + cartoon palette notes</a></li>
+          </ul>
+        </section>
+
+        <section class="month" id="may">
+          <h2>May</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — Puzzle editor mindset</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — Localization constraints</a></li>
+          </ul>
+        </section>
+
+        <section class="month" id="jun">
+          <h2>June</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — Content pipeline</a></li>
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — Narrative + puzzles</a></li>
+          </ul>
+        </section>
+
+        <section class="month" id="jul">
+          <h2>July</h2>
+          <ul class="post-list">
+            <li><a class="post-link" href="#" target="_blank" rel="noreferrer">Post — Portfolio upgrades</a></li>
+          </ul>
+        </section>
+      </section>
     </div>
-  </footer>
+
+    <footer class="footer">
+      <p class="muted">© 2026 Camila G. Motta — Blog.</p>
+      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+    </footer>
+  </main>
 </body>
 </html>

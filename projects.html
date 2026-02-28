@@ -1,294 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Portfolio · Game Projects</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects — Camila G. Motta</title>
+  <meta name="description" content="Game projects and prototypes." />
   <link rel="stylesheet" href="styles.css" />
-  <!-- Optional Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="page-projects">
-  <a href="#main" class="skip-link">Skip to content</a>
+
+<body class="page-projects" id="top">
+  <div class="bg" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="blob b4"></span>
+    <span class="grain"></span>
+  </div>
 
   <header class="site-header">
-    <div class="shell">
-      <div class="nav-inner">
-        <a href="index.html" class="brand" aria-label="Home">
-          <span class="logo-mark" aria-hidden="true">
-            <span class="logo-orbit"></span>
-            <span class="logo-core"></span>
-          </span>
-          <span class="brand-text">
-            <span class="brand-name">Your Name</span>
-            <span class="brand-role">Designer · Developer</span>
-          </span>
-        </a>
+    <a class="brand" href="index.html" aria-label="Home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Camila</span>
+    </a>
 
-        <nav class="site-nav" aria-label="Primary">
-          <ul>
-            <li><a class="nav-link" href="index.html">Home</a></li>
-            <li><a class="nav-link is-active" href="projects.html">Projects</a></li>
-            <li><a class="nav-link" href="art.html">Art</a></li>
-            <li><a class="nav-link" href="blog.html">Blog</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link is-active" href="projects.html">Projects</a>
+      <a class="nav-link" href="art.html">Art</a>
+      <a class="nav-link" href="blog.html">Blog</a>
+    </nav>
+
+    <a class="btn btn-chip" href="index.html#contact">Contact</a>
   </header>
 
-  <main id="main">
-    <section class="section">
-      <div class="shell section-header">
-        <h1>Game projects</h1>
-        <p class="section-kicker">Selected prototypes & experiments</p>
-      </div>
+  <main class="shell">
+    <section class="page-head reveal">
+      <h1>Game Projects</h1>
+      <p class="muted">
+        Bento grid + CSS-only “modal” details (click a card). Replace content with your real projects.
+      </p>
+    </section>
 
-      <div class="shell projects-grid">
-        <!-- Project card template using :target for modal-like details -->
-        <article class="project-card" id="puzzle-orbit">
-          <a href="#puzzle-orbit-detail" class="project-link">
-            <div class="project-thumb gradient-1" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
-            </div>
-            <div class="project-body">
-              <h2>Puzzle Orbit</h2>
-              <p>A circular puzzle game where you rotate planetary rings to realign constellations.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Puzzle</li>
-                <li>Game Feel</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+    <section class="bento reveal" aria-label="Projects grid">
+      <!-- Bento cards -->
+      <a class="bento-card span-2" href="#p1">
+        <div class="thumb t1" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Language Puzzle Game (Train)</h2>
+          <p>Learn Finnish through dialogue puzzles + collectible word cards.</p>
+          <ul class="tags">
+            <li>Puzzle</li><li>Language</li><li>UI Notebook</li>
+          </ul>
+        </div>
+      </a>
 
-        <article class="project-card" id="signal-echo">
-          <a href="#signal-echo-detail" class="project-link">
-            <div class="project-thumb gradient-2" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
-            </div>
-            <div class="project-body">
-              <h2>Signal Echo</h2>
-              <p>A narrative terminal where you tune drifting radio signals to uncover a lost crew.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Narrative</li>
-                <li>UI Design</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+      <a class="bento-card" href="#p2">
+        <div class="thumb t2" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Localization Puzzle Prototype</h2>
+          <p>EN → PT-BR adaptation with clue & cultural constraints.</p>
+          <ul class="tags">
+            <li>Localization</li><li>Editing</li><li>Words</li>
+          </ul>
+        </div>
+      </a>
 
-        <article class="project-card" id="glowline">
-          <a href="#glowline-detail" class="project-link">
-            <div class="project-thumb gradient-3" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
-            </div>
-            <div class="project-body">
-              <h2>Glowline</h2>
-              <p>A minimalist rhythm rail where you sketch paths to catch beats in motion.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Rhythm</li>
-                <li>Accessibility</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+      <a class="bento-card" href="#p3">
+        <div class="thumb t3" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Library Maze (3D)</h2>
+          <p>First-person exploration + notes, keys, hidden books.</p>
+          <ul class="tags">
+            <li>Unity</li><li>3D</li><li>Exploration</li>
+          </ul>
+        </div>
+      </a>
 
-        <article class="project-card" id="atlas-archive">
-          <a href="#atlas-archive-detail" class="project-link">
-            <div class="project-thumb gradient-4" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
-            </div>
-            <div class="project-body">
-              <h2>Atlas Archive</h2>
-              <p>A map-driven exploration game with diegetic UI and layered localization.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Localization</li>
-                <li>Diegetic UI</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+      <a class="bento-card" href="#p4">
+        <div class="thumb t4" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Bookstore Mystery (2D)</h2>
+          <p>One-screen puzzles with immigrant language learning.</p>
+          <ul class="tags">
+            <li>2D</li><li>Narrative</li><li>Vocabulary</li>
+          </ul>
+        </div>
+      </a>
 
-        <article class="project-card" id="relay">
-          <a href="#relay-detail" class="project-link">
-            <div class="project-thumb gradient-5" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
-            </div>
-            <div class="project-body">
-              <h2>Relay</h2>
-              <p>A co-op puzzle where players pass energy between devices in tight time windows.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Co-op</li>
-                <li>UI Systems</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+      <a class="bento-card span-2" href="#p5">
+        <div class="thumb t5" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Word-Card Puzzle Week</h2>
+          <p>Mobile-friendly puzzle card mechanics + weekly structure.</p>
+          <ul class="tags">
+            <li>Cards</li><li>Mobile</li><li>Systems</li>
+          </ul>
+        </div>
+      </a>
 
-        <article class="project-card" id="skyline-lab">
-          <a href="#skyline-lab-detail" class="project-link">
-            <div class="project-thumb gradient-6" aria-hidden="true">
-              <div class="thumb-overlay">View details</div>
+      <a class="bento-card" href="#p6">
+        <div class="thumb t6" aria-hidden="true"></div>
+        <div class="bento-meta">
+          <h2>Hot Air Balloon Race</h2>
+          <p>Prototype exploration: feel, speed, and playful constraints.</p>
+          <ul class="tags">
+            <li>Prototype</li><li>Iteration</li><li>Fun-first</li>
+          </ul>
+        </div>
+      </a>
+    </section>
+
+    <!-- CSS-only modal overlays via :target -->
+    <section class="modal" id="p1" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Language Puzzle Game (Train)</h2>
+        <p class="muted">Replace this with screenshots, gifs, and your best pitch.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-1" aria-hidden="true"></div>
+          <div>
+            <h3>What it is</h3>
+            <p>
+              A puzzle-driven language-learning experience where players collect “word cards”
+              and use them to solve dialogue puzzles across train cars.
+            </p>
+
+            <h3>My focus</h3>
+            <ul class="bullets">
+              <li>Word-card inventory + notebook UI</li>
+              <li>Readable puzzles with progressive learning</li>
+              <li>Feedback loops and small mystery beats</li>
+            </ul>
+
+            <div class="modal-actions">
+              <a class="btn btn-primary" href="#">Live Demo (add link)</a>
+              <a class="btn btn-ghost" href="#">Case Study (add link)</a>
             </div>
-            <div class="project-body">
-              <h2>Skyline Lab</h2>
-              <p>A city-building toy focused on mood, lighting, and atmospheric UI overlays.</p>
-              <ul class="tag-list">
-                <li>Unity</li>
-                <li>Sandbox</li>
-                <li>Visual Design</li>
-              </ul>
-            </div>
-          </a>
-        </article>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Modal-like detail panels -->
-    <section class="project-detail-layer" aria-label="Project details">
-      <!-- Puzzle Orbit -->
-      <article class="project-detail" id="puzzle-orbit-detail" aria-labelledby="puzzle-orbit-title">
-        <div class="project-detail-inner">
-          <a href="#puzzle-orbit" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="puzzle-orbit-title">Puzzle Orbit</h2>
-          <p>
-            A circular puzzle game built in Unity where players rotate planetary rings, align
-            constellations, and restore a broken sky map.
-          </p>
-          <p>
-            I focused on tactile rotation controls, subtle haptic-inspired animation, and a clean HUD
-            that stays readable against dynamic backgrounds.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> UI/UX, front-end implementation</li>
-            <li><strong>Platforms:</strong> PC prototype</li>
-            <li><strong>Tags:</strong> Unity, Puzzle, Game Feel</li>
-          </ul>
+    <section class="modal" id="p2" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Localization Puzzle Prototype</h2>
+        <p class="muted">CSS-only modal using :target.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-2" aria-hidden="true"></div>
+          <div>
+            <h3>Goal</h3>
+            <p>
+              Adapt word puzzles across cultures while preserving difficulty and clue fairness.
+            </p>
+            <h3>Highlights</h3>
+            <ul class="bullets">
+              <li>Constraint-based clue writing</li>
+              <li>Testing for ambiguity</li>
+              <li>“Puzzle editor” mindset</li>
+            </ul>
+          </div>
         </div>
-      </article>
-
-      <!-- Signal Echo -->
-      <article class="project-detail" id="signal-echo-detail" aria-labelledby="signal-echo-title">
-        <div class="project-detail-inner">
-          <a href="#signal-echo" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="signal-echo-title">Signal Echo</h2>
-          <p>
-            A narrative terminal where players scrub through noisy transmissions to reconstruct
-            the story of a missing crew.
-          </p>
-          <p>
-            I designed the interface to feel like a real tool: scopes, dials, and readouts that
-            animate with purpose, while remaining keyboard-accessible.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> UI design, interaction design</li>
-            <li><strong>Focus:</strong> Narrative pacing, legibility</li>
-            <li><strong>Tags:</strong> Unity, Narrative, UI Design</li>
-          </ul>
-        </div>
-      </article>
-
-      <!-- Glowline -->
-      <article class="project-detail" id="glowline-detail" aria-labelledby="glowline-title">
-        <div class="project-detail-inner">
-          <a href="#glowline" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="glowline-title">Glowline</h2>
-          <p>
-            A rhythm rail where players sketch paths for a glowing cursor, catching beats that
-            travel along the track.
-          </p>
-          <p>
-            I focused on color contrast, timing feedback, and accessibility options like
-            beat previews and customizable palettes.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> UI/UX, prototyping</li>
-            <li><strong>Focus:</strong> Accessibility, game feel</li>
-            <li><strong>Tags:</strong> Unity, Rhythm, Accessibility</li>
-          </ul>
-        </div>
-      </article>
-
-      <!-- Atlas Archive -->
-      <article class="project-detail" id="atlas-archive-detail" aria-labelledby="atlas-archive-title">
-        <div class="project-detail-inner">
-          <a href="#atlas-archive" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="atlas-archive-title">Atlas Archive</h2>
-          <p>
-            A map-driven exploration game where every UI element exists as part of an in-world
-            archivist desk.
-          </p>
-          <p>
-            I built layered localization-friendly layouts, ensuring that text expansion never
-            breaks the illusion of the desk space.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> UI systems, layout</li>
-            <li><strong>Focus:</strong> Diegetic UI, localization</li>
-            <li><strong>Tags:</strong> Unity, Localization, Diegetic UI</li>
-          </ul>
-        </div>
-      </article>
-
-      <!-- Relay -->
-      <article class="project-detail" id="relay-detail" aria-labelledby="relay-title">
-        <div class="project-detail-inner">
-          <a href="#relay" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="relay-title">Relay</h2>
-          <p>
-            A co-op puzzle where two players pass energy between devices in tight time windows,
-            coordinating through UI signals.
-          </p>
-          <p>
-            I designed a clear signaling language using color, motion, and sound hooks that
-            communicates urgency without overwhelming players.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> UI/UX, systems design</li>
-            <li><strong>Focus:</strong> Co-op readability</li>
-            <li><strong>Tags:</strong> Unity, Co-op, UI Systems</li>
-          </ul>
-        </div>
-      </article>
-
-      <!-- Skyline Lab -->
-      <article class="project-detail" id="skyline-lab-detail" aria-labelledby="skyline-lab-title">
-        <div class="project-detail-inner">
-          <a href="#skyline-lab" class="detail-close" aria-label="Close details">×</a>
-          <h2 id="skyline-lab-title">Skyline Lab</h2>
-          <p>
-            A city-building toy focused on mood, lighting, and atmospheric overlays rather than
-            optimization.
-          </p>
-          <p>
-            I explored soft gradients, parallax UI, and time-of-day palettes that keep the HUD
-            legible across scenes.
-          </p>
-          <ul class="detail-meta">
-            <li><strong>Role:</strong> Visual design, front-end</li>
-            <li><strong>Focus:</strong> Mood, motion</li>
-            <li><strong>Tags:</strong> Unity, Sandbox, Visual Design</li>
-          </ul>
-        </div>
-      </article>
+      </div>
     </section>
+
+    <section class="modal" id="p3" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Library Maze (3D)</h2>
+        <p class="muted">First-person puzzle exploration.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-3" aria-hidden="true"></div>
+          <div>
+            <h3>Features</h3>
+            <ul class="bullets">
+              <li>Room-to-room progression</li>
+              <li>Notes + keys + hidden books</li>
+              <li>Environmental navigation puzzles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="p4" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Bookstore Mystery (2D)</h2>
+        <p class="muted">One-screen puzzle loops + language learning.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-4" aria-hidden="true"></div>
+          <div>
+            <h3>Core loop</h3>
+            <ul class="bullets">
+              <li>Talk to customers → learn words → solve mini-mystery</li>
+              <li>Notebook verification and recall</li>
+              <li>Short, satisfying daily tasks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="p5" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Word-Card Puzzle Week</h2>
+        <p class="muted">Mobile-friendly “week structure” prototype.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-5" aria-hidden="true"></div>
+          <div>
+            <h3>Design pillars</h3>
+            <ul class="bullets">
+              <li>Simple interactions, deep combinations</li>
+              <li>Progressive vocabulary</li>
+              <li>Short levels with clear outcomes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="p6" aria-label="Project details">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <h2>Hot Air Balloon Race</h2>
+        <p class="muted">Prototype exploration.</p>
+        <div class="modal-body">
+          <div class="modal-shot shot-6" aria-hidden="true"></div>
+          <div>
+            <h3>What I explored</h3>
+            <ul class="bullets">
+              <li>Race feel and readability</li>
+              <li>Simple rules with fun chaos</li>
+              <li>Fast iteration and testing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="muted">© 2026 Camila G. Motta — Projects.</p>
+      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+    </footer>
   </main>
-
-  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
-
-  <footer class="site-footer" id="top">
-    <div class="shell footer-inner">
-      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
-      <p class="footer-note">Game projects, prototypes, and playful experiments.</p>
-    </div>
-  </footer>
 </body>
 </html>
