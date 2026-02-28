@@ -3,232 +3,112 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Projects — Camila G. Motta</title>
+  <title>Game Projects — Camila Motta</title>
   <meta name="description" content="Game projects and prototypes." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page-projects" id="top">
-  <div class="bg" aria-hidden="true">
-    <span class="blob b1"></span>
-    <span class="blob b2"></span>
-    <span class="blob b3"></span>
-    <span class="blob b4"></span>
-    <span class="grain"></span>
-  </div>
-
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-text">Camila</span>
+<body class="page" id="top">
+  <header class="header">
+    <a class="logo" href="index.html">
+      <span class="logo-dot" aria-hidden="true"></span>
+      <span>Camila Motta</span>
     </a>
 
     <nav class="nav" aria-label="Primary">
-      <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link is-active" href="projects.html">Projects</a>
-      <a class="nav-link" href="art.html">Art</a>
-      <a class="nav-link" href="blog.html">Blog</a>
+      <a class="nav-link" href="index.html">About</a>
+      <a class="nav-link is-active" href="projects.html">Game Projects</a>
+      <a class="nav-link" href="art.html">Arts & Doodles</a>
+      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
     </nav>
-
-    <a class="btn btn-chip" href="index.html#contact">Contact</a>
   </header>
 
   <main class="shell">
-    <section class="page-head reveal">
-      <h1>Game Projects</h1>
-      <p class="muted">
-        Bento grid + CSS-only “modal” details (click a card). Replace the content with your real projects.
+    <section class="page-head">
+      <h1 class="h1">Game Projects</h1>
+      <p class="sub">
+        Small cards with media placeholders. Hover to reveal an info window (CSS-only).
+        Replace frames/buttons later with your own UI art.
       </p>
     </section>
 
-    <section class="bento reveal" aria-label="Projects grid">
-      <a class="bento-card span-2" href="#p1">
-        <div class="thumb t1" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Language Puzzle Game (Train)</h2>
-          <p>Learn Finnish through dialogue puzzles + collectible word cards.</p>
-          <ul class="tags"><li>Puzzle</li><li>Language</li><li>UI Notebook</li></ul>
+    <section class="cards-grid" aria-label="Projects">
+      <!-- CARD 1 -->
+      <article class="card">
+        <div class="media">
+          <!-- Replace with <img> or <video> later -->
+          <div class="media-placeholder">IMAGE/VIDEO</div>
         </div>
-      </a>
 
-      <a class="bento-card" href="#p2">
-        <div class="thumb t2" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Localization Puzzle Prototype</h2>
-          <p>EN → PT-BR adaptation with clue & cultural constraints.</p>
-          <ul class="tags"><li>Localization</li><li>Editing</li><li>Words</li></ul>
+        <div class="card-body">
+          <h2 class="h2">Project Title 01</h2>
+          <p class="desc">Short description placeholder. 1–2 lines.</p>
+
+          <ul class="tags" aria-label="Tags">
+            <li class="tag">Unity</li>
+            <li class="tag">C#</li>
+            <li class="tag">Puzzle</li>
+          </ul>
         </div>
-      </a>
 
-      <a class="bento-card" href="#p3">
-        <div class="thumb t3" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Library Maze (3D)</h2>
-          <p>First-person exploration + notes, keys, hidden books.</p>
-          <ul class="tags"><li>Unity</li><li>3D</li><li>Exploration</li></ul>
+        <!-- HOVER INFO WINDOW -->
+        <div class="hover-window" aria-hidden="true">
+          <h3 class="h3">More info</h3>
+          <p class="mini">
+            Longer info placeholder shown on hover. Add: your role, what you built, key mechanic, tools.
+          </p>
+          <p class="mini"><strong>Status:</strong> Prototype</p>
+          <p class="mini"><strong>Links:</strong> itch / repo / video (add later)</p>
         </div>
-      </a>
+      </article>
 
-      <a class="bento-card" href="#p4">
-        <div class="thumb t4" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Bookstore Mystery (2D)</h2>
-          <p>One-screen puzzles with immigrant language learning.</p>
-          <ul class="tags"><li>2D</li><li>Narrative</li><li>Vocabulary</li></ul>
+      <!-- CARD 2 -->
+      <article class="card">
+        <div class="media">
+          <div class="media-placeholder">IMAGE/VIDEO</div>
         </div>
-      </a>
-
-      <a class="bento-card span-2" href="#p5">
-        <div class="thumb t5" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Word-Card Puzzle Week</h2>
-          <p>Mobile-friendly puzzle card mechanics + weekly structure.</p>
-          <ul class="tags"><li>Cards</li><li>Mobile</li><li>Systems</li></ul>
+        <div class="card-body">
+          <h2 class="h2">Project Title 02</h2>
+          <p class="desc">Short description placeholder. 1–2 lines.</p>
+          <ul class="tags">
+            <li class="tag">3D</li>
+            <li class="tag">Level Design</li>
+            <li class="tag">UI</li>
+          </ul>
         </div>
-      </a>
 
-      <a class="bento-card" href="#p6">
-        <div class="thumb t6" aria-hidden="true"></div>
-        <div class="bento-meta">
-          <h2>Hot Air Balloon Race</h2>
-          <p>Prototype exploration: feel, speed, and playful constraints.</p>
-          <ul class="tags"><li>Prototype</li><li>Iteration</li><li>Fun-first</li></ul>
+        <div class="hover-window" aria-hidden="true">
+          <h3 class="h3">More info</h3>
+          <p class="mini">Hover details placeholder. Add achievements, constraints, and what you learned.</p>
         </div>
-      </a>
-    </section>
+      </article>
 
-    <!-- CSS-only modal overlays via :target -->
-    <section class="modal" id="p1" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Language Puzzle Game (Train)</h2>
-        <p class="muted">Replace this with screenshots, gifs, and your best pitch.</p>
-
-        <div class="modal-body">
-          <div class="modal-shot shot-1" aria-hidden="true"></div>
-          <div>
-            <h3>What it is</h3>
-            <p>
-              A puzzle-driven language-learning experience where players collect “word cards”
-              and use them to solve dialogue puzzles across train cars.
-            </p>
-
-            <h3>My focus</h3>
-            <ul class="bullets">
-              <li>Word-card inventory + notebook UI</li>
-              <li>Readable puzzles with progressive learning</li>
-              <li>Feedback loops and small mystery beats</li>
-            </ul>
-
-            <div class="modal-actions">
-              <a class="btn btn-primary" href="#">Live Demo (add link)</a>
-              <a class="btn btn-ghost" href="#">Case Study (add link)</a>
-            </div>
-          </div>
+      <!-- CARD 3 -->
+      <article class="card">
+        <div class="media">
+          <div class="media-placeholder">IMAGE/VIDEO</div>
         </div>
-      </div>
-    </section>
-
-    <section class="modal" id="p2" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Localization Puzzle Prototype</h2>
-        <p class="muted">CSS-only modal using :target.</p>
-        <div class="modal-body">
-          <div class="modal-shot shot-2" aria-hidden="true"></div>
-          <div>
-            <h3>Goal</h3>
-            <p>Adapt word puzzles across cultures while keeping clue fairness.</p>
-            <h3>Highlights</h3>
-            <ul class="bullets">
-              <li>Constraint-based clue writing</li>
-              <li>Testing for ambiguity</li>
-              <li>Puzzle editor mindset</li>
-            </ul>
-          </div>
+        <div class="card-body">
+          <h2 class="h2">Project Title 03</h2>
+          <p class="desc">Short description placeholder. 1–2 lines.</p>
+          <ul class="tags">
+            <li class="tag">Localization</li>
+            <li class="tag">Words</li>
+            <li class="tag">Design</li>
+          </ul>
         </div>
-      </div>
-    </section>
 
-    <section class="modal" id="p3" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Library Maze (3D)</h2>
-        <p class="muted">First-person puzzle exploration.</p>
-        <div class="modal-body">
-          <div class="modal-shot shot-3" aria-hidden="true"></div>
-          <div>
-            <h3>Features</h3>
-            <ul class="bullets">
-              <li>Room-to-room progression</li>
-              <li>Notes + keys + hidden books</li>
-              <li>Environmental navigation puzzles</li>
-            </ul>
-          </div>
+        <div class="hover-window" aria-hidden="true">
+          <h3 class="h3">More info</h3>
+          <p class="mini">Hover details placeholder. Add story beats, puzzle logic, or system notes.</p>
         </div>
-      </div>
-    </section>
+      </article>
 
-    <section class="modal" id="p4" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Bookstore Mystery (2D)</h2>
-        <p class="muted">One-screen puzzle loops + language learning.</p>
-        <div class="modal-body">
-          <div class="modal-shot shot-4" aria-hidden="true"></div>
-          <div>
-            <h3>Core loop</h3>
-            <ul class="bullets">
-              <li>Talk → learn words → solve mini-mystery</li>
-              <li>Notebook verification and recall</li>
-              <li>Short, satisfying daily tasks</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="modal" id="p5" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Word-Card Puzzle Week</h2>
-        <p class="muted">Mobile-friendly “week structure” prototype.</p>
-        <div class="modal-body">
-          <div class="modal-shot shot-5" aria-hidden="true"></div>
-          <div>
-            <h3>Design pillars</h3>
-            <ul class="bullets">
-              <li>Simple interactions, deep combinations</li>
-              <li>Progressive vocabulary</li>
-              <li>Short levels with clear outcomes</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="modal" id="p6" aria-label="Project details">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <h2>Hot Air Balloon Race</h2>
-        <p class="muted">Prototype exploration.</p>
-        <div class="modal-body">
-          <div class="modal-shot shot-6" aria-hidden="true"></div>
-          <div>
-            <h3>What I explored</h3>
-            <ul class="bullets">
-              <li>Race feel and readability</li>
-              <li>Simple rules with fun chaos</li>
-              <li>Fast iteration and testing</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <!-- Add more cards by copy/paste -->
     </section>
 
     <footer class="footer">
-      <p class="muted">© 2026 Camila G. Motta — Projects.</p>
-      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+      <p>© 2026 Camila Motta</p>
     </footer>
   </main>
 </body>

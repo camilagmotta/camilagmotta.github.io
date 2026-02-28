@@ -3,126 +3,124 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Art — Camila G. Motta</title>
-  <meta name="description" content="Art gallery with CSS-only filters." />
+  <title>Arts & Doodles — Camila Motta</title>
+  <meta name="description" content="Gallery page." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page-art" id="top">
-  <div class="bg" aria-hidden="true">
-    <span class="blob b1"></span>
-    <span class="blob b2"></span>
-    <span class="blob b3"></span>
-    <span class="blob b4"></span>
-    <span class="grain"></span>
-  </div>
-
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-text">Camila</span>
+<body class="page" id="top">
+  <header class="header">
+    <a class="logo" href="index.html">
+      <span class="logo-dot" aria-hidden="true"></span>
+      <span>Camila Motta</span>
     </a>
 
     <nav class="nav" aria-label="Primary">
-      <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link" href="projects.html">Projects</a>
-      <a class="nav-link is-active" href="art.html">Art</a>
-      <a class="nav-link" href="blog.html">Blog</a>
+      <a class="nav-link" href="index.html">About</a>
+      <a class="nav-link" href="projects.html">Game Projects</a>
+      <a class="nav-link is-active" href="art.html">Arts & Doodles</a>
+      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
     </nav>
-
-    <a class="btn btn-chip" href="index.html#contact">Contact</a>
   </header>
 
   <main class="shell">
-    <section class="page-head reveal">
-      <h1>Art Gallery</h1>
-      <p class="muted">
-        CSS-only category filters + interactive tiles. Replace the placeholders with your images.
+    <section class="page-head">
+      <h1 class="h1">Arts & Doodles</h1>
+      <p class="sub">
+        ArtStation-style grid. Click any image to open a larger preview on the same page (CSS-only).
+        Replace placeholders with your images later.
       </p>
     </section>
 
-    <section class="filters reveal" aria-label="Art filters">
-      <input class="filter-radio" type="radio" name="artfilter" id="f-all" checked />
-      <label class="filter-pill" for="f-all">All</label>
+    <section class="gallery" aria-label="Art gallery">
+      <a class="thumb" href="#art1">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
 
-      <input class="filter-radio" type="radio" name="artfilter" id="f-character" />
-      <label class="filter-pill" for="f-character">Character</label>
+      <a class="thumb" href="#art2">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
 
-      <input class="filter-radio" type="radio" name="artfilter" id="f-environment" />
-      <label class="filter-pill" for="f-environment">Environment</label>
+      <a class="thumb" href="#art3">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
 
-      <input class="filter-radio" type="radio" name="artfilter" id="f-ui" />
-      <label class="filter-pill" for="f-ui">UI</label>
+      <a class="thumb" href="#art4">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
 
-      <input class="filter-radio" type="radio" name="artfilter" id="f-sketch" />
-      <label class="filter-pill" for="f-sketch">Sketches</label>
+      <a class="thumb" href="#art5">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
+
+      <a class="thumb" href="#art6">
+        <div class="thumb-frame">
+          <div class="thumb-img">IMAGE</div>
+        </div>
+      </a>
     </section>
 
-    <section class="art-grid reveal" aria-label="Art items">
-      <a class="art-tile cat-character" href="#" aria-label="Character art 1">
-        <div class="art-thumb a1" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Character Sheet</strong><span class="muted">stylized study</span></div>
-      </a>
+    <!-- CSS-only preview modals -->
+    <section class="modal" id="art1" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
+    </section>
 
-      <a class="art-tile cat-environment" href="#" aria-label="Environment art 1">
-        <div class="art-thumb a2" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Village Mood</strong><span class="muted">lighting + shape</span></div>
-      </a>
+    <section class="modal" id="art2" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
+    </section>
 
-      <a class="art-tile cat-ui span-2" href="#" aria-label="UI art 1">
-        <div class="art-thumb a3" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Notebook UI</strong><span class="muted">language learning UI</span></div>
-      </a>
+    <section class="modal" id="art3" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
+    </section>
 
-      <a class="art-tile cat-sketch" href="#" aria-label="Sketch 1">
-        <div class="art-thumb a4" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Sketch Page</strong><span class="muted">thumbnails</span></div>
-      </a>
+    <section class="modal" id="art4" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
+    </section>
 
-      <a class="art-tile cat-character" href="#" aria-label="Character art 2">
-        <div class="art-thumb a5" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Portrait</strong><span class="muted">expression study</span></div>
-      </a>
+    <section class="modal" id="art5" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
+    </section>
 
-      <a class="art-tile cat-environment span-2" href="#" aria-label="Environment art 2">
-        <div class="art-thumb a6" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Train Interior</strong><span class="muted">cozy + readable</span></div>
-      </a>
-
-      <a class="art-tile cat-ui" href="#" aria-label="UI art 2">
-        <div class="art-thumb a7" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Buttons & Chips</strong><span class="muted">cartoon UI kit</span></div>
-      </a>
-
-      <a class="art-tile cat-sketch" href="#" aria-label="Sketch 2">
-        <div class="art-thumb a8" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Gesture</strong><span class="muted">quick poses</span></div>
-      </a>
-
-      <a class="art-tile cat-character" href="#" aria-label="Character art 3">
-        <div class="art-thumb a9" aria-hidden="true"></div>
-        <div class="art-cap"><strong>NPC Concepts</strong><span class="muted">silhouettes</span></div>
-      </a>
-
-      <a class="art-tile cat-environment" href="#" aria-label="Environment art 3">
-        <div class="art-thumb a10" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Street Scene</strong><span class="muted">composition</span></div>
-      </a>
-
-      <a class="art-tile cat-ui" href="#" aria-label="UI art 3">
-        <div class="art-thumb a11" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Dialogue Layout</strong><span class="muted">readability</span></div>
-      </a>
-
-      <a class="art-tile cat-sketch span-2" href="#" aria-label="Sketch 3">
-        <div class="art-thumb a12" aria-hidden="true"></div>
-        <div class="art-cap"><strong>Sketchbook Spread</strong><span class="muted">studies + notes</span></div>
-      </a>
+    <section class="modal" id="art6" aria-label="Art preview">
+      <div class="modal-card">
+        <a class="modal-close" href="#top" aria-label="Close">✕</a>
+        <div class="modal-media">LARGE IMAGE (replace with real)</div>
+        <p class="modal-desc">Small description placeholder for this artwork.</p>
+      </div>
     </section>
 
     <footer class="footer">
-      <p class="muted">© 2026 Camila G. Motta — Art.</p>
-      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+      <p>© 2026 Camila Motta</p>
     </footer>
   </main>
 </body>

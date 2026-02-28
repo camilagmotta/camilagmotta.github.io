@@ -4,191 +4,90 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Camila Motta — Portfolio</title>
-  <meta name="description" content="Game Designer | 3D Artist" />
+  <meta name="description" content="Camila Motta — Game Designer and 3D Artist" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page-home" id="top">
-  <!-- Background blobs -->
-  <div class="bg" aria-hidden="true">
-    <span class="blob b1"></span>
-    <span class="blob b2"></span>
-    <span class="blob b3"></span>
-    <span class="blob b4"></span>
-    <span class="grain"></span>
+<body class="page" id="top">
+  <!-- INTRO OVERLAY (placeholder animation) -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro-card">
+      <div class="intro-mark"></div>
+      <p class="intro-text">Loading portfolio…</p>
+      <p class="intro-sub">Intro animation placeholder (you’ll replace this later)</p>
+      <div class="intro-bar"></div>
+    </div>
   </div>
 
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-text">Camila Motta</span>
+  <header class="header">
+    <a class="logo" href="index.html">
+      <span class="logo-dot" aria-hidden="true"></span>
+      <span>Camila Motta</span>
     </a>
 
     <nav class="nav" aria-label="Primary">
-      <a class="nav-link is-active" href="index.html">Home</a>
+      <a class="nav-link is-active" href="index.html">About</a>
       <a class="nav-link" href="projects.html">Game Projects</a>
-      <a class="nav-link" href="art.html">Art</a>
-      <a class="nav-link" href="blog.html">Blog</a>
+      <a class="nav-link" href="art.html">Arts & Doodles</a>
+      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
     </nav>
-
-    <a class="btn btn-chip" href="#contact">Contact</a>
   </header>
 
   <main class="shell">
-    <section class="hero reveal">
-      <div class="hero-card">
-        <p class="kicker">Game Designer · 3D Artist</p>
-
-        <h1 class="title">
-          Hello, I’m <span class="accent">Camila Motta</span> — I build playful
-          puzzle experiences and interactive learning games.
-        </h1>
-
-        <p class="subtitle">
-          I like clean design, clever mechanics, and colorful UI that feels like a cartoon sticker book —
-          simple, readable, and fun.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="projects.html">Game Projects</a>
-          <a class="btn btn-ghost" href="art.html">See My Art</a>
-          <a class="btn btn-ghost" href="blog.html">Read My Blog</a>
-        </div>
-
-        <div class="hero-mini-grid">
-          <a class="mini-card" href="projects.html">
-            <span class="mini-emoji" aria-hidden="true">🎮</span>
-            <span>
-              <strong>Game Projects</strong>
-              <span class="muted">Bento grid + details</span>
-            </span>
-          </a>
-
-          <a class="mini-card" href="art.html">
-            <span class="mini-emoji" aria-hidden="true">🎨</span>
-            <span>
-              <strong>Art Gallery</strong>
-              <span class="muted">CSS-only filters</span>
-            </span>
-          </a>
-
-          <a class="mini-card" href="blog.html">
-            <span class="mini-emoji" aria-hidden="true">📝</span>
-            <span>
-              <strong>Monthly Blog</strong>
-              <span class="muted">Sticky month index</span>
-            </span>
-          </a>
-        </div>
-      </div>
-
-      <aside class="hero-side reveal">
-        <div class="sticker-card">
-          <div class="sticker-top">
-            <span class="pill">Available for</span>
-            <span class="pill alt">Internships / Portfolio roles</span>
+    <section class="about">
+      <div class="about-grid">
+        <!-- LEFT: PHOTO PLACEHOLDER -->
+        <aside class="portrait">
+          <div class="portrait-frame">
+            <!-- Replace with <img src="..." alt="Camila Motta" /> later -->
+            <div class="portrait-placeholder" aria-label="Portrait placeholder"></div>
           </div>
+          <p class="hint">Replace with your photo later</p>
+        </aside>
 
-          <div class="sticker-art" aria-hidden="true">
-            <div class="sticker-illus"></div>
-          </div>
+        <!-- RIGHT: INFO -->
+        <section class="about-card">
+          <h1 class="h1">Camila Motta</h1>
+          <p class="role">Game Designer · 3D Artist</p>
 
-          <div class="sticker-meta">
-            <p class="sticker-title">Quick Info</p>
-            <ul class="chips" aria-label="Skills">
-              <li class="chip">Unity</li>
-              <li class="chip">Puzzle Design</li>
-              <li class="chip">Localization</li>
-              <li class="chip">UI/UX</li>
-            </ul>
+          <div class="divider"></div>
 
-            <a class="btn btn-primary btn-wide" href="projects.html">Explore Projects</a>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section reveal" id="about">
-      <div class="section-head">
-        <h2>About Me</h2>
-        <p class="muted">Short, clear, and focused — like a good tutorial.</p>
-      </div>
-
-      <div class="grid-2">
-        <div class="panel">
-          <h3>What I do</h3>
-          <p>
-            I design puzzle-forward game experiences with strong readability and satisfying feedback.
-            I’m especially interested in language-learning mechanics, cultural adaptation, and “small mysteries”
-            that unfold through interactions.
+          <p class="bio">
+            <!-- Replace this text later -->
+            Short description placeholder: what you do, what you love building, and what you want next.
+            Keep it punchy (2–4 lines).
           </p>
 
           <div class="divider"></div>
 
-          <h3>What I’m aiming for</h3>
-          <p>
-            Roles around game design, puzzle design, narrative systems, or localization puzzle editing —
-            where clarity and playful problem-solving matter.
-          </p>
-        </div>
+          <div class="button-row" aria-label="Main pages">
+            <a class="big-btn" href="projects.html">
+              <span class="btn-icon" aria-hidden="true"></span>
+              <span>Game Projects</span>
+            </a>
 
-        <div class="panel">
-          <h3>Skills</h3>
-          <ul class="skill-list">
-            <li><span class="dot d1"></span> Unity (prototyping + iteration)</li>
-            <li><span class="dot d2"></span> Puzzle design & level editing</li>
-            <li><span class="dot d3"></span> Localization & cultural adaptation</li>
-            <li><span class="dot d4"></span> Writing & documentation</li>
-            <li><span class="dot d5"></span> UI/UX & presentation</li>
-          </ul>
+            <a class="big-btn" href="art.html">
+              <span class="btn-icon" aria-hidden="true"></span>
+              <span>Arts & Doodles</span>
+            </a>
 
-          <div class="divider"></div>
-
-          <div class="cta-row">
-            <a class="btn btn-ghost" href="projects.html">Projects</a>
-            <a class="btn btn-ghost" href="art.html">Art</a>
-            <a class="btn btn-ghost" href="blog.html">Blog</a>
+            <a class="big-btn" href="thoughts.html">
+              <span class="btn-icon" aria-hidden="true"></span>
+              <span>Latest Thoughts</span>
+            </a>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="section reveal" id="contact">
-      <div class="section-head">
-        <h2>Contact</h2>
-        <p class="muted">Let’s build something playful (and readable).</p>
-      </div>
-
-      <div class="contact-grid">
-        <a class="contact-card" href="mailto:YOUR_EMAIL_HERE">
-          <span class="contact-emoji" aria-hidden="true">✉️</span>
-          <span>
-            <strong>Email</strong>
-            <span class="muted">YOUR_EMAIL_HERE</span>
-          </span>
-        </a>
-
-        <a class="contact-card" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
-          <span class="contact-emoji" aria-hidden="true">💼</span>
-          <span>
-            <strong>LinkedIn</strong>
-            <span class="muted">Add your link</span>
-          </span>
-        </a>
-
-        <a class="contact-card" href="https://github.com/" target="_blank" rel="noreferrer">
-          <span class="contact-emoji" aria-hidden="true">🐙</span>
-          <span>
-            <strong>GitHub</strong>
-            <span class="muted">Add your link</span>
-          </span>
-        </a>
+          <div class="contact">
+            <p class="contact-line"><strong>Email:</strong> <a class="link" href="mailto:YOUR_EMAIL_HERE">YOUR_EMAIL_HERE</a></p>
+            <p class="contact-line"><strong>LinkedIn:</strong> <a class="link" href="#" target="_blank" rel="noreferrer">add link</a></p>
+            <p class="contact-line"><strong>GitHub:</strong> <a class="link" href="#" target="_blank" rel="noreferrer">add link</a></p>
+          </div>
+        </section>
       </div>
     </section>
 
     <footer class="footer">
-      <p class="muted">© 2026 Camila G. Motta — Built with HTML + CSS.</p>
-      <a class="to-top" href="#top" aria-label="Back to top">↑</a>
+      <p>© 2026 Camila Motta</p>
     </footer>
   </main>
 </body>
