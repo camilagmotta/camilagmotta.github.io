@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio · Art</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Optional Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="page-art">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell">
+      <div class="nav-inner">
+        <a href="index.html" class="brand" aria-label="Home">
+          <span class="logo-mark" aria-hidden="true">
+            <span class="logo-orbit"></span>
+            <span class="logo-core"></span>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Your Name</span>
+            <span class="brand-role">Designer · Developer</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="projects.html">Projects</a></li>
+            <li><a class="nav-link is-active" href="art.html">Art</a></li>
+            <li><a class="nav-link" href="blog.html">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="shell section-header">
+        <h1>Art &amp; visuals</h1>
+        <p class="section-kicker">Stylized explorations for games and interfaces</p>
+      </div>
+
+      <div class="shell art-layout">
+        <!-- Filters -->
+        <aside class="art-filters" aria-label="Filter gallery by category">
+          <h2 class="filters-title">Filter</h2>
+          <div class="filter-options">
+            <input type="radio" name="art-filter" id="filter-all" checked>
+            <label for="filter-all" class="pill">All</label>
+
+            <input type="radio" name="art-filter" id="filter-character">
+            <label for="filter-character" class="pill">Character</label>
+
+            <input type="radio" name="art-filter" id="filter-environment">
+            <label for="filter-environment" class="pill">Environment</label>
+
+            <input type="radio" name="art-filter" id="filter-ui">
+            <label for="filter-ui" class="pill">UI</label>
+
+            <input type="radio" name="art-filter" id="filter-sketches">
+            <label for="filter-sketches" class="pill">Sketches</label>
+          </div>
+          <p class="filters-note">
+            CSS-only filtering using radio buttons. Tap a category to update the grid.
+          </p>
+        </aside>
+
+        <!-- Gallery -->
+        <section class="art-gallery" aria-label="Art gallery">
+          <!-- 12 items, each with category classes -->
+          <figure class="art-item is-character">
+            <div class="art-thumb gradient-1">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Character</span>
+              Neon courier portrait for a sci-fi delivery sim.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-character">
+            <div class="art-thumb gradient-2">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Character</span>
+              Cozy mage concept with UI-inspired spell icons.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-environment">
+            <div class="art-thumb gradient-3">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Environment</span>
+              Floating observatory hub with layered parallax.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-environment">
+            <div class="art-thumb gradient-4">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Environment</span>
+              Underground station bathed in holographic signage.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-ui">
+            <div class="art-thumb gradient-5">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">UI</span>
+              Inventory grid with rarity glows and quick-compare.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-ui">
+            <div class="art-thumb gradient-6">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">UI</span>
+              Tactical HUD for a co-op stealth prototype.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-sketches">
+            <div class="art-thumb gradient-2">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Sketches</span>
+              Gesture studies for expressive NPC poses.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-sketches">
+            <div class="art-thumb gradient-3">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Sketches</span>
+              Quick thumbnails exploring camera angles.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-character">
+            <div class="art-thumb gradient-4">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Character</span>
+              Rival racer lineup with bold silhouette reads.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-environment">
+            <div class="art-thumb gradient-5">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Environment</span>
+              Cozy rooftop garden for a slice-of-life sim.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-ui">
+            <div class="art-thumb gradient-1">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">UI</span>
+              Dialogue system with branching previews.
+            </figcaption>
+          </figure>
+
+          <figure class="art-item is-sketches">
+            <div class="art-thumb gradient-6">
+              <div class="art-tilt-layer"></div>
+            </div>
+            <figcaption>
+              <span class="art-label">Sketches</span>
+              UI icon explorations for crafting materials.
+            </figcaption>
+          </figure>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
+
+  <footer class="site-footer" id="top">
+    <div class="shell footer-inner">
+      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
+      <p class="footer-note">Placeholder gradients stand in for final artwork.</p>
+    </div>
+  </footer>
+</body>
+</html>
