@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio · Game Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Optional Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="page-projects">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell">
+      <div class="nav-inner">
+        <a href="index.html" class="brand" aria-label="Home">
+          <span class="logo-mark" aria-hidden="true">
+            <span class="logo-orbit"></span>
+            <span class="logo-core"></span>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Your Name</span>
+            <span class="brand-role">Designer · Developer</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link is-active" href="projects.html">Projects</a></li>
+            <li><a class="nav-link" href="art.html">Art</a></li>
+            <li><a class="nav-link" href="blog.html">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="shell section-header">
+        <h1>Game projects</h1>
+        <p class="section-kicker">Selected prototypes & experiments</p>
+      </div>
+
+      <div class="shell projects-grid">
+        <!-- Project card template using :target for modal-like details -->
+        <article class="project-card" id="puzzle-orbit">
+          <a href="#puzzle-orbit-detail" class="project-link">
+            <div class="project-thumb gradient-1" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Puzzle Orbit</h2>
+              <p>A circular puzzle game where you rotate planetary rings to realign constellations.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Puzzle</li>
+                <li>Game Feel</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+
+        <article class="project-card" id="signal-echo">
+          <a href="#signal-echo-detail" class="project-link">
+            <div class="project-thumb gradient-2" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Signal Echo</h2>
+              <p>A narrative terminal where you tune drifting radio signals to uncover a lost crew.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Narrative</li>
+                <li>UI Design</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+
+        <article class="project-card" id="glowline">
+          <a href="#glowline-detail" class="project-link">
+            <div class="project-thumb gradient-3" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Glowline</h2>
+              <p>A minimalist rhythm rail where you sketch paths to catch beats in motion.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Rhythm</li>
+                <li>Accessibility</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+
+        <article class="project-card" id="atlas-archive">
+          <a href="#atlas-archive-detail" class="project-link">
+            <div class="project-thumb gradient-4" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Atlas Archive</h2>
+              <p>A map-driven exploration game with diegetic UI and layered localization.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Localization</li>
+                <li>Diegetic UI</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+
+        <article class="project-card" id="relay">
+          <a href="#relay-detail" class="project-link">
+            <div class="project-thumb gradient-5" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Relay</h2>
+              <p>A co-op puzzle where players pass energy between devices in tight time windows.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Co-op</li>
+                <li>UI Systems</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+
+        <article class="project-card" id="skyline-lab">
+          <a href="#skyline-lab-detail" class="project-link">
+            <div class="project-thumb gradient-6" aria-hidden="true">
+              <div class="thumb-overlay">View details</div>
+            </div>
+            <div class="project-body">
+              <h2>Skyline Lab</h2>
+              <p>A city-building toy focused on mood, lighting, and atmospheric UI overlays.</p>
+              <ul class="tag-list">
+                <li>Unity</li>
+                <li>Sandbox</li>
+                <li>Visual Design</li>
+              </ul>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Modal-like detail panels -->
+    <section class="project-detail-layer" aria-label="Project details">
+      <!-- Puzzle Orbit -->
+      <article class="project-detail" id="puzzle-orbit-detail" aria-labelledby="puzzle-orbit-title">
+        <div class="project-detail-inner">
+          <a href="#puzzle-orbit" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="puzzle-orbit-title">Puzzle Orbit</h2>
+          <p>
+            A circular puzzle game built in Unity where players rotate planetary rings, align
+            constellations, and restore a broken sky map.
+          </p>
+          <p>
+            I focused on tactile rotation controls, subtle haptic-inspired animation, and a clean HUD
+            that stays readable against dynamic backgrounds.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> UI/UX, front-end implementation</li>
+            <li><strong>Platforms:</strong> PC prototype</li>
+            <li><strong>Tags:</strong> Unity, Puzzle, Game Feel</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Signal Echo -->
+      <article class="project-detail" id="signal-echo-detail" aria-labelledby="signal-echo-title">
+        <div class="project-detail-inner">
+          <a href="#signal-echo" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="signal-echo-title">Signal Echo</h2>
+          <p>
+            A narrative terminal where players scrub through noisy transmissions to reconstruct
+            the story of a missing crew.
+          </p>
+          <p>
+            I designed the interface to feel like a real tool: scopes, dials, and readouts that
+            animate with purpose, while remaining keyboard-accessible.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> UI design, interaction design</li>
+            <li><strong>Focus:</strong> Narrative pacing, legibility</li>
+            <li><strong>Tags:</strong> Unity, Narrative, UI Design</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Glowline -->
+      <article class="project-detail" id="glowline-detail" aria-labelledby="glowline-title">
+        <div class="project-detail-inner">
+          <a href="#glowline" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="glowline-title">Glowline</h2>
+          <p>
+            A rhythm rail where players sketch paths for a glowing cursor, catching beats that
+            travel along the track.
+          </p>
+          <p>
+            I focused on color contrast, timing feedback, and accessibility options like
+            beat previews and customizable palettes.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> UI/UX, prototyping</li>
+            <li><strong>Focus:</strong> Accessibility, game feel</li>
+            <li><strong>Tags:</strong> Unity, Rhythm, Accessibility</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Atlas Archive -->
+      <article class="project-detail" id="atlas-archive-detail" aria-labelledby="atlas-archive-title">
+        <div class="project-detail-inner">
+          <a href="#atlas-archive" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="atlas-archive-title">Atlas Archive</h2>
+          <p>
+            A map-driven exploration game where every UI element exists as part of an in-world
+            archivist desk.
+          </p>
+          <p>
+            I built layered localization-friendly layouts, ensuring that text expansion never
+            breaks the illusion of the desk space.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> UI systems, layout</li>
+            <li><strong>Focus:</strong> Diegetic UI, localization</li>
+            <li><strong>Tags:</strong> Unity, Localization, Diegetic UI</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Relay -->
+      <article class="project-detail" id="relay-detail" aria-labelledby="relay-title">
+        <div class="project-detail-inner">
+          <a href="#relay" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="relay-title">Relay</h2>
+          <p>
+            A co-op puzzle where two players pass energy between devices in tight time windows,
+            coordinating through UI signals.
+          </p>
+          <p>
+            I designed a clear signaling language using color, motion, and sound hooks that
+            communicates urgency without overwhelming players.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> UI/UX, systems design</li>
+            <li><strong>Focus:</strong> Co-op readability</li>
+            <li><strong>Tags:</strong> Unity, Co-op, UI Systems</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Skyline Lab -->
+      <article class="project-detail" id="skyline-lab-detail" aria-labelledby="skyline-lab-title">
+        <div class="project-detail-inner">
+          <a href="#skyline-lab" class="detail-close" aria-label="Close details">×</a>
+          <h2 id="skyline-lab-title">Skyline Lab</h2>
+          <p>
+            A city-building toy focused on mood, lighting, and atmospheric overlays rather than
+            optimization.
+          </p>
+          <p>
+            I explored soft gradients, parallax UI, and time-of-day palettes that keep the HUD
+            legible across scenes.
+          </p>
+          <ul class="detail-meta">
+            <li><strong>Role:</strong> Visual design, front-end</li>
+            <li><strong>Focus:</strong> Mood, motion</li>
+            <li><strong>Tags:</strong> Unity, Sandbox, Visual Design</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
+
+  <footer class="site-footer" id="top">
+    <div class="shell footer-inner">
+      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
+      <p class="footer-note">Game projects, prototypes, and playful experiments.</p>
+    </div>
+  </footer>
+</body>
+</html>

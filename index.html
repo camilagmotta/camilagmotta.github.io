@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio · Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Optional Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="page-home">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell">
+      <div class="nav-inner">
+        <a href="index.html" class="brand" aria-label="Home">
+          <span class="logo-mark" aria-hidden="true">
+            <span class="logo-orbit"></span>
+            <span class="logo-core"></span>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Your Name</span>
+            <span class="brand-role">Designer · Developer</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a class="nav-link is-active" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="projects.html">Projects</a></li>
+            <li><a class="nav-link" href="art.html">Art</a></li>
+            <li><a class="nav-link" href="blog.html">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="hero-aurora" aria-hidden="true"></div>
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Portfolio 2025</p>
+          <h1 id="hero-title">Hi, I’m <span class="highlight">Your Name</span>.</h1>
+          <p class="hero-subtitle">
+            A game-focused front-end developer and visual designer crafting playful, performant experiences.
+          </p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="projects.html">View Game Projects</a>
+            <a class="btn btn-ghost" href="art.html">Browse Art</a>
+            <a class="btn btn-text" href="blog.html">Read the Blog</a>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-card">
+            <div class="hero-avatar" aria-hidden="true">
+              <div class="avatar-gradient"></div>
+              <svg class="avatar-shape" viewBox="0 0 120 120" aria-hidden="true">
+                <defs>
+                  <linearGradient id="avatarGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ff7a7a"/>
+                    <stop offset="50%" stop-color="#ffb347"/>
+                    <stop offset="100%" stop-color="#5b8dff"/>
+                  </linearGradient>
+                </defs>
+                <rect x="10" y="10" width="100" height="100" rx="28" fill="url(#avatarGrad)"/>
+                <circle cx="60" cy="48" r="18" fill="#0b1020"/>
+                <rect x="32" y="70" width="56" height="20" rx="10" fill="#0b1020"/>
+              </svg>
+            </div>
+            <dl class="hero-meta">
+              <div>
+                <dt>Focus</dt>
+                <dd>Game UI · Front-end · Interaction</dd>
+              </div>
+              <div>
+                <dt>Currently</dt>
+                <dd>Building playful prototypes & tools</dd>
+              </div>
+              <div>
+                <dt>Based in</dt>
+                <dd>Remote · Open to collaboration</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="shell section-header">
+        <h2>About me</h2>
+        <p class="section-kicker">A quick snapshot</p>
+      </div>
+      <div class="shell about-grid">
+        <div class="about-text">
+          <p>
+            I design and build expressive interfaces for games, tools, and interactive stories.
+            My work balances <span class="highlight">clarity</span>, <span class="highlight">color</span>,
+            and <span class="highlight">playfulness</span> while staying accessible and performant.
+          </p>
+          <p>
+            I enjoy translating complex systems into intuitive flows, crafting UI animation,
+            and collaborating with teams that care about polish and feel.
+          </p>
+        </div>
+        <ul class="about-list">
+          <li>
+            <span class="pill">Game UI</span>
+            <p>Menus, HUDs, inventories, and interaction systems that feel responsive and readable.</p>
+          </li>
+          <li>
+            <span class="pill pill-alt">Front-end</span>
+            <p>Modern, accessible web experiences with thoughtful motion and micro-interactions.</p>
+          </li>
+          <li>
+            <span class="pill pill-soft">Art</span>
+            <p>Stylized characters, environments, and UI iconography for prototypes and shipped titles.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="shell contact-card">
+        <div>
+          <h2>Let’s build something playful.</h2>
+          <p>
+            Whether you need UI for a prototype, a game landing page, or a front-end partner,
+            I’d love to hear from you.
+          </p>
+        </div>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="mailto:you@example.com">Email me</a>
+          <div class="contact-links" aria-label="Social links">
+            <a href="#" class="link-accent">Itch.io</a>
+            <a href="#" class="link-accent">GitHub</a>
+            <a href="#" class="link-accent">ArtStation</a>
+            <a href="#" class="link-accent">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a href="#top" class="back-to-top" aria-label="Back to top">↑</a>
+
+  <footer class="site-footer" id="top">
+    <div class="shell footer-inner">
+      <p>© <span id="year">2025</span> Your Name. All rights reserved.</p>
+      <p class="footer-note">Built with semantic HTML, modern CSS, and a bit of color.</p>
+    </div>
+  </footer>
+</body>
+</html>
