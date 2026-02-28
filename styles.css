@@ -145,9 +145,9 @@ button:focus-visible{
 }
 
 /* About button image */
-.nav-icon{
+/*.nav-icon{
   padding: 6px 10px;
-}
+}*/
 .nav-icon img{
   height: 22px;   /* make smaller here */
   width: auto;
