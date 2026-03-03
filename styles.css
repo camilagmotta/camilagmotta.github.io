@@ -697,18 +697,30 @@ body{
 }
 
 /* 6) Base tile style */
+/* Base tile */
 .tile{
   position: absolute;
-  display: grid;
-  place-items: center;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  height: auto;              /* ✅ allow content to define height */
+  width: auto;               /* ✅ allow content to define width */
+  max-width: 420px;          /* ✅ prevents super wide tiles */
+  overflow: visible;         /* ✅ don’t clip text */
+  box-sizing: border-box;
+}
 
-  border-radius: 18px; /* change to 50% for circles */
-  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+/* Replace fixed sizes with minimums */
+.t-sm { min-width: 160px; min-height: 120px; }
+.t-md { min-width: 220px; min-height: 160px; }
+.t-lg { min-width: 280px; min-height: 220px; }
+.t-xl { min-width: 360px; min-height: 260px; }
 
-  text-decoration: none;
-  color: #141414;
-
-  transition: transform .16s ease, box-shadow .16s ease;
+/* If you have images inside tiles */
+.tile img{
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .tile:hover{
