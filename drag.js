@@ -32,102 +32,138 @@
   // How long after a drag we ignore clicks (prevents “release click” opening link)
   const JUST_DRAGGED_MS = 600;
 
-    // =========================
-  // MAGNET SNAP SETTINGS
   // =========================
-  const SNAP_DIST = 18; // how close before it snaps (px)
-  const GAP = 12;       // "magnetic spacing" between tiles (px)
+// JUICY MAGNET SNAP (v2)
+// =========================
+const SNAP_IN = 12;      // snap engages when this close
+const SNAP_OUT = 50;     // snap releases when pulled this far (bigger = easier to detach)
+const MAGNET_GAP = 12;   // nice spacing snap (like tiles "park" with a gap)
+const PULL = 0.28;       // softness: 0..1 (higher = stronger pull)
+const OVERLAP_MIN = 26;  // requires overlap to avoid snapping from weird angles
 
-  function rectInStage(el) {
-    const stageRect = stage.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
-    return {
-      left: r.left - stageRect.left,
-      top: r.top - stageRect.top,
-      right: r.right - stageRect.left,
-      bottom: r.bottom - stageRect.top,
-      width: r.width,
-      height: r.height,
-    };
-  }
+function overlap1D(a1, a2, b1, b2) {
+  return Math.max(0, Math.min(a2, b2) - Math.max(a1, b1));
+}
 
-  // Applies a tiny transition when snapping to feel "satisfying"
-  function snapEase(el) {
-    el.style.transition = "left 90ms cubic-bezier(.2,.9,.2,1), top 90ms cubic-bezier(.2,.9,.2,1)";
-    clearTimeout(el._snapTO);
-    el._snapTO = setTimeout(() => {
-      el.style.transition = "";
-    }, 110);
-  }
+function rectFromLT(el, left, top) {
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  return { left, top, right: left + w, bottom: top + h, w, h };
+}
 
-  function maybeSnap(el, nextLeft, nextTop) {
-    // Temporarily position to measure accurately
-    const prevL = el.style.left, prevT = el.style.top;
-    el.style.left = nextLeft + "px";
-    el.style.top = nextTop + "px";
+function setHint(el, on) {
+  el.classList.toggle("snap-hint", !!on);
+}
 
-    const me = rectInStage(el);
+function pop(el) {
+  el.classList.remove("snap-pop");
+  void el.offsetWidth; // retrigger animation
+  el.classList.add("snap-pop");
+  clearTimeout(el._popTO);
+  el._popTO = setTimeout(() => el.classList.remove("snap-pop"), 180);
+}
 
-    // Restore for now (we'll return snapped coords)
-    el.style.left = prevL;
-    el.style.top = prevT;
+function magnetStep(el, nextLeft, nextTop, dragState) {
+  const me = rectFromLT(el, nextLeft, nextTop);
 
-    let snappedLeft = nextLeft;
-    let snappedTop = nextTop;
-    let didSnap = false;
+  let bestX = null;
+  let bestY = null;
 
-    for (const other of tiles) {
-      if (other === el) continue;
+  for (const other of tiles) {
+    if (other === el) continue;
 
-      const o = rectInStage(other);
+    const oL = parseFloat(other.style.left) || 0;
+    const oT = parseFloat(other.style.top) || 0;
+    const o = rectFromLT(other, oL, oT);
 
-      // --- Horizontal snapping candidates ---
-      // Align left edges
-      if (Math.abs(me.left - o.left) <= SNAP_DIST) {
-        snappedLeft = o.left;
-        didSnap = true;
-      }
-      // Align right edges
-      if (Math.abs(me.right - o.right) <= SNAP_DIST) {
-        snappedLeft = o.right - me.width;
-        didSnap = true;
-      }
-      // Snap my left to other right + GAP
-      if (Math.abs(me.left - (o.right + GAP)) <= SNAP_DIST) {
-        snappedLeft = o.right + GAP;
-        didSnap = true;
-      }
-      // Snap my right to other left - GAP
-      if (Math.abs(me.right - (o.left - GAP)) <= SNAP_DIST) {
-        snappedLeft = (o.left - GAP) - me.width;
-        didSnap = true;
-      }
+    const vOverlap = overlap1D(me.top, me.bottom, o.top, o.bottom);
+    const hOverlap = overlap1D(me.left, me.right, o.left, o.right);
 
-      // --- Vertical snapping candidates ---
-      // Align top edges
-      if (Math.abs(me.top - o.top) <= SNAP_DIST) {
-        snappedTop = o.top;
-        didSnap = true;
-      }
-      // Align bottom edges
-      if (Math.abs(me.bottom - o.bottom) <= SNAP_DIST) {
-        snappedTop = o.bottom - me.height;
-        didSnap = true;
-      }
-      // Snap my top to other bottom + GAP
-      if (Math.abs(me.top - (o.bottom + GAP)) <= SNAP_DIST) {
-        snappedTop = o.bottom + GAP;
-        didSnap = true;
-      }
-      // Snap my bottom to other top - GAP
-      if (Math.abs(me.bottom - (o.top - GAP)) <= SNAP_DIST) {
-        snappedTop = (o.top - GAP) - me.height;
-        didSnap = true;
+    // Only snap X if we overlap vertically enough
+    if (vOverlap >= OVERLAP_MIN) {
+      const xTargets = [
+        o.left,                  // left-left
+        o.right - me.w,          // right-right
+        o.right + MAGNET_GAP,    // my left to their right + gap
+        (o.left - MAGNET_GAP) - me.w // my right to their left - gap
+      ];
+
+      for (const t of xTargets) {
+        const dist = Math.abs(me.left - t);
+        if (!bestX || dist < bestX.dist) bestX = { axis: "x", target: t, dist };
       }
     }
 
-    return { left: snappedLeft, top: snappedTop, didSnap };
+    // Only snap Y if we overlap horizontally enough
+    if (hOverlap >= OVERLAP_MIN) {
+      const yTargets = [
+        o.top,                   // top-top
+        o.bottom - me.h,         // bottom-bottom
+        o.bottom + MAGNET_GAP,   // my top to their bottom + gap
+        (o.top - MAGNET_GAP) - me.h // my bottom to their top - gap
+      ];
+
+      for (const t of yTargets) {
+        const dist = Math.abs(me.top - t);
+        if (!bestY || dist < bestY.dist) bestY = { axis: "y", target: t, dist };
+      }
+    }
   }
+
+  // --- Release logic (so it's not sticky)
+  if (dragState.snap) {
+  if (dragState.snap.x) {
+    if (Math.abs(nextLeft - dragState.snap.x.target) > SNAP_OUT) dragState.snap.x = null;
+  }
+  if (dragState.snap.y) {
+    if (Math.abs(nextTop - dragState.snap.y.target) > SNAP_OUT) dragState.snap.y = null;
+  }
+  if (!dragState.snap.x && !dragState.snap.y) setHint(el, false);
+  }
+
+// Make snap state hold 2 axes:
+if (!dragState.snap) dragState.snap = { x: null, y: null };
+
+// Engage snap per-axis (more satisfying)
+let snappedThisFrame = false;
+
+if (!dragState.snap.x && bestX && bestX.dist <= SNAP_IN) {
+  dragState.snap.x = bestX;
+  snappedThisFrame = true;
+}
+if (!dragState.snap.y && bestY && bestY.dist <= SNAP_IN) {
+  dragState.snap.y = bestY;
+  snappedThisFrame = true;
+}
+
+if (snappedThisFrame) pop(el);
+
+// Hint if near either axis
+const hintOn =
+  !!dragState.snap.x || !!dragState.snap.y ||
+  (bestX && bestX.dist <= SNAP_OUT) ||
+  (bestY && bestY.dist <= SNAP_OUT);
+
+setHint(el, hintOn);
+
+// Soft pull X
+const pullX = dragState.snap.x || (bestX && bestX.dist <= SNAP_OUT ? bestX : null);
+if (pullX) {
+  const delta = pullX.target - nextLeft;
+  nextLeft += delta * (dragState.snap.x ? PULL : PULL * 0.55);
+  if (Math.abs(delta) <= 1.2) nextLeft = pullX.target;
+}
+
+// Soft pull Y
+const pullY = dragState.snap.y || (bestY && bestY.dist <= SNAP_OUT ? bestY : null);
+if (pullY) {
+  const delta = pullY.target - nextTop;
+  nextTop += delta * (dragState.snap.y ? PULL : PULL * 0.55);
+  if (Math.abs(delta) <= 1.2) nextTop = pullY.target;
+}
+
+  return { left: nextLeft, top: nextTop };
+}
 
   // Footer boundary (supports: <footer>, .footer, .tile-footer)
   function getFooterHeight() {
@@ -236,6 +272,7 @@
 
       startX = e.clientX;
       startY = e.clientY;
+      el._dragState = { snap: { x: null, y: null } };
       startLeft = parseFloat(el.style.left) || 0;
       startTop = parseFloat(el.style.top) || 0;
       moved = false;
@@ -254,17 +291,16 @@
       let nextLeft = startLeft + dx;
       let nextTop = startTop + dy;
 
-      // Magnet snap against other tiles
-      const snap = maybeSnap(el, nextLeft, nextTop);
-      nextLeft = snap.left;
-      nextTop = snap.top;
+      // ✅ JUICY MAGNET
+      const st = el._dragState || (el._dragState = { snap: null });
+      const m = magnetStep(el, nextLeft, nextTop, st);
+      nextLeft = m.left;
+      nextTop = m.top;
 
       // Keep within stage + above footer
       const bounds = getMaxXY(el);
       nextLeft = clamp(nextLeft, 0, bounds.maxX);
       nextTop = clamp(nextTop, 0, bounds.maxY);
-
-      if (snap.didSnap) snapEase(el);
 
       el.style.left = nextLeft + "px";
       el.style.top = nextTop + "px";
@@ -283,12 +319,18 @@
 
       startX = null;
       startY = null;
+
+      setHint(el, false);
+      el._dragState = null;
     });
 
     el.addEventListener("pointercancel", () => {
       el.style.cursor = "grab";
       startX = null;
       startY = null;
+
+      setHint(el, false);
+      el._dragState = null;
     });
 
     el.addEventListener("keydown", (e) => {
