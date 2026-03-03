@@ -107,9 +107,10 @@
     });
   });
 
-  function bringToFront(el) {
-    const maxZ = tiles.reduce((m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 0), 0);
-    el.style.zIndex = String(maxZ + 1);
+  function bringToFront(el)  
+  {
+    const maxZ = tiles.reduce((m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 10), 10);
+    el.style.zIndex = String(Math.min(maxZ + 1, 999)); // ✅ never climbs into footer range
   }
 
   function maybeNavigate(el) {
