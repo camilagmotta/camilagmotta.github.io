@@ -32,6 +32,103 @@
   // How long after a drag we ignore clicks (prevents “release click” opening link)
   const JUST_DRAGGED_MS = 600;
 
+    // =========================
+  // MAGNET SNAP SETTINGS
+  // =========================
+  const SNAP_DIST = 18; // how close before it snaps (px)
+  const GAP = 12;       // "magnetic spacing" between tiles (px)
+
+  function rectInStage(el) {
+    const stageRect = stage.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    return {
+      left: r.left - stageRect.left,
+      top: r.top - stageRect.top,
+      right: r.right - stageRect.left,
+      bottom: r.bottom - stageRect.top,
+      width: r.width,
+      height: r.height,
+    };
+  }
+
+  // Applies a tiny transition when snapping to feel "satisfying"
+  function snapEase(el) {
+    el.style.transition = "left 90ms cubic-bezier(.2,.9,.2,1), top 90ms cubic-bezier(.2,.9,.2,1)";
+    clearTimeout(el._snapTO);
+    el._snapTO = setTimeout(() => {
+      el.style.transition = "";
+    }, 110);
+  }
+
+  function maybeSnap(el, nextLeft, nextTop) {
+    // Temporarily position to measure accurately
+    const prevL = el.style.left, prevT = el.style.top;
+    el.style.left = nextLeft + "px";
+    el.style.top = nextTop + "px";
+
+    const me = rectInStage(el);
+
+    // Restore for now (we'll return snapped coords)
+    el.style.left = prevL;
+    el.style.top = prevT;
+
+    let snappedLeft = nextLeft;
+    let snappedTop = nextTop;
+    let didSnap = false;
+
+    for (const other of tiles) {
+      if (other === el) continue;
+
+      const o = rectInStage(other);
+
+      // --- Horizontal snapping candidates ---
+      // Align left edges
+      if (Math.abs(me.left - o.left) <= SNAP_DIST) {
+        snappedLeft = o.left;
+        didSnap = true;
+      }
+      // Align right edges
+      if (Math.abs(me.right - o.right) <= SNAP_DIST) {
+        snappedLeft = o.right - me.width;
+        didSnap = true;
+      }
+      // Snap my left to other right + GAP
+      if (Math.abs(me.left - (o.right + GAP)) <= SNAP_DIST) {
+        snappedLeft = o.right + GAP;
+        didSnap = true;
+      }
+      // Snap my right to other left - GAP
+      if (Math.abs(me.right - (o.left - GAP)) <= SNAP_DIST) {
+        snappedLeft = (o.left - GAP) - me.width;
+        didSnap = true;
+      }
+
+      // --- Vertical snapping candidates ---
+      // Align top edges
+      if (Math.abs(me.top - o.top) <= SNAP_DIST) {
+        snappedTop = o.top;
+        didSnap = true;
+      }
+      // Align bottom edges
+      if (Math.abs(me.bottom - o.bottom) <= SNAP_DIST) {
+        snappedTop = o.bottom - me.height;
+        didSnap = true;
+      }
+      // Snap my top to other bottom + GAP
+      if (Math.abs(me.top - (o.bottom + GAP)) <= SNAP_DIST) {
+        snappedTop = o.bottom + GAP;
+        didSnap = true;
+      }
+      // Snap my bottom to other top - GAP
+      if (Math.abs(me.bottom - (o.top - GAP)) <= SNAP_DIST) {
+        snappedTop = (o.top - GAP) - me.height;
+        didSnap = true;
+      }
+    }
+
+    return { left: snappedLeft, top: snappedTop, didSnap };
+  }
+
   // Footer boundary (supports: <footer>, .footer, .tile-footer)
   function getFooterHeight() {
     const footer =
@@ -157,9 +254,17 @@
       let nextLeft = startLeft + dx;
       let nextTop = startTop + dy;
 
-      const { maxX, maxY } = getMaxXY(el);
-      nextLeft = clamp(nextLeft, 0, maxX);
-      nextTop = clamp(nextTop, 0, maxY);
+      // Magnet snap against other tiles
+      const snap = maybeSnap(el, nextLeft, nextTop);
+      nextLeft = snap.left;
+      nextTop = snap.top;
+
+      // Keep within stage + above footer
+      const bounds = getMaxXY(el);
+      nextLeft = clamp(nextLeft, 0, bounds.maxX);
+      nextTop = clamp(nextTop, 0, bounds.maxY);
+
+      if (snap.didSnap) snapEase(el);
 
       el.style.left = nextLeft + "px";
       el.style.top = nextTop + "px";
