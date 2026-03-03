@@ -1,18 +1,23 @@
 (() => {
   // ======================
-  // SETTINGS
+  // SETTINGS (tuned for "satisfying drag & drop")
   // ======================
-  const ENABLE_ON_MOBILE = true; // set false if you want no physics on phones
+  const ENABLE_ON_MOBILE = true;
+
   const COLOR_CLASSES = ["c-pink", "c-green", "c-yellow", "c-blue", "c-white", "c-black"];
 
-  const GRAVITY_ON = 1;     // gravity AFTER first grab
-  const GRAVITY_OFF = 0;    // gravity BEFORE first grab
-  const BOUNCE = 0.15;
-  const FRICTION = 0.25;
-  const AIR_FRICTION = 0.02;
+  // "Settle" behavior (small gravity for a moment after drop)
+  const SETTLE_GRAVITY = 0.35;
+  const SETTLE_MS = 700;
 
-  const BORDER_THICKNESS = 200;
-  const SPAWN_PADDING = 20; // space from edges when random spawning
+  // Physics feel
+  const BOUNCE = 0.04;       // low bounce = less chaos
+  const FRICTION = 0.85;     // high friction = stable piles
+  const AIR_FRICTION = 0.12; // strong damping = stops quickly
+
+  // Spawn
+  const SPAWN_PADDING = 18;
+  const MAX_SPAWN_TRIES = 80;
 
   const STAGE_SELECTOR = ".tile-stage";
   const TILE_SELECTOR = ".tile-stage .tile";
@@ -29,12 +34,13 @@
   const tiles = Array.from(document.querySelectorAll(TILE_SELECTOR));
   if (!tiles.length) return;
 
-  // Make stage a positioning context
   stage.style.position = "relative";
   stage.style.overflow = "hidden";
   stage.style.minHeight = stage.style.minHeight || "70vh";
 
-  // Randomize colors each reload
+  // ======================
+  // Randomize colors each reload (using existing CSS classes)
+  // ======================
   function randomColor() {
     return COLOR_CLASSES[Math.floor(Math.random() * COLOR_CLASSES.length)];
   }
@@ -44,68 +50,29 @@
   });
 
   // ======================
-  // MATTER SETUP
+  // MATTER (HEADLESS — NO RENDER CANVAS)
   // ======================
-  const { Engine, Render, Runner, Bodies, Body, Composite, Mouse, MouseConstraint, Events } = Matter;
+  const { Engine, Runner, Bodies, Body, Composite, Mouse, MouseConstraint, Events } = Matter;
 
   const engine = Engine.create();
-  engine.world.gravity.y = GRAVITY_OFF; // OFF until first grab
+  engine.world.gravity.y = 0;      // no gravity by default
+  engine.enableSleeping = true;    // helps tiles settle and stop jittering
 
-  const render = Render.create({
-    element: stage,
-    engine,
-    options: {
-      width: stage.clientWidth,
-      height: stage.clientHeight,
-      wireframes: false,
-      background: "transparent",
-    }
-  });
-
-  // Keep canvas invisible (we render DOM)
-  render.canvas.style.position = "absolute";
-  render.canvas.style.left = "0";
-  render.canvas.style.top = "0";
-  render.canvas.style.width = "100%";
-  render.canvas.style.height = "100%";
-  render.canvas.style.pointerEvents = "none";
-
-  Render.run(render);
   const runner = Runner.create();
   Runner.run(runner, engine);
 
   // ======================
-  // BOUNDS (WALLS)
+  // DOM prep + disable native link navigation (we handle click manually)
   // ======================
-  function addBounds() {
-    const w = stage.clientWidth;
-    const h = stage.clientHeight;
-
-    Composite.add(engine.world, [
-      Bodies.rectangle(w / 2, h + BORDER_THICKNESS / 2, w + BORDER_THICKNESS * 2, BORDER_THICKNESS, { isStatic: true }),
-      Bodies.rectangle(w / 2, -BORDER_THICKNESS / 2, w + BORDER_THICKNESS * 2, BORDER_THICKNESS, { isStatic: true }),
-      Bodies.rectangle(-BORDER_THICKNESS / 2, h / 2, BORDER_THICKNESS, h + BORDER_THICKNESS * 2, { isStatic: true }),
-      Bodies.rectangle(w + BORDER_THICKNESS / 2, h / 2, BORDER_THICKNESS, h + BORDER_THICKNESS * 2, { isStatic: true }),
-    ]);
-  }
-  addBounds();
-
-  // ======================
-  // RANDOM SPAWN POSITIONS
-  // ======================
-  function rand(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  // IMPORTANT: set DOM tiles to a clean base so transforms work
   tiles.forEach((el) => {
     el.style.position = "absolute";
     el.style.left = "0px";
     el.style.top = "0px";
     el.style.willChange = "transform";
     el.style.touchAction = "none";
+    el.style.userSelect = "none";
+    el.style.cursor = "grab";
 
-    // Disable native anchor navigation; we handle it manually
     if (el.tagName.toLowerCase() === "a") {
       if (!el.dataset.href) el.dataset.href = el.getAttribute("href") || "";
       el.removeAttribute("href");
@@ -114,30 +81,62 @@
     }
   });
 
-  // Create physics bodies in random places
-  const bodies = new Map();
+  // ======================
+  // Spawn positions (random, with simple overlap avoidance)
+  // ======================
+  function rand(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
-  tiles.forEach((el, i) => {
-    const rect = el.getBoundingClientRect();
-    const w = rect.width;
-    const h = rect.height;
+  function rectsOverlap(a, b) {
+    return !(a.x + a.w < b.x || b.x + b.w < a.x || a.y + a.h < b.y || b.y + b.h < a.y);
+  }
 
-    // Random position inside stage bounds
+  const placed = [];
+
+  function pickSpawn(w, h) {
     const maxX = Math.max(SPAWN_PADDING, stage.clientWidth - w - SPAWN_PADDING);
     const maxY = Math.max(SPAWN_PADDING, stage.clientHeight - h - SPAWN_PADDING);
 
+    for (let i = 0; i < MAX_SPAWN_TRIES; i++) {
+      const x = rand(SPAWN_PADDING, maxX);
+      const y = rand(SPAWN_PADDING, maxY);
+
+      const r = { x, y, w, h };
+      const collides = placed.some(p => rectsOverlap(p, r));
+      if (!collides) {
+        placed.push(r);
+        return { x, y };
+      }
+    }
+
+    // fallback: allow overlap if too crowded
     const x = rand(SPAWN_PADDING, maxX);
     const y = rand(SPAWN_PADDING, maxY);
+    return { x, y };
+  }
 
-    // Body centered
+  // ======================
+  // Create bodies (start STATIC / frozen)
+  // ======================
+  const bodies = new Map();
+
+  tiles.forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    const w = r.width;
+    const h = r.height;
+
+    const { x, y } = pickSpawn(w, h);
+
     const body = Bodies.rectangle(x + w / 2, y + h / 2, w, h, {
       restitution: BOUNCE,
       friction: FRICTION,
       frictionAir: AIR_FRICTION,
-      isStatic: true, // FROZEN until first grab
+      isStatic: true,     // frozen at start
+      sleepThreshold: 60,
+      slop: 0.02
     });
 
-    body.label = "tile";
     body.plugin = { el };
     body._tileIndex = i;
 
@@ -146,53 +145,95 @@
   });
 
   // ======================
-  // MOUSE / TOUCH DRAGGING
+  // Walls (keep tiles inside stage)
+  // ======================
+  // Instead of thick bodies, use thin walls just outside the stage.
+  function addBounds() {
+    const w = stage.clientWidth;
+    const h = stage.clientHeight;
+    const t = 50;
+
+    Composite.add(engine.world, [
+      Bodies.rectangle(w / 2, h + t / 2, w + t * 2, t, { isStatic: true }),
+      Bodies.rectangle(w / 2, -t / 2, w + t * 2, t, { isStatic: true }),
+      Bodies.rectangle(-t / 2, h / 2, t, h + t * 2, { isStatic: true }),
+      Bodies.rectangle(w + t / 2, h / 2, t, h + t * 2, { isStatic: true })
+    ]);
+  }
+  addBounds();
+
+  // ======================
+  // Mouse/touch grabbing
   // ======================
   const mouse = Mouse.create(stage);
   const mouseConstraint = MouseConstraint.create(engine, {
     mouse,
     constraint: {
-      stiffness: 0.18,
-      damping: 0.12,
+      stiffness: 0.22,
+      damping: 0.20,
       render: { visible: false }
     }
   });
   Composite.add(engine.world, mouseConstraint);
 
-  // Prevent scroll when dragging on touch
+  // Prevent scrolling while actively grabbing
   stage.addEventListener("touchmove", (e) => {
     if (mouseConstraint.body) e.preventDefault();
   }, { passive: false });
 
   // ======================
-  // ENABLE PHYSICS ON FIRST GRAB
+  // Interaction logic:
+  // - Physics OFF (static)
+  // - On grab -> physics ON (dynamic, gravity 0)
+  // - On release -> tiny settle gravity briefly -> freeze again
   // ======================
-  let physicsEnabled = false;
+  let physicsActive = false;
+  let settleTimer = null;
   let draggedRecentlyUntil = 0;
 
-  function enablePhysics() {
-    if (physicsEnabled) return;
-    physicsEnabled = true;
-
-    // Turn on gravity
-    engine.world.gravity.y = GRAVITY_ON;
-
-    // Make all tiles dynamic
-    bodies.forEach((body) => {
-      Body.setStatic(body, false);
-      // Tiny nudge so stacked overlaps separate a bit once physics begins
-      Body.setVelocity(body, { x: (Math.random() - 0.5) * 0.5, y: (Math.random() - 0.5) * 0.5 });
+  function setAllStatic(isStatic) {
+    bodies.forEach((b) => {
+      Body.setStatic(b, isStatic);
+      if (isStatic) {
+        Body.setVelocity(b, { x: 0, y: 0 });
+        Body.setAngularVelocity(b, 0);
+      }
     });
   }
 
-  // When user starts dragging ANY body, enable physics
+  function activatePhysics() {
+    if (settleTimer) clearTimeout(settleTimer);
+    engine.world.gravity.y = 0;
+    setAllStatic(false);
+    physicsActive = true;
+  }
+
+  function settleAndFreeze() {
+    if (!physicsActive) return;
+
+    // Gentle settle
+    engine.world.gravity.y = SETTLE_GRAVITY;
+
+    if (settleTimer) clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      engine.world.gravity.y = 0;
+      setAllStatic(true);      // freeze pile
+      physicsActive = false;
+    }, SETTLE_MS);
+  }
+
   Events.on(mouseConstraint, "startdrag", () => {
-    enablePhysics();
-    draggedRecentlyUntil = Date.now() + 700; // block click right after drag
+    activatePhysics();
+    draggedRecentlyUntil = Date.now() + 550;
+  });
+
+  Events.on(mouseConstraint, "enddrag", () => {
+    // Only settle when user releases
+    settleAndFreeze();
   });
 
   // ======================
-  // CLICK TO OPEN (only if not just dragged)
+  // Click to open (only if not just dragged)
   // ======================
   stage.addEventListener("click", (e) => {
     if (Date.now() < draggedRecentlyUntil) {
@@ -200,10 +241,8 @@
       e.stopPropagation();
       return;
     }
-
     const tile = e.target.closest(".tile");
     if (!tile) return;
-
     const href = tile.dataset.href;
     if (href) window.location.href = href;
   });
@@ -211,7 +250,6 @@
   stage.addEventListener("keydown", (e) => {
     const tile = e.target.closest(".tile");
     if (!tile) return;
-
     if (e.key === "Enter" || e.key === " ") {
       const href = tile.dataset.href;
       if (href) {
@@ -222,13 +260,13 @@
   });
 
   // ======================
-  // SYNC PHYSICS → DOM
+  // Sync physics -> DOM
   // ======================
   Events.on(engine, "afterUpdate", () => {
     bodies.forEach((body, el) => {
-      const r = el.getBoundingClientRect();
-      const w = r.width;
-      const h = r.height;
+      // Use the original size from body bounds (stable), not getBoundingClientRect() (changes when rotating)
+      const w = body.bounds.max.x - body.bounds.min.x;
+      const h = body.bounds.max.y - body.bounds.min.y;
 
       const x = body.position.x - w / 2;
       const y = body.position.y - h / 2;
@@ -238,7 +276,7 @@
   });
 
   // ======================
-  // RESIZE: reload (simple/stable)
+  // Resize: reload for stability
   // ======================
   let resizeTimer = null;
   window.addEventListener("resize", () => {
