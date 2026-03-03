@@ -991,3 +991,90 @@ body{
   pointer-events: none;
   opacity: 0.55;
 }
+
+/* ===== Play mode UI (improved) ===== */
+.play-hud{
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  z-index: 12000;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
+  font-size: 14px;
+}
+
+.play-hud button{
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.06);
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.play-hud button:hover{ background: rgba(0,0,0,0.10); }
+
+.play-hud .mini{
+  opacity: .72;
+  font-size: 12px;
+}
+
+/* Player */
+.player{
+  position: absolute;
+  width: 44px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.20);
+  border: 2px solid rgba(0,0,0,0.25);
+  z-index: 11000;
+  pointer-events: none;
+}
+
+/* Optional: if you later add /images/player.png */
+.player.has-sprite{
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  background-image: url("./images/player.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Targets */
+.target{
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: rgba(255, 80, 120, 0.35);
+  border: 2px solid rgba(255, 80, 120, 0.65);
+  z-index: 10900;
+  pointer-events: none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 900;
+  transform-origin: 50% 50%;
+  transition: transform 120ms ease;
+}
+
+/* Particle */
+.p{
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.9);
+  pointer-events: none;
+  z-index: 15000;
+  will-change: transform, opacity;
+}
+
+.play-mode .tile{ cursor: default !important; }
+.play-mode .tile-nav a{ pointer-events: none; opacity: 0.55; }
