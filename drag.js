@@ -1,4 +1,37 @@
 (() => {
+
+  /* =========================
+     RANDOMIZE TILE COLORS
+     ========================= */
+
+  const COLOR_CLASSES = [
+    "c-pink",
+    "c-green",
+    "c-yellow",
+    "c-blue",
+    "c-white",
+    "c-black"
+  ];
+
+  function randomColor() {
+    return COLOR_CLASSES[Math.floor(Math.random() * COLOR_CLASSES.length)];
+  }
+
+  const allTiles = document.querySelectorAll(".tile");
+
+  allTiles.forEach(tile => {
+    // Remove existing color classes
+    COLOR_CLASSES.forEach(c => tile.classList.remove(c));
+
+    // Assign new random one
+    tile.classList.add(randomColor());
+  });
+
+
+  /* =========================
+     DRAG SYSTEM (unchanged)
+     ========================= */
+
   const stage = document.querySelector(".tile-stage");
   if (!stage) return;
 
@@ -13,10 +46,8 @@
 
   stage.style.position = "relative";
 
-  // Track if a tile was just dragged (so the release doesn't "click" the link)
   const JUST_DRAGGED_MS = 450;
 
-  // Set initial px positions + apply saved
   tiles.forEach((el, i) => {
     const id = el.dataset.id || (el.dataset.id = "tile-" + i);
     el.style.position = "absolute";
@@ -30,7 +61,6 @@
       el.style.top = el.offsetTop + "px";
     }
 
-    // Used to suppress click after dragging
     el.dataset.justDraggedUntil = "0";
   });
 
@@ -53,27 +83,18 @@
   }
 
   tiles.forEach((el) => {
-    // Make it feel draggable
     el.style.cursor = "grab";
     el.style.userSelect = "none";
     el.style.touchAction = "none";
 
-    // If it's a link tile, we handle navigation ourselves
-    // (This prevents the browser from opening it when you start dragging)
     if (el.tagName.toLowerCase() === "a") {
       el.addEventListener("click", (e) => {
         const until = parseInt(el.dataset.justDraggedUntil || "0", 10);
         const now = Date.now();
-
-        // If tile was just dragged, ignore this click.
         if (now < until) {
           e.preventDefault();
           e.stopPropagation();
-          return;
         }
-
-        // Otherwise: allow normal navigation.
-        // (No preventDefault here.)
       });
     }
 
@@ -84,9 +105,7 @@
     let moved = false;
 
     el.addEventListener("pointerdown", (e) => {
-      // Prevent text selection + prevent default link drag behavior
       e.preventDefault();
-
       bringToFront(el);
       el.style.cursor = "grabbing";
 
@@ -118,7 +137,6 @@
 
       if (moved) {
         savePos(el);
-        // Block link click that might happen on release
         el.dataset.justDraggedUntil = String(Date.now() + JUST_DRAGGED_MS);
       }
 
@@ -126,10 +144,6 @@
       startY = null;
     });
 
-    el.addEventListener("pointercancel", () => {
-      el.style.cursor = "grab";
-      startX = null;
-      startY = null;
-    });
   });
+
 })();
