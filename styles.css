@@ -814,3 +814,18 @@ body{
 .draggable-tile:active{
   cursor: grabbing;
 }
+
+/* --- Fixed footer for tile pages --- */
+.tile-footer{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  padding: 12px 18px;
+  background: rgba(242,222,177,0.80);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(0,0,0,0.10);
+  font-size: 14px;
+  color: rgba(20,20,20,0.70);
+}

@@ -14,7 +14,9 @@
   });
 
   /* =========================
-     DRAGGABLE TILES (STAGE ONLY)
+     DRAGGABLE + RANDOM POSITIONS
+     - Every page load: tiles start in new random positions
+     - Tiles are clamped so they can't go under the footer
      ========================= */
   const stage = document.querySelector(".tile-stage");
   if (!stage) return;
@@ -27,40 +29,82 @@
 
   stage.style.position = "relative";
 
-  const pageKey = "tilepos:" + location.pathname;
-  const saved = JSON.parse(localStorage.getItem(pageKey) || "{}");
-
   // How long after a drag we ignore clicks (prevents “release click” opening link)
   const JUST_DRAGGED_MS = 600;
 
-  // IMPORTANT: disable browser default navigation on stage tiles that are <a>
+  // Footer boundary (supports: <footer>, .footer, .tile-footer)
+  function getFooterHeight() {
+    const footer =
+      document.querySelector(".tile-footer") ||
+      document.querySelector("footer") ||
+      document.querySelector(".footer");
+    if (!footer) return 0;
+    const rect = footer.getBoundingClientRect();
+    return Math.max(0, rect.height || 0);
+  }
+
+  function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function getMaxXY(el) {
+    // Clamp within stage width, and within viewport area above footer.
+    const stageRect = stage.getBoundingClientRect();
+    const footerH = getFooterHeight();
+
+    const maxX = Math.max(0, stage.clientWidth - el.offsetWidth);
+
+    // Viewport bottom, minus footer, converted to stage-local coordinates
+    const usableBottomInViewport = (window.innerHeight - footerH) - stageRect.top;
+    const maxYViewport = usableBottomInViewport - el.offsetHeight;
+
+    // Also clamp to stage height if the stage is smaller
+    const maxYStage = stage.clientHeight - el.offsetHeight;
+
+    const maxY = Math.max(0, Math.min(maxYViewport, maxYStage));
+    return { maxX, maxY };
+  }
+
+  function randomizePositions() {
+    tiles.forEach((el, i) => {
+      el.dataset.id = el.dataset.id || "tile-" + i;
+      el.style.position = "absolute";
+
+      const { maxX, maxY } = getMaxXY(el);
+
+      const pad = 8;
+      const x = Math.floor(Math.random() * Math.max(1, maxX - pad)) + pad / 2;
+      const y = Math.floor(Math.random() * Math.max(1, maxY - pad)) + pad / 2;
+
+      el.style.left = clamp(x, 0, maxX) + "px";
+      el.style.top = clamp(y, 0, maxY) + "px";
+      el.dataset.justDraggedUntil = "0";
+    });
+  }
+
+  // Disable default navigation on stage tiles that are <a>
   tiles.forEach((el) => {
     if (el.tagName.toLowerCase() === "a") {
-      // Store href and remove it so the browser can't navigate automatically
       if (!el.dataset.href) el.dataset.href = el.getAttribute("href") || "";
       el.removeAttribute("href");
 
-      // Keep it accessible as a link
       el.setAttribute("role", "link");
       if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "0");
     }
   });
 
-  // Apply saved positions (px) or lock the initial ones to px
-  tiles.forEach((el, i) => {
-    const id = el.dataset.id || (el.dataset.id = "tile-" + i);
-    el.style.position = "absolute";
+  // New random layout every reload
+  randomizePositions();
 
-    const pos = saved[id];
-    if (pos && typeof pos.x === "number" && typeof pos.y === "number") {
-      el.style.left = pos.x + "px";
-      el.style.top = pos.y + "px";
-    } else {
-      el.style.left = el.offsetLeft + "px";
-      el.style.top = el.offsetTop + "px";
-    }
-
-    el.dataset.justDraggedUntil = "0";
+  // Keep tiles in-bounds on resize
+  window.addEventListener("resize", () => {
+    tiles.forEach((el) => {
+      const left = parseFloat(el.style.left) || 0;
+      const top = parseFloat(el.style.top) || 0;
+      const { maxX, maxY } = getMaxXY(el);
+      el.style.left = clamp(left, 0, maxX) + "px";
+      el.style.top = clamp(top, 0, maxY) + "px";
+    });
   });
 
   function bringToFront(el) {
@@ -68,19 +112,9 @@
     el.style.zIndex = String(maxZ + 1);
   }
 
-  function savePos(el) {
-    const id = el.dataset.id;
-    const x = parseFloat(el.style.left) || 0;
-    const y = parseFloat(el.style.top) || 0;
-
-    const current = JSON.parse(localStorage.getItem(pageKey) || "{}");
-    current[id] = { x, y };
-    localStorage.setItem(pageKey, JSON.stringify(current));
-  }
-
   function maybeNavigate(el) {
     const until = parseInt(el.dataset.justDraggedUntil || "0", 10);
-    if (Date.now() < until) return; // ignore click right after drag
+    if (Date.now() < until) return;
 
     const href = el.dataset.href;
     if (href) window.location.href = href;
@@ -117,23 +151,27 @@
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
 
-      // Lower threshold so it counts as a drag more easily
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
 
-      el.style.left = startLeft + dx + "px";
-      el.style.top = startTop + dy + "px";
+      let nextLeft = startLeft + dx;
+      let nextTop = startTop + dy;
+
+      const { maxX, maxY } = getMaxXY(el);
+      nextLeft = clamp(nextLeft, 0, maxX);
+      nextTop = clamp(nextTop, 0, maxY);
+
+      el.style.left = nextLeft + "px";
+      el.style.top = nextTop + "px";
     });
 
-    el.addEventListener("pointerup", (e) => {
+    el.addEventListener("pointerup", () => {
       if (startX === null) return;
 
       el.style.cursor = "grab";
 
       if (moved) {
-        savePos(el);
         el.dataset.justDraggedUntil = String(Date.now() + JUST_DRAGGED_MS);
       } else {
-        // This was a deliberate click (no drag) → now navigate
         if (el.tagName.toLowerCase() === "a") maybeNavigate(el);
       }
 
@@ -147,7 +185,6 @@
       startY = null;
     });
 
-    // Keyboard open (Enter / Space)
     el.addEventListener("keydown", (e) => {
       if (el.tagName.toLowerCase() !== "a") return;
       if (e.key === "Enter" || e.key === " ") {
