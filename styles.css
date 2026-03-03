@@ -804,3 +804,13 @@ body{
     width: calc(100% - 16px) !important;
   }
 }
+
+/* Draggable behavior helpers */
+.draggable-tile{
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* important for mobile dragging */
+}
+.draggable-tile:active{
+  cursor: grabbing;
+}

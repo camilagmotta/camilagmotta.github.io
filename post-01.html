@@ -1,40 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post Title 01 — Camila Motta</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post 01</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="tile-page" id="top">
-  <nav class="tile-nav" aria-label="Site">
-    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
-    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
-    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
-    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
-  </nav>
+<body class="tile-page">
 
-  <header class="tile-brand">
-    <h1>Post Title 01</h1>
-    <p><a href="thoughts.html">← back to thoughts</a></p>
-  </header>
+<nav class="tile-nav">
+  <a href="index.html">home</a>
+  <a href="projects.html">games</a>
+  <a href="art.html">art</a>
+  <a href="thoughts.html">thoughts</a>
+</nav>
 
-  <main class="tile-stage">
-    <article class="tile t-xl c-white tile-content" style="left: 8%; top: 140px; z-index: 3;">
-      <h2>Post Title 01</h2>
-      <p><em>Date placeholder · 3 min read</em></p>
+<header class="tile-brand">
+  <h1>Post Title 01</h1>
+</header>
 
-      <h3>Section Heading</h3>
-      <p>Write your post here. This is a big readable tile.</p>
+<main class="tile-stage">
 
-      <p>Add images later using &lt;img&gt; inside the tile.</p>
-    </article>
+  <section class="tile t-xl c-white tile-content" style="left:120px; top:200px;">
+    <h2>Section Heading</h2>
+    <p>This is your blog post inside a draggable tile.</p>
+  </section>
 
-    <!-- Decorative side tile (optional) -->
-    <div class="tile t-sm c-pink" style="left: 72%; top: 220px; z-index: 2;">
-      <span class="label" style="font-size:22px;">note</span>
-    </div>
-  </main>
+</main>
+
+<script src="drag.js"></script>
 </body>
 </html>

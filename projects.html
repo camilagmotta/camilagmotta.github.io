@@ -1,48 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Game Projects — Camila Motta</title>
-  <meta name="description" content="Game projects and prototypes." />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="tile-page" id="top">
-  <nav class="tile-nav" aria-label="Site">
-    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
-    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
-    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
-    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
-  </nav>
+<body class="tile-page">
 
-  <header class="tile-brand">
-    <h1>Game Projects</h1>
-    <p>Click any tile.</p>
-  </header>
+<nav class="tile-nav">
+  <a href="index.html">home</a>
+  <a href="projects.html">games</a>
+  <a href="art.html">art</a>
+  <a href="thoughts.html">thoughts</a>
+</nav>
 
-  <main class="tile-stage">
-    <!-- Project tiles (duplicate these as needed) -->
-    <a class="tile t-lg c-green tile-content" style="left: 10%; top: 120px; z-index: 3;" href="#">
-      <h2>Project Title 01</h2>
-      <p>Short description. Tools: Unity, C#…</p>
-      <p><strong>Role:</strong> Game Designer</p>
-    </a>
+<header class="tile-brand">
+  <h1>Game Projects</h1>
+</header>
 
-    <a class="tile t-md c-yellow tile-content" style="left: 52%; top: 210px; z-index: 4;" href="#">
-      <h2>Project Title 02</h2>
-      <p>Short description. What you built.</p>
-    </a>
+<main class="tile-stage">
 
-    <a class="tile t-md c-pink tile-content" style="left: 68%; top: 80px; z-index: 5;" href="#">
-      <h2>Project Title 03</h2>
-      <p>Short description. Highlight the hook.</p>
-    </a>
+  <a class="tile t-lg c-green tile-content" style="left:120px; top:200px;" href="#">
+    <h2>Project 01</h2>
+    <p>Unity · Puzzle · Prototype</p>
+  </a>
 
-    <a class="tile t-sm c-blue tile-content" style="left: 34%; top: 430px; z-index: 2;" href="#">
-      <h2>Prototype</h2>
-      <p>Small note / link to build / itch.</p>
-    </a>
-  </main>
+  <a class="tile t-md c-yellow tile-content" style="left:600px; top:150px;" href="#">
+    <h2>Project 02</h2>
+    <p>3D · Level Design</p>
+  </a>
+
+  <a class="tile t-md c-pink tile-content" style="left:820px; top:380px;" href="#">
+    <h2>Project 03</h2>
+    <p>Localization · Systems</p>
+  </a>
+
+</main>
+
+<script src="drag.js"></script>
 </body>
 </html>

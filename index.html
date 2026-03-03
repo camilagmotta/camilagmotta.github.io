@@ -1,53 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Camila Motta — Portfolio</title>
-  <meta name="description" content="Camila Motta — Game Designer and 3D Artist" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camila Motta — Portfolio</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="tile-page" id="top">
-  <nav class="tile-nav" aria-label="Site">
-    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
-    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
-    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
-    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
-  </nav>
+<body class="tile-page">
 
-  <header class="tile-brand">
-    <h1>Camila Motta</h1>
-    <p>Game Designer · 3D Artist</p>
-  </header>
+<nav class="tile-nav">
+  <a href="index.html">home</a>
+  <a href="projects.html">games</a>
+  <a href="art.html">art</a>
+  <a href="thoughts.html">thoughts</a>
+</nav>
 
-  <main class="tile-stage">
-    <!-- Big “About” tile (content tile) -->
-    <section class="tile t-xl c-white tile-content" style="left: 6%; top: 140px; z-index: 2;">
-      <h2>About</h2>
-      <p>
-        I am a Game Design student from Brazil in my final year of a Bachelor’s degree in Arts and Culture 
-            - Game Design. I am currently learning to design and prototype my own games, 
-            with a strong interest in puzzle design, gameplay systems, and player experience. 
-            I am expanding my technical skills in C# and Unity as I continue to grow as a designer.
-      </p>
-      <p><strong>Email:</strong> <a href="mailto:mottacamila@outlook.com">mottacamila@outlook.com</a></p>
-      <p><strong>LinkedIn:</strong> <a href="#" target="_blank" rel="noreferrer">...</a></p>
-      <p><strong>GitHub:</strong> <a href="#" target="_blank" rel="noreferrer">...</a></p>
-    </section>
+<header class="tile-brand">
+  <h1>Camila Motta</h1>
+  <p>Game Designer · 3D Artist</p>
+</header>
 
-    <!-- Navigation tiles (pile) -->
-    <a class="tile t-lg c-green" style="left: 55%; top: 240px; z-index: 3;" href="projects.html">
-      <span class="label" style="font-size:48px;">games</span>
-    </a>
+<main class="tile-stage">
 
-    <a class="tile t-md c-pink" style="left: 62%; top: 80px; z-index: 4;" href="art.html">
-      <span class="label" style="font-size:40px;">art</span>
-    </a>
+  <section class="tile t-xl c-white tile-content" style="left:80px; top:180px;">
+    <h2>About</h2>
+    <p>Game Design student focused on puzzle systems and player experience.</p>
+    <p>Email: mottacamila@outlook.com</p>
+  </section>
 
-    <a class="tile t-sm c-blue" style="left: 78%; top: 430px; z-index: 5;" href="thoughts.html">
-      <span class="label" style="font-size:34px;">thoughts</span>
-    </a>
-  </main>
+  <a class="tile t-lg c-green" style="left:550px; top:260px;" href="projects.html">
+    <span class="label">Games</span>
+  </a>
+
+  <a class="tile t-md c-pink" style="left:720px; top:80px;" href="art.html">
+    <span class="label">Art</span>
+  </a>
+
+  <a class="tile t-sm c-blue" style="left:880px; top:420px;" href="thoughts.html">
+    <span class="label">Thoughts</span>
+  </a>
+
+</main>
+
+<script src="drag.js"></script>
 </body>
 </html>
