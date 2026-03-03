@@ -8,79 +8,46 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page" id="top">
-  <!-- INTRO OVERLAY - animation -->
-  <div class="intro" aria-hidden="true">
-    <div class="intro-card">
-      <div class="intro-mark"></div>
-      <p class="intro-text"></p>
-      <p class="intro-sub">Loading... Carregando...</p>
-      <div class="intro-bar"></div>
-    </div>
-  </div>
+<body class="tile-page" id="top">
+  <nav class="tile-nav" aria-label="Site">
+    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
+    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
+    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
+    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
+  </nav>
 
-  <header class="header">
-    <a class="logo" href="index.html">
-      <span class="logo-dot" aria-hidden="true"></span>
-      <span>Camila Motta</span>
-    </a>
-
-    <nav class="nav">
-      <a class="nav-link is-active nav-icon" href="index.html">
-        <img src="images/Button_AboutMe.png" alt="About Me">
-      </a>
-      <a class="nav-link is-active nav-icon" href="projects.html">
-        <img src="images/Button_GameProject.png" alt="Game Projects">
-      </a>
-      <a class="nav-link" href="art.html">Arts & Doodles</a>
-      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
-    </nav>
+  <header class="tile-brand">
+    <h1>Camila Motta</h1>
+    <p>Game Designer · 3D Artist</p>
   </header>
 
-  <main class="shell">
-    <section class="about">
-      <div class="about-grid">
-
-        <aside class="portrait">
-          <div class="portrait-frame">
-            <div class="portrait-placeholder"></div>
-          </div>
-          <p class="hint">Replace with your photo later</p>
-        </aside>
-
-        <section class="about-card">
-          <h1 class="h1">Camila Motta</h1>
-
-          <p class="role">
-            Game Designer · 3D Artist
-          </p>
-
-          <div class="divider"></div>
-
-          <p class="bio">
-            <!-- Replace this text later -->
-            I am a Game Design student from Brazil in my final year of a Bachelor’s degree in Arts and Culture 
+  <main class="tile-stage">
+    <!-- Big “About” tile (content tile) -->
+    <section class="tile t-xl c-white tile-content" style="left: 6%; top: 140px; z-index: 2;">
+      <h2>About</h2>
+      <p>
+        I am a Game Design student from Brazil in my final year of a Bachelor’s degree in Arts and Culture 
             - Game Design. I am currently learning to design and prototype my own games, 
             with a strong interest in puzzle design, gameplay systems, and player experience. 
             I am expanding my technical skills in C# and Unity as I continue to grow as a designer.
-          </p>
-
-          <div class="divider"></div>
-
-          <!-- Buttons removed: keep only contacts -->
-          <div class="contact">
-            <p class="contact-line"><strong>Email:</strong> <a class="link" href="mailto:mottacamila@outlook.com">mottacamila@outlook.com</a></p>
-            <p class="contact-line"><strong>LinkedIn:</strong> <a class="link" href="#" target="_blank" rel="noreferrer">...</a></p>
-            <p class="contact-line"><strong>GitHub:</strong> <a class="link" href="#" target="_blank" rel="noreferrer">...</a></p>
-          </div>
-
-        </section>
-      </div>
+      </p>
+      <p><strong>Email:</strong> <a href="mailto:mottacamila@outlook.com">mottacamila@outlook.com</a></p>
+      <p><strong>LinkedIn:</strong> <a href="#" target="_blank" rel="noreferrer">...</a></p>
+      <p><strong>GitHub:</strong> <a href="#" target="_blank" rel="noreferrer">...</a></p>
     </section>
 
-    <footer class="footer">
-      © 2026 Camila Motta
-    </footer>
+    <!-- Navigation tiles (pile) -->
+    <a class="tile t-lg c-green" style="left: 55%; top: 240px; z-index: 3;" href="projects.html">
+      <span class="label" style="font-size:48px;">games</span>
+    </a>
+
+    <a class="tile t-md c-pink" style="left: 62%; top: 80px; z-index: 4;" href="art.html">
+      <span class="label" style="font-size:40px;">art</span>
+    </a>
+
+    <a class="tile t-sm c-blue" style="left: 78%; top: 430px; z-index: 5;" href="thoughts.html">
+      <span class="label" style="font-size:34px;">thoughts</span>
+    </a>
   </main>
 </body>
 </html>

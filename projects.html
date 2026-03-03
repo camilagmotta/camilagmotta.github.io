@@ -8,112 +8,41 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page" id="top">
-  <header class="header">
-    <a class="logo" href="index.html">
-      <span class="logo-dot" aria-hidden="true"></span>
-      <span>Camila Motta</span>
-    </a>
+<body class="tile-page" id="top">
+  <nav class="tile-nav" aria-label="Site">
+    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
+    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
+    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
+    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
+  </nav>
 
-    <nav class="nav" aria-label="Primary">
-      <a class="nav-link nav-icon" href="index.html">
-        <img src="images/Button_AboutMe.png" alt="About Me">
-      </a>
-      <a class="nav-link is-active nav-icon" href="projects.html">
-        <img src="images/Button_GameProject.png" alt="Game Projects">
-      </a>
-      <a class="nav-link" href="art.html">Arts & Doodles</a>
-      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
-    </nav>
+  <header class="tile-brand">
+    <h1>Game Projects</h1>
+    <p>Click any tile.</p>
   </header>
 
-  <main class="shell">
-    <section class="page-head">
-      <h1 class="h1">Game Projects</h1>
-      <p class="sub">
-        Small cards with media placeholders. Hover to reveal an info window (CSS-only).
-        Replace frames/buttons later with your own UI art.
-      </p>
-    </section>
+  <main class="tile-stage">
+    <!-- Project tiles (duplicate these as needed) -->
+    <a class="tile t-lg c-green tile-content" style="left: 10%; top: 120px; z-index: 3;" href="#">
+      <h2>Project Title 01</h2>
+      <p>Short description. Tools: Unity, C#…</p>
+      <p><strong>Role:</strong> Game Designer</p>
+    </a>
 
-    <section class="cards-grid" aria-label="Projects">
-      <!-- CARD 1 -->
-      <article class="card">
-        <div class="media">
-          <!-- Replace with <img> or <video> later -->
-          <div class="media-placeholder">IMAGE/VIDEO</div>
-        </div>
+    <a class="tile t-md c-yellow tile-content" style="left: 52%; top: 210px; z-index: 4;" href="#">
+      <h2>Project Title 02</h2>
+      <p>Short description. What you built.</p>
+    </a>
 
-        <div class="card-body">
-          <h2 class="h2">Project Title 01</h2>
-          <p class="desc">Short description placeholder. 1-2 lines.</p>
+    <a class="tile t-md c-pink tile-content" style="left: 68%; top: 80px; z-index: 5;" href="#">
+      <h2>Project Title 03</h2>
+      <p>Short description. Highlight the hook.</p>
+    </a>
 
-          <ul class="tags" aria-label="Tags">
-            <li class="tag">Unity</li>
-            <li class="tag">C#</li>
-            <li class="tag">Puzzle</li>
-          </ul>
-        </div>
-
-        <!-- HOVER INFO WINDOW -->
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">More info</h3>
-          <p class="mini">
-            Longer info placeholder shown on hover. Add: your role, what you built, key mechanic, tools.
-          </p>
-          <p class="mini"><strong>Status:</strong> Prototype</p>
-          <p class="mini"><strong>Links:</strong> itch / repo / video (add later)</p>
-        </div>
-      </article>
-
-      <!-- CARD 2 -->
-      <article class="card">
-        <div class="media">
-          <div class="media-placeholder">IMAGE/VIDEO</div>
-        </div>
-        <div class="card-body">
-          <h2 class="h2">Project Title 02</h2>
-          <p class="desc">Short description placeholder. 1–2 lines.</p>
-          <ul class="tags">
-            <li class="tag">3D</li>
-            <li class="tag">Level Design</li>
-            <li class="tag">UI</li>
-          </ul>
-        </div>
-
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">More info</h3>
-          <p class="mini">Hover details placeholder. Add achievements, constraints, and what you learned.</p>
-        </div>
-      </article>
-
-      <!-- CARD 3 -->
-      <article class="card">
-        <div class="media">
-          <div class="media-placeholder">IMAGE/VIDEO</div>
-        </div>
-        <div class="card-body">
-          <h2 class="h2">Project Title 03</h2>
-          <p class="desc">Short description placeholder. 1–2 lines.</p>
-          <ul class="tags">
-            <li class="tag">Localization</li>
-            <li class="tag">Words</li>
-            <li class="tag">Design</li>
-          </ul>
-        </div>
-
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">More info</h3>
-          <p class="mini">Hover details placeholder. Add story beats, puzzle logic, or system notes.</p>
-        </div>
-      </article>
-
-      <!-- Add more cards by copy/paste -->
-    </section>
-
-    <footer class="footer">
-      <p>© 2026 Camila Motta</p>
-    </footer>
+    <a class="tile t-sm c-blue tile-content" style="left: 34%; top: 430px; z-index: 2;" href="#">
+      <h2>Prototype</h2>
+      <p>Small note / link to build / itch.</p>
+    </a>
   </main>
 </body>
 </html>

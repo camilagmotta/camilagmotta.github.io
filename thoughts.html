@@ -8,92 +8,35 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page" id="top">
-  <header class="header">
-    <a class="logo" href="index.html">
-      <span class="logo-dot" aria-hidden="true"></span>
-      <span>Camila Motta</span>
-    </a>
+<body class="tile-page" id="top">
+  <nav class="tile-nav" aria-label="Site">
+    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
+    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
+    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
+    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
+  </nav>
 
-    <nav class="nav" aria-label="Primary">
-      <a class="nav-link nav-icon" href="index.html">
-        <img src="images/Button_AboutMe.png" alt="About Me">
-      </a>
-      <a class="nav-link is-active nav-icon" href="projects.html">
-        <img src="images/Button_GameProject.png" alt="Game Projects">
-      </a>
-      <a class="nav-link" href="art.html">Arts & Doodles</a>
-      <a class="nav-link is-active" href="thoughts.html">Latest Thoughts</a>
-    </nav>
+  <header class="tile-brand">
+    <h1>Latest Thoughts</h1>
+    <p>Click a tile to open the post.</p>
   </header>
 
-  <main class="shell">
-    <section class="page-head">
-      <h1 class="h1">Latest Thoughts</h1>
-      <p class="sub">
-        Similar to Projects layout. Each card links to a full post page (static HTML).
-      </p>
-    </section>
+  <main class="tile-stage">
+    <a class="tile t-lg c-blue tile-content" style="left: 10%; top: 120px; z-index: 3;" href="post-01.html">
+      <h2>Post Title 01</h2>
+      <p>Short excerpt…</p>
+      <p><strong>Tags:</strong> Devlog, Design</p>
+    </a>
 
-    <section class="cards-grid" aria-label="Posts">
-      <a class="card card-link" href="post-01.html">
-        <div class="media">
-          <div class="media-placeholder">COVER IMAGE</div>
-        </div>
-        <div class="card-body">
-          <h2 class="h2">Post Title 01</h2>
-          <p class="desc">Short excerpt placeholder (1–2 lines).</p>
-          <ul class="tags">
-            <li class="tag">Devlog</li>
-            <li class="tag">Design</li>
-          </ul>
-        </div>
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">Preview</h3>
-          <p class="mini">Hover preview text. Optional: add reading time, date, summary.</p>
-        </div>
-      </a>
+    <a class="tile t-md c-white tile-content" style="left: 55%; top: 220px; z-index: 4;" href="post-02.html">
+      <h2>Post Title 02</h2>
+      <p>Short excerpt…</p>
+    </a>
 
-      <a class="card card-link" href="post-02.html">
-        <div class="media">
-          <div class="media-placeholder">COVER IMAGE</div>
-        </div>
-        <div class="card-body">
-          <h2 class="h2">Post Title 02</h2>
-          <p class="desc">Short excerpt placeholder (1–2 lines).</p>
-          <ul class="tags">
-            <li class="tag">UI</li>
-            <li class="tag">Notes</li>
-          </ul>
-        </div>
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">Preview</h3>
-          <p class="mini">Hover preview text placeholder.</p>
-        </div>
-      </a>
-
-      <a class="card card-link" href="post-03.html">
-        <div class="media">
-          <div class="media-placeholder">COVER IMAGE</div>
-        </div>
-        <div class="card-body">
-          <h2 class="h2">Post Title 03</h2>
-          <p class="desc">Short excerpt placeholder (1–2 lines).</p>
-          <ul class="tags">
-            <li class="tag">Puzzle</li>
-            <li class="tag">Iteration</li>
-          </ul>
-        </div>
-        <div class="hover-window" aria-hidden="true">
-          <h3 class="h3">Preview</h3>
-          <p class="mini">Hover preview text placeholder.</p>
-        </div>
-      </a>
-    </section>
-
-    <footer class="footer">
-      <p>© 2026 Camila Motta</p>
-    </footer>
+    <a class="tile t-sm c-yellow tile-content" style="left: 70%; top: 90px; z-index: 5;" href="post-03.html">
+      <h2>Post Title 03</h2>
+      <p>Short excerpt…</p>
+    </a>
   </main>
 </body>
 </html>

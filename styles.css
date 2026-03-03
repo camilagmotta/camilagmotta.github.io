@@ -633,3 +633,174 @@ body{
 {
   color: var(--muted) !important;
 }
+
+/* =========================================================
+   Sokpop-style tiles — GLOBAL (ALL PAGES)
+   Paste at the very bottom of styles.css
+   ========================================================= */
+
+/* 1) Global page background + remove the classic header layout */
+body{
+  background: #f2deb1 !important;
+}
+
+/* Hide the sticky header on all pages (we replace it with tile-nav) */
+.header{
+  display: none !important;
+}
+
+/* 2) Page wrapper */
+.tile-page{
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 26px 18px 80px;
+}
+
+/* 3) A “pile” area where tiles can overlap */
+.tile-stage{
+  position: relative;
+  min-height: calc(100vh - 140px);
+  padding: 10px 6px 0;
+}
+
+/* 4) Top “brand” */
+.tile-brand{
+  margin: 10px 8px 18px;
+}
+.tile-brand h1{
+  margin: 0;
+  font-size: clamp(30px, 4vw, 56px);
+  letter-spacing: 0.4px;
+}
+.tile-brand p{
+  margin: 6px 0 0;
+  opacity: 0.75;
+}
+
+/* 5) Tile nav (always visible) */
+.tile-nav{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 10px;
+  background: rgba(242,222,177,0.75);
+  backdrop-filter: blur(6px);
+}
+
+.tile-nav a{
+  text-decoration: none;
+  color: #141414;
+}
+
+/* 6) Base tile style */
+.tile{
+  position: absolute;
+  display: grid;
+  place-items: center;
+
+  border-radius: 18px; /* change to 50% for circles */
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+
+  text-decoration: none;
+  color: #141414;
+
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.tile:hover{
+  transform: scale(1.05);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.22);
+}
+
+.tile .label{
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-shadow: 0 3px 0 rgba(255,255,255,0.55);
+}
+
+/* 7) Tile sizes (reusable) */
+.t-xl{ width: 430px; height: 430px; }
+.t-lg{ width: 360px; height: 360px; }
+.t-md{ width: 260px; height: 260px; }
+.t-sm{ width: 180px; height: 180px; }
+.t-xs{ width: 140px; height: 140px; }
+
+/* 8) Colors */
+.c-pink{ background:#f48fc2; }
+.c-green{ background:#a7bd53; }
+.c-yellow{ background:#f5cd6a; }
+.c-blue{ background:#7e97db; }
+.c-white{ background:#ffffff; }
+.c-black{ background:#1f1f1f; color:#fff; }
+.c-black .label{ text-shadow:none; }
+
+/* 9) Inside content tile (text blocks) */
+.tile-content{
+  padding: 16px;
+  align-items: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.tile-content h2,
+.tile-content h3{
+  margin: 0 0 8px;
+}
+
+.tile-content p{
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+/* 10) Convert your existing “card grids” into tile piles */
+.cards-grid,
+.gallery{
+  display: block !important;   /* stop grid */
+}
+
+/* Make existing cards act like tiles */
+.card,
+.thumb-frame{
+  position: absolute !important;
+  border-radius: 18px !important;
+  border: none !important;
+  overflow: hidden !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18) !important;
+}
+
+/* Remove the hover-window overlay (optional; tiles already hover) */
+.hover-window{ display: none !important; }
+
+/* Make cards clickable feel like tiles */
+.card-link,
+.card{
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 11) Mobile: stop overlapping and stack nicely */
+@media (max-width: 860px){
+  .tile{
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 14px 8px !important;
+
+    width: calc(100% - 16px) !important;
+    height: auto !important;
+    min-height: 120px;
+  }
+
+  .card,
+  .thumb-frame{
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 14px 8px !important;
+    width: calc(100% - 16px) !important;
+  }
+}

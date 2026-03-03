@@ -8,124 +8,40 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="page" id="top">
-  <header class="header">
-    <a class="logo" href="index.html">
-      <span class="logo-dot" aria-hidden="true"></span>
-      <span>Camila Motta</span>
-    </a>
+<body class="tile-page" id="top">
+  <nav class="tile-nav" aria-label="Site">
+    <a class="tile t-xs c-white" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="index.html"><span class="label">home</span></a>
+    <a class="tile t-xs c-yellow" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="projects.html"><span class="label">games</span></a>
+    <a class="tile t-xs c-pink" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="art.html"><span class="label">art</span></a>
+    <a class="tile t-xs c-blue" style="position:relative; width:auto; height:auto; padding:10px 14px;" href="thoughts.html"><span class="label">thoughts</span></a>
+  </nav>
 
-    <nav class="nav" aria-label="Primary">
-      <a class="nav-link nav-icon" href="index.html">
-        <img src="images/Button_AboutMe.png" alt="About Me">
-      </a>
-      <a class="nav-link is-active nav-icon" href="projects.html">
-        <img src="images/Button_GameProject.png" alt="Game Projects">
-      </a>
-      <a class="nav-link is-active" href="art.html">Arts & Doodles</a>
-      <a class="nav-link" href="thoughts.html">Latest Thoughts</a>
-    </nav>
+  <header class="tile-brand">
+    <h1>Arts & Doodles</h1>
+    <p>Replace placeholder text with images later.</p>
   </header>
 
-  <main class="shell">
-    <section class="page-head">
-      <h1 class="h1">Arts & Doodles</h1>
-      <p class="sub">
-        ArtStation-style grid. Click any image to open a larger preview on the same page (CSS-only).
-        Replace placeholders with your images later.
-      </p>
-    </section>
+  <main class="tile-stage">
+    <!-- Art tiles (these can become <a> to full images later) -->
+    <a class="tile t-md c-white tile-content" style="left: 10%; top: 120px; z-index: 2;" href="#">
+      <h2>Artwork 01</h2>
+      <p>Short caption.</p>
+    </a>
 
-    <section class="gallery" aria-label="Art gallery">
-      <a class="thumb" href="#art1">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
+    <a class="tile t-lg c-pink tile-content" style="left: 46%; top: 220px; z-index: 3;" href="#">
+      <h2>Artwork 02</h2>
+      <p>Short caption.</p>
+    </a>
 
-      <a class="thumb" href="#art2">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
+    <a class="tile t-sm c-yellow tile-content" style="left: 68%; top: 90px; z-index: 4;" href="#">
+      <h2>Artwork 03</h2>
+      <p>Short caption.</p>
+    </a>
 
-      <a class="thumb" href="#art3">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
-
-      <a class="thumb" href="#art4">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
-
-      <a class="thumb" href="#art5">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
-
-      <a class="thumb" href="#art6">
-        <div class="thumb-frame">
-          <div class="thumb-img">IMAGE</div>
-        </div>
-      </a>
-    </section>
-
-    <!-- CSS-only preview modals -->
-    <section class="modal" id="art1" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <section class="modal" id="art2" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <section class="modal" id="art3" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <section class="modal" id="art4" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <section class="modal" id="art5" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <section class="modal" id="art6" aria-label="Art preview">
-      <div class="modal-card">
-        <a class="modal-close" href="#top" aria-label="Close">✕</a>
-        <div class="modal-media">LARGE IMAGE (replace with real)</div>
-        <p class="modal-desc">Small description placeholder for this artwork.</p>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <p>© 2026 Camila Motta</p>
-    </footer>
+    <a class="tile t-sm c-blue tile-content" style="left: 24%; top: 470px; z-index: 1;" href="#">
+      <h2>Sketches</h2>
+      <p>Mini collection.</p>
+    </a>
   </main>
 </body>
 </html>
