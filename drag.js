@@ -1,37 +1,21 @@
 (() => {
-
   /* =========================
      RANDOMIZE TILE COLORS
      ========================= */
-
-  const COLOR_CLASSES = [
-    "c-pink",
-    "c-green",
-    "c-yellow",
-    "c-blue",
-    "c-white",
-    "c-black"
-  ];
+  const COLOR_CLASSES = ["c-pink", "c-green", "c-yellow", "c-blue", "c-white", "c-black"];
 
   function randomColor() {
     return COLOR_CLASSES[Math.floor(Math.random() * COLOR_CLASSES.length)];
   }
 
-  const allTiles = document.querySelectorAll(".tile");
-
-  allTiles.forEach(tile => {
-    // Remove existing color classes
-    COLOR_CLASSES.forEach(c => tile.classList.remove(c));
-
-    // Assign new random one
+  document.querySelectorAll(".tile").forEach((tile) => {
+    COLOR_CLASSES.forEach((c) => tile.classList.remove(c));
     tile.classList.add(randomColor());
   });
 
-
   /* =========================
-     DRAG SYSTEM (unchanged)
+     DRAGGABLE TILES (STAGE ONLY)
      ========================= */
-
   const stage = document.querySelector(".tile-stage");
   if (!stage) return;
 
@@ -41,19 +25,34 @@
   const tiles = Array.from(stage.querySelectorAll(".tile"));
   if (!tiles.length) return;
 
+  stage.style.position = "relative";
+
   const pageKey = "tilepos:" + location.pathname;
   const saved = JSON.parse(localStorage.getItem(pageKey) || "{}");
 
-  stage.style.position = "relative";
+  // How long after a drag we ignore clicks (prevents “release click” opening link)
+  const JUST_DRAGGED_MS = 600;
 
-  const JUST_DRAGGED_MS = 450;
+  // IMPORTANT: disable browser default navigation on stage tiles that are <a>
+  tiles.forEach((el) => {
+    if (el.tagName.toLowerCase() === "a") {
+      // Store href and remove it so the browser can't navigate automatically
+      if (!el.dataset.href) el.dataset.href = el.getAttribute("href") || "";
+      el.removeAttribute("href");
 
+      // Keep it accessible as a link
+      el.setAttribute("role", "link");
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "0");
+    }
+  });
+
+  // Apply saved positions (px) or lock the initial ones to px
   tiles.forEach((el, i) => {
     const id = el.dataset.id || (el.dataset.id = "tile-" + i);
     el.style.position = "absolute";
 
     const pos = saved[id];
-    if (pos) {
+    if (pos && typeof pos.x === "number" && typeof pos.y === "number") {
       el.style.left = pos.x + "px";
       el.style.top = pos.y + "px";
     } else {
@@ -65,38 +64,32 @@
   });
 
   function bringToFront(el) {
-    const maxZ = tiles.reduce(
-      (m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 0),
-      0
-    );
-    el.style.zIndex = maxZ + 1;
+    const maxZ = tiles.reduce((m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 0), 0);
+    el.style.zIndex = String(maxZ + 1);
   }
 
   function savePos(el) {
     const id = el.dataset.id;
-    const x = parseFloat(el.style.left);
-    const y = parseFloat(el.style.top);
+    const x = parseFloat(el.style.left) || 0;
+    const y = parseFloat(el.style.top) || 0;
 
     const current = JSON.parse(localStorage.getItem(pageKey) || "{}");
     current[id] = { x, y };
     localStorage.setItem(pageKey, JSON.stringify(current));
   }
 
+  function maybeNavigate(el) {
+    const until = parseInt(el.dataset.justDraggedUntil || "0", 10);
+    if (Date.now() < until) return; // ignore click right after drag
+
+    const href = el.dataset.href;
+    if (href) window.location.href = href;
+  }
+
   tiles.forEach((el) => {
     el.style.cursor = "grab";
     el.style.userSelect = "none";
     el.style.touchAction = "none";
-
-    if (el.tagName.toLowerCase() === "a") {
-      el.addEventListener("click", (e) => {
-        const until = parseInt(el.dataset.justDraggedUntil || "0", 10);
-        const now = Date.now();
-        if (now < until) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      });
-    }
 
     let startX = null;
     let startY = null;
@@ -124,13 +117,14 @@
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
 
-      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+      // Lower threshold so it counts as a drag more easily
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
 
       el.style.left = startLeft + dx + "px";
       el.style.top = startTop + dy + "px";
     });
 
-    el.addEventListener("pointerup", () => {
+    el.addEventListener("pointerup", (e) => {
       if (startX === null) return;
 
       el.style.cursor = "grab";
@@ -138,12 +132,28 @@
       if (moved) {
         savePos(el);
         el.dataset.justDraggedUntil = String(Date.now() + JUST_DRAGGED_MS);
+      } else {
+        // This was a deliberate click (no drag) → now navigate
+        if (el.tagName.toLowerCase() === "a") maybeNavigate(el);
       }
 
       startX = null;
       startY = null;
     });
 
-  });
+    el.addEventListener("pointercancel", () => {
+      el.style.cursor = "grab";
+      startX = null;
+      startY = null;
+    });
 
+    // Keyboard open (Enter / Space)
+    el.addEventListener("keydown", (e) => {
+      if (el.tagName.toLowerCase() !== "a") return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        maybeNavigate(el);
+      }
+    });
+  });
 })();
