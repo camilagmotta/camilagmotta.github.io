@@ -834,3 +834,80 @@ body{
 
 .tile { z-index: 10; }
 .tile-nav { z-index: 10000; }  /* keep nav above everything */
+
+/* =========================
+   Project tile "open on hover"
+   ========================= */
+
+.project-tile{
+  /* override your grid centering so content stacks nicely */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  overflow: hidden;
+
+  /* Collapsed size (matches t-lg default height) */
+  height: 360px;
+
+  /* Smooth open animation */
+  transition: height .22s ease, transform .16s ease, box-shadow .16s ease;
+}
+
+/* Expand downward on hover */
+.project-tile:hover{
+  height: var(--expanded-h, 560px);
+}
+
+/* Media area */
+.project-media{
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 8px 0 10px;
+  background: rgba(0,0,0,0.12);
+}
+
+/* Image + video share the same box */
+.project-img,
+.project-video{
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Video is hidden until hover */
+.project-video{
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+
+/* On hover: show video over the image */
+.project-tile:hover .project-video{
+  opacity: 1;
+}
+
+/* Description is hidden until hover */
+.project-desc{
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height .22s ease, opacity .18s ease, transform .18s ease;
+}
+
+/* Reveal description on hover */
+.project-tile:hover .project-desc{
+  max-height: 260px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Use the data-expanded-h value from HTML */
+.project-tile[data-expanded-h]{
+  --expanded-h: attr(data-expanded-h px); /* fallback handled by JS below */
+}

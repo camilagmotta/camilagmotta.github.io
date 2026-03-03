@@ -1,53 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projects</title>
-<link rel="stylesheet" href="styles.css">
-</head>
+<a class="tile t-lg c-green tile-content project-tile"
+   style="left:120px; top:200px;"
+   href="#"
+   data-expanded-h="560">
 
-<body class="tile-page">
+  <h2>Project 01</h2>
 
-<nav class="tile-nav">
-  <a href="index.html">home</a>
-  <a href="projects.html">games</a>
-  <a href="art.html">art</a>
-  <a href="thoughts.html">thoughts</a>
-</nav>
+  <div class="project-media">
+    <!-- Poster image (shows by default) -->
+    <img class="project-img" src="./images/HellofaKnight.png" alt="Hell of a Knight screenshot">
 
-<header class="tile-brand">
-  <h1>Game Projects</h1>
-</header>
+    <!-- Hover video (shows + plays on hover) -->
+    <video class="project-video" muted loop playsinline preload="metadata">
+      <source src="./videos/hell-of-a-knight.mp4" type="video/mp4">
+    </video>
+  </div>
 
-<main class="tile-stage">
-
-  <a class="tile t-lg c-green tile-content" style="left:120px; top:200px;" href="#">
-    <h2>Project 01</h2>
-
-    <p><img src="./images/HellofaKnight.png"/></p>
+  <!-- This part will be hidden until hover -->
+  <div class="project-desc">
     <p>
-       <strong>A small Construct 3 platformer prototype about a lonely knight searching for his heart.
-        Created in one day for a XAMK Game Jam during my first year of university.</strong>
+      <strong>
+        A small Construct 3 platformer prototype about a lonely knight searching for his heart.
+        Created in one day for a XAMK Game Jam during my first year of university.
+      </strong>
     </p>
 
     <p>Unity · Puzzle · Prototype</p>
-  </a>
-
-  <a class="tile t-md c-yellow tile-content" style="left:600px; top:150px;" href="#">
-    <h2>Project 02</h2>
-    <p>3D · Level Design</p>
-  </a>
-
-  <a class="tile t-md c-pink tile-content" style="left:820px; top:380px;" href="#">
-    <h2>Project 03</h2>
-    <p>Localization · Systems</p>
-  </a>
-
-</main>
-
-<footer class="tile-footer">© Camila Motta</footer>
-
-<script src="drag.js"></script>
-</body>
-</html>
+  </div>
+</a>

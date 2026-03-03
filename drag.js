@@ -194,4 +194,30 @@
       }
     });
   });
+    /* =========================
+     Project hover video + expand height
+     ========================= */
+  document.querySelectorAll(".project-tile").forEach((tile) => {
+    // Expand height from data-expanded-h (reliable cross-browser)
+    const expanded = tile.getAttribute("data-expanded-h");
+    if (expanded) tile.style.setProperty("--expanded-h", `${parseInt(expanded, 10)}px`);
+
+    const video = tile.querySelector(".project-video");
+    if (!video) return;
+
+    // Make sure video starts hidden (CSS handles opacity)
+    video.pause();
+
+    tile.addEventListener("mouseenter", () => {
+      // Some browsers block play unless muted (we set muted in HTML)
+      video.currentTime = 0;
+      const p = video.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    });
+
+    tile.addEventListener("mouseleave", () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
 })();
