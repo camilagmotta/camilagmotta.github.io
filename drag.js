@@ -36,9 +36,9 @@
 // JUICY MAGNET SNAP (v2)
 // =========================
 const SNAP_IN = 12;      // snap engages when this close
-const SNAP_OUT = 50;     // snap releases when pulled this far (bigger = easier to detach)
-const MAGNET_GAP = 12;   // nice spacing snap (like tiles "park" with a gap)
-const PULL = 0.28;       // softness: 0..1 (higher = stronger pull)
+const SNAP_OUT = 40;     // snap releases when pulled this far (bigger = easier to detach)
+const MAGNET_GAP = 0;   // nice spacing snap (like tiles "park" with a gap)
+const PULL = 0.5;       // softness: 0..1 (higher = stronger pull)
 const OVERLAP_MIN = 26;  // requires overlap to avoid snapping from weird angles
 
 function overlap1D(a1, a2, b1, b2) {
