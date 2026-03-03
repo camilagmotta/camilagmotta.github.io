@@ -5,14 +5,14 @@
 
 /* --- Palette --- */
 :root{
-  --bg:#e7ea51;
-  --gold:#ffdd7e;
-  --mauve:#8B7C93;
+  --bg:#59879b;
+  --gold:#7ec1ff;
+  --mauve:#6d7fbb;
   --beige:#6b5735;
   --sage:#7D8F64;
 
-  --text: #6A4782;
-  --muted: rgba(21, 103, 158, 0.992);
+  --text: #191919;
+  --muted: rgba(60, 21, 158, 0.992);
 
   --card: rgba(250, 160, 255, 0.893);
   --border: rgba(241,230,211,0.18);
@@ -126,7 +126,7 @@ button:focus-visible{
   padding: 8px 12px;
   border-radius: 999px;
 
-  background: rgba(0,0,0,0.18);
+  background: rgba(251, 255, 184, 0.18);
   border: 1px solid rgba(241,230,211,0.16);
 
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
@@ -134,7 +134,7 @@ button:focus-visible{
 
 .nav-link:hover{
   background: linear-gradient(90deg, rgba(174,142,54,0.18), rgba(139,124,147,0.14));
-  box-shadow: 0 0 0 3px rgba(241,230,211,0.06), 0 10px 24px rgba(0,0,0,0.20);
+  box-shadow: 0 0 0 3px rgba(241,230,211,0.06), 0 10px 24px rgba(102, 102, 102, 0.2);
   transform: translateY(-1px);
 }
 
@@ -223,7 +223,7 @@ button:focus-visible{
 
 .role{
   margin: 0 0 10px;
-  color: rgba(241,230,211,0.9);
+  color: rgba(131, 149, 140, 0.9);
   font-weight: 600;
 }
 
@@ -236,7 +236,7 @@ button:focus-visible{
 
 .bio{
   margin: 0;
-  color: rgba(241,230,211,0.86);
+  color: rgba(201, 191, 248, 0.86);
   max-width: 70ch;
 }
 
@@ -247,7 +247,7 @@ button:focus-visible{
 
 .contact-line{
   margin:0;
-  color: rgba(241,230,211,0.86);
+  color: rgba(241, 211, 237, 0.86);
 }
 
 .link{
