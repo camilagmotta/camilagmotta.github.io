@@ -326,38 +326,35 @@ function minOverlapForSnap(aLen, bLen){
   });
 
   /* =========================
-     MATTER.JS MINI GAME
-     ========================= */
+  /* =========================
+     MATTER.JS — PATH + KEY + DOOR GAME
+     =========================
+     Edit mode: drag & snap tiles to build platforms.
+     Play mode: player can move/jump on those platforms, collect key, reach door.
+  */
   const hasMatter = typeof window.Matter !== "undefined";
-  let Engine, Bodies, Body, Composite, Events, Vector;
-  if (hasMatter) ({ Engine, Bodies, Body, Composite, Events, Vector } = window.Matter);
+  let Engine, Bodies, Body, Composite, Events;
+  if (hasMatter) ({ Engine, Bodies, Body, Composite, Events } = window.Matter);
 
   // HUD
   const hud = document.createElement("div");
   hud.className = "play-hud";
   hud.innerHTML = `
     <button type="button" id="togglePlay">Play mode: OFF</button>
-    <div><strong>Score:</strong> <span id="score">0</span></div>
-    <div><strong>Combo:</strong> <span id="combo">x1</span></div>
-    <div class="mini">WASD move · Space jump · E grab · Click throw</div>
+    <div><strong>Level:</strong> <span id="level">1</span></div>
+    <div><strong>Key:</strong> <span id="keyState">NO</span></div>
+    <div class="mini">Drag tiles to build a path · WASD move · Space jump</div>
   `;
   document.body.appendChild(hud);
 
   const btn = hud.querySelector("#togglePlay");
-  const scoreEl = hud.querySelector("#score");
-  const comboEl = hud.querySelector("#combo");
-// Prevent Space/Enter from “clicking” the play button when it has focus
-btn.addEventListener("keydown", (e) => {
-  if (e.code === "Space" || e.key === "Enter") {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-});
+  const levelEl = hud.querySelector("#level");
+  const keyStateEl = hud.querySelector("#keyState");
 
-
-  let score = 0;
-  let combo = 1;
-  let comboTimer = null;
+  // Prevent Space/Enter "clicking" the button when it has focus
+  btn.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.key === "Enter") e.preventDefault();
+  });
 
   // DOM game elements
   const playerEl = document.createElement("div");
@@ -365,79 +362,124 @@ btn.addEventListener("keydown", (e) => {
   playerEl.style.display = "none";
   stage.appendChild(playerEl);
 
-  // Targets container
-  const targetEls = [];
-  const TARGET_COUNT = 3;
+  const keyEl = document.createElement("div");
+  keyEl.className = "key";
+  keyEl.style.display = "none";
+  keyEl.textContent = "🔑";
+  stage.appendChild(keyEl);
 
-  // Matter state
-  let engine = null;
-  let playerBody = null;
-  let targetBodies = [];
-  let tileBodies = new Map();
-  let held = null;
-
-  const keys = { a:false, d:false, w:false, s:false, space:false };
-  let facing = 1;
-
-  // Mouse aim
-  let aim = { x: 0, y: 0 };
-
-  // Sound (tiny pop)
-  let audioCtx = null;
-  function popSound() {
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = "square";
-      o.frequency.value = 420;
-      g.gain.value = 0.06;
-      o.connect(g);
-      g.connect(audioCtx.destination);
-      o.start();
-      o.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.06);
-      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-      o.stop(audioCtx.currentTime + 0.09);
-    } catch(e) {}
-  }
-
-  function particleBurst(x, y, n = 10) {
-    for (let i = 0; i < n; i++) {
-      const p = document.createElement("div");
-      p.className = "p";
-      p.style.left = x + "px";
-      p.style.top = y + "px";
-      stage.appendChild(p);
-
-      const ang = Math.random() * Math.PI * 2;
-      const sp = 2 + Math.random() * 4;
-      const dx = Math.cos(ang) * sp;
-      const dy = Math.sin(ang) * sp;
-
-      let t = 0;
-      const tick = () => {
-        t += 1;
-        const ox = dx * t;
-        const oy = dy * t + 0.08 * t * t; // tiny gravity
-        p.style.transform = `translate(${ox}px, ${oy}px) scale(${1 - t/22})`;
-        p.style.opacity = String(1 - t/22);
-        if (t < 22) requestAnimationFrame(tick);
-        else p.remove();
-      };
-      requestAnimationFrame(tick);
-    }
-  }
+  const doorEl = document.createElement("div");
+  doorEl.className = "door";
+  doorEl.style.display = "none";
+  doorEl.innerHTML = `<span class="door-icon">🚪</span><span class="door-label">EXIT</span>`;
+  stage.appendChild(doorEl);
 
   function stageSize() {
     const rect = stage.getBoundingClientRect();
     return { w: rect.width, h: rect.height, top: rect.top, left: rect.left };
   }
 
-  function tileMass(el) {
-    if (el.classList.contains("t-xl")) return 6;
-    if (el.classList.contains("t-lg")) return 4;
-    if (el.classList.contains("t-md")) return 2.8;
-    return 2.0;
+  // Matter state
+  let engine = null;
+  let playerBody = null;
+  let tileBodies = new Map(); // el -> body (static)
+  let keyBody = null;
+  let doorBody = null;
+
+  let level = 1;
+  let hasKey = false;
+
+  const keys = { a:false, d:false, w:false, s:false, space:false };
+
+  function setKeyState(v) {
+    hasKey = !!v;
+    keyStateEl.textContent = hasKey ? "YES" : "NO";
+    keyStateEl.style.opacity = hasKey ? "1" : "0.7";
+  }
+
+  function stagePlayHeight() {
+    const rect = stage.getBoundingClientRect();
+    const footerH = getFooterHeight();
+    // the portion of stage visible above the footer
+    const usable = Math.max(240, Math.min(rect.height, window.innerHeight - footerH - rect.top));
+    return usable;
+  }
+
+  function buildStaticTileBodies() {
+    tileBodies.clear();
+    tiles.forEach((el) => {
+      const left = parseFloat(el.style.left) || 0;
+      const top = parseFloat(el.style.top) || 0;
+      const bw = el.offsetWidth;
+      const bh = el.offsetHeight;
+
+      const body = Bodies.rectangle(left + bw/2, top + bh/2, bw, bh, {
+        isStatic: true,
+        friction: 0.6,
+        restitution: 0.0,
+        label: "tile"
+      });
+
+      Composite.add(engine.world, body);
+      tileBodies.set(el, body);
+
+      // prevent link clicking while in play mode
+      el.dataset._savedPointer = el.style.pointerEvents || "";
+      el.style.pointerEvents = "none";
+    });
+  }
+
+  function placeDoorAndKey() {
+    const { w } = stageSize();
+    const playH = stagePlayHeight();
+
+    // Door fixed on the right
+    const doorW = 72;
+    const doorH = 110;
+    const doorX = w - 70;
+    const doorY = clamp(playH - 160, 120, playH - 140);
+
+    doorEl.style.display = "flex";
+    doorEl.style.left = (doorX - doorW/2) + "px";
+    doorEl.style.top = (doorY - doorH/2) + "px";
+
+    doorBody = Bodies.rectangle(doorX, doorY, doorW, doorH, {
+      isStatic: true,
+      isSensor: true,
+      label: "door"
+    });
+    Composite.add(engine.world, doorBody);
+
+    // Key somewhere NOT on the far right (so you must build a path)
+    const kR = 18;
+    let kx = 140 + Math.random() * (w - 380);
+    kx = Math.min(kx, w - 260);
+    kx = clamp(kx, 110, w - 240);
+
+    let ky = 110 + Math.random() * (playH - 260);
+    ky = clamp(ky, 90, playH - 170);
+
+    keyEl.style.display = "flex";
+    keyEl.style.left = (kx - kR) + "px";
+    keyEl.style.top = (ky - kR) + "px";
+
+    keyBody = Bodies.circle(kx, ky, kR, {
+      isStatic: true,
+      isSensor: true,
+      label: "key"
+    });
+    Composite.add(engine.world, keyBody);
+  }
+
+  function resetPlayer() {
+    const playH = stagePlayHeight();
+    const x = 90;
+    const y = Math.min(120, playH - 220);
+    if (!playerBody) return;
+    Body.setPosition(playerBody, { x, y });
+    Body.setVelocity(playerBody, { x: 0, y: 0 });
+    Body.setAngle(playerBody, 0);
+    Body.setAngularVelocity(playerBody, 0);
   }
 
   function enablePlayMode() {
@@ -445,145 +487,72 @@ btn.addEventListener("keydown", (e) => {
       alert("Matter.js not loaded. Add the CDN script tag above drag.js.");
       return;
     }
+
     playMode = true;
     document.body.classList.add("play-mode");
 
+    // Remove focus from the button so Space doesn't toggle it
+    btn.blur();
     btn.textContent = "Play mode: ON";
-    // If the button has focus, Space/Enter can trigger a click. Blur it so Space is free for jumping.
-    try { btn.blur(); } catch(e) {}
-    score = 0; combo = 1;
-    scoreEl.textContent = "0";
-    comboEl.textContent = "x1";
+
+    levelEl.textContent = String(level);
+    setKeyState(false);
 
     // stop any hover videos
     document.querySelectorAll(".project-video").forEach(v => { try { v.pause(); } catch(e){} });
 
     engine = Engine.create();
-    engine.gravity.y = 1.25;
+    engine.gravity.y = 1.3;
 
-    const { w, h, top } = stageSize();
-    const footerH = getFooterHeight();
-    const playH = Math.max(240, Math.min(h, window.innerHeight - footerH - top));
+    const { w } = stageSize();
+    const playH = stagePlayHeight();
 
     // bounds
-    const ground = Bodies.rectangle(w/2, playH + 40, w + 400, 80, { isStatic:true });
+    const ground = Bodies.rectangle(w/2, playH + 40, w + 400, 80, { isStatic:true, label:"ground" });
     const leftWall = Bodies.rectangle(-40, playH/2, 80, playH + 400, { isStatic:true });
     const rightWall = Bodies.rectangle(w+40, playH/2, 80, playH + 400, { isStatic:true });
     const ceiling = Bodies.rectangle(w/2, -40, w + 400, 80, { isStatic:true });
     Composite.add(engine.world, [ground, leftWall, rightWall, ceiling]);
 
     // player
-    playerBody = Bodies.rectangle(140, 120, 44, 56, {
+    playerBody = Bodies.rectangle(90, 120, 44, 56, {
       friction: 0.02,
       restitution: 0.0,
-      density: 0.002
+      density: 0.002,
+      label: "player"
     });
     Composite.add(engine.world, playerBody);
 
     playerEl.style.display = "block";
 
-    // targets
-    targetBodies = [];
-    // create target DOM els if not yet
-    while (targetEls.length < TARGET_COUNT) {
-      const t = document.createElement("div");
-      t.className = "target";
-      t.textContent = "★";
-      t.style.display = "none";
-      stage.appendChild(t);
-      targetEls.push(t);
-    }
+    // tiles as static platforms
+    buildStaticTileBodies();
 
-    for (let i = 0; i < TARGET_COUNT; i++) {
-      const tx = clamp(520 + Math.random() * (w - 640), 220, w - 100);
-      const ty = clamp(120 + Math.random() * (playH - 260), 120, playH - 120);
-      const body = Bodies.circle(tx, ty, 30, { isStatic:true });
-      Composite.add(engine.world, body);
-      targetBodies.push(body);
+    // door + key
+    placeDoorAndKey();
 
-      const el = targetEls[i];
-      el.style.display = "flex";
-      el.style.left = (tx - 30) + "px";
-      el.style.top = (ty - 30) + "px";
-      el.style.transform = "scale(1)";
-    }
-
-
-    // Make tiles into uniform “pickup” blocks in play mode
-    tiles.forEach((el) => {
-      el.classList.add("play-mini");
-    });
-
-    // tiles -> bodies
-    tileBodies.clear();
-    tiles.forEach((el) => {
-      el.classList.remove("play-mini");
-      const left = parseFloat(el.style.left) || 0;
-      const top = parseFloat(el.style.top) || 0;
-      const bw = el.offsetWidth;
-      const bh = el.offsetHeight;
-
-      const body = Bodies.rectangle(left + bw/2, top + bh/2, bw, bh, {
-        friction: 0.12,
-        restitution: 0.22,
-        density: 0.0015 * tileMass(el)
-      });
-
-      Composite.add(engine.world, body);
-      tileBodies.set(el, body);
-
-      el.dataset._savedPointer = el.style.pointerEvents || "";
-      el.style.pointerEvents = "none";
-    });
-
-    // scoring
+    // collision logic
     Events.on(engine, "collisionStart", (evt) => {
-      for (const p of evt.pairs) {
-        const a = p.bodyA, b = p.bodyB;
+      for (const pair of evt.pairs) {
+        const a = pair.bodyA;
+        const b = pair.bodyB;
 
-        const targetHit = getTargetHit(a, b);
-        if (!targetHit) continue;
+        // key pickup
+        if (!hasKey && keyBody && ((a === playerBody && b === keyBody) || (b === playerBody && a === keyBody))) {
+          setKeyState(true);
+          try { Composite.remove(engine.world, keyBody); } catch(e) {}
+          keyBody = null;
+          keyEl.style.display = "none";
+        }
 
-        // score + combo
-        score += 10 * combo;
-        scoreEl.textContent = String(score);
-
-        combo = Math.min(10, combo + 1);
-        comboEl.textContent = "x" + combo;
-
-        clearTimeout(comboTimer);
-        comboTimer = setTimeout(() => {
-          combo = 1;
-          comboEl.textContent = "x1";
-        }, 1500);
-
-        // juice: pop + particles + sound
-        const tBody = targetHit.body;
-        const tEl = targetHit.el;
-        tEl.style.transform = "scale(1.08)";
-        setTimeout(() => tEl.style.transform = "scale(1)", 120);
-
-        particleBurst(tBody.position.x - 4, tBody.position.y - 4, 14);
-        popSound();
+        // door reach
+        if (hasKey && doorBody && ((a === playerBody && b === doorBody) || (b === playerBody && a === doorBody))) {
+          nextLevel();
+        }
       }
     });
 
     requestAnimationFrame(tick);
-  }
-
-  function getTargetHit(a, b) {
-    // tile hits any target?
-    for (let i = 0; i < targetBodies.length; i++) {
-      const tb = targetBodies[i];
-      const isHit = (a === tb && isTileBody(b)) || (b === tb && isTileBody(a));
-      if (isHit) return { body: tb, el: targetEls[i] };
-    }
-    return null;
-  }
-
-  function isTileBody(body) {
-    for (const b of tileBodies.values()) if (b === body) return true;
-    return false;
   }
 
   function disablePlayMode() {
@@ -592,75 +561,52 @@ btn.addEventListener("keydown", (e) => {
     btn.textContent = "Play mode: OFF";
 
     playerEl.style.display = "none";
-    targetEls.forEach(t => t.style.display = "none");
+    keyEl.style.display = "none";
+    doorEl.style.display = "none";
 
     tiles.forEach((el) => {
-      el.classList.remove("play-mini");
       el.style.pointerEvents = el.dataset._savedPointer || "";
       delete el.dataset._savedPointer;
-      el.style.transform = ""; // remove rotation
+      el.style.transform = "";
     });
 
     engine = null;
     playerBody = null;
-    targetBodies = [];
     tileBodies.clear();
-    held = null;
-    combo = 1;
-    comboEl.textContent = "x1";
+    keyBody = null;
+    doorBody = null;
+    setKeyState(false);
   }
 
   function onGroundNow() {
     if (!playerBody) return false;
+    // simple heuristic; good enough for this playful portfolio
     return Math.abs(playerBody.velocity.y) < 1.2;
   }
 
-  function nearestTileToPlayer(maxDist = 150) {
-    if (!playerBody) return null;
-    let best = null;
-    let bestD = Infinity;
-    const px = playerBody.position.x;
-    const py = playerBody.position.y;
+  function nextLevel() {
+    doorEl.classList.remove("door-pop");
+    void doorEl.offsetWidth;
+    doorEl.classList.add("door-pop");
 
-    for (const [el, body] of tileBodies.entries()) {
-      const dx = body.position.x - px;
-      const dy = body.position.y - py;
-      const d = Math.hypot(dx, dy);
-      if (d < bestD && d <= maxDist) {
-        bestD = d;
-        best = { el, body };
-      }
+    level += 1;
+    levelEl.textContent = String(level);
+
+    // reset key + player (tiles stay where the player built them)
+    setKeyState(false);
+
+    if (engine && doorBody) {
+      try { Composite.remove(engine.world, doorBody); } catch(e) {}
+      doorBody = null;
     }
-    return best;
-  }
+    if (engine && keyBody) {
+      try { Composite.remove(engine.world, keyBody); } catch(e) {}
+      keyBody = null;
+    }
+    keyEl.style.display = "none";
 
-  function grab() {
-    if (held) return;
-    const n = nearestTileToPlayer(170);
-    if (!n) return;
-    held = n;
-    Body.setAngularVelocity(n.body, 0);
-    Body.setVelocity(n.body, { x: 0, y: 0 });
-  }
-
-  function throwHeldTowardMouse() {
-    if (!held || !playerBody) return;
-
-    const b = held.body;
-    held = null;
-
-    // direction: player -> mouse (stage coords)
-    const dir = { x: aim.x - playerBody.position.x, y: aim.y - playerBody.position.y };
-    const len = Math.hypot(dir.x, dir.y) || 1;
-    const nx = dir.x / len;
-    const ny = dir.y / len;
-
-    // power
-    const power = 16;
-    Body.setVelocity(b, { x: nx * power, y: ny * power });
-
-    // little spin
-    Body.setAngularVelocity(b, nx * 0.25);
+    placeDoorAndKey();
+    resetPlayer();
   }
 
   function tick() {
@@ -670,11 +616,11 @@ btn.addEventListener("keydown", (e) => {
 
     // Movement
     if (playerBody) {
-      const speed = 0.9;
+      const accel = 0.95;
       const vx = playerBody.velocity.x;
 
-      if (keys.a) { facing = -1; Body.setVelocity(playerBody, { x: clamp(vx - speed, -8, 8), y: playerBody.velocity.y }); }
-      if (keys.d) { facing = 1;  Body.setVelocity(playerBody, { x: clamp(vx + speed, -8, 8), y: playerBody.velocity.y }); }
+      if (keys.a) Body.setVelocity(playerBody, { x: clamp(vx - accel, -7.5, 7.5), y: playerBody.velocity.y });
+      if (keys.d) Body.setVelocity(playerBody, { x: clamp(vx + accel, -7.5, 7.5), y: playerBody.velocity.y });
 
       if (keys.space && onGroundNow()) {
         Body.setVelocity(playerBody, { x: playerBody.velocity.x, y: -12 });
@@ -682,24 +628,6 @@ btn.addEventListener("keydown", (e) => {
 
       playerEl.style.left = (playerBody.position.x - 22) + "px";
       playerEl.style.top = (playerBody.position.y - 28) + "px";
-    }
-
-    // Held tile follows player (like carrying)
-    if (held && playerBody) {
-      const carryX = playerBody.position.x + facing * 54;
-      const carryY = playerBody.position.y - 30;
-      Body.setPosition(held.body, { x: carryX, y: carryY });
-      Body.setVelocity(held.body, { x: 0, y: 0 });
-      Body.setAngle(held.body, 0);
-    }
-
-    // Sync tiles
-    for (const [el, body] of tileBodies.entries()) {
-      const w = el.offsetWidth;
-      const h = el.offsetHeight;
-      el.style.left = (body.position.x - w / 2) + "px";
-      el.style.top = (body.position.y - h / 2) + "px";
-      el.style.transform = `rotate(${body.angle}rad)`;
     }
 
     requestAnimationFrame(tick);
@@ -717,14 +645,11 @@ btn.addEventListener("keydown", (e) => {
     if (e.key === "d" || e.key === "D") keys.d = true;
     if (e.key === "w" || e.key === "W") keys.w = true;
     if (e.key === "s" || e.key === "S") keys.s = true;
+
     if (e.code === "Space") {
       keys.space = true;
-      if (playMode) e.preventDefault(); // stop page scroll / focused-button click
+      if (playMode) e.preventDefault(); // stop page scroll
     }
-
-    if (!playMode) return;
-
-    if (e.key === "e" || e.key === "E") grab();
   });
 
   window.addEventListener("keyup", (e) => {
@@ -733,22 +658,5 @@ btn.addEventListener("keydown", (e) => {
     if (e.key === "w" || e.key === "W") keys.w = false;
     if (e.key === "s" || e.key === "S") keys.s = false;
     if (e.code === "Space") keys.space = false;
-  });
-
-  // Mouse aim + click throw
-  window.addEventListener("mousemove", (e) => {
-    if (!playMode) return;
-    const r = stage.getBoundingClientRect();
-    aim.x = e.clientX - r.left;
-    aim.y = e.clientY - r.top;
-  });
-
-  window.addEventListener("mousedown", (e) => {
-    if (!playMode) return;
-    // avoid clicking the HUD
-    const hudRect = hud.getBoundingClientRect();
-    if (e.clientX >= hudRect.left && e.clientX <= hudRect.right && e.clientY >= hudRect.top && e.clientY <= hudRect.bottom) return;
-
-    throwHeldTowardMouse();
   });
 })();
