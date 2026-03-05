@@ -108,7 +108,7 @@
      ========================= */
   const SNAP_IN = 16;
   const SNAP_OUT = 52;
-  const MAGNET_GAP = 0;
+  const MAGNET_GAP = 10;
   const PULL = 0.62;
 // Overlap needed for snapping (dynamic, so big/small tiles still snap nicely)
 function minOverlapForSnap(aLen, bLen){
@@ -450,7 +450,7 @@ function minOverlapForSnap(aLen, bLen){
     });
     Composite.add(engine.world, doorBody);
 
-    // Key somewhere NOT on the far right (so you must build a path)
+    // Key somewhere NOT on the far right 
     const kR = 18;
     let kx = 140 + Math.random() * (w - 380);
     kx = Math.min(kx, w - 260);
@@ -502,7 +502,7 @@ function minOverlapForSnap(aLen, bLen){
     document.querySelectorAll(".project-video").forEach(v => { try { v.pause(); } catch(e){} });
 
     engine = Engine.create();
-    engine.gravity.y = 1.3;
+    engine.gravity.y = 1.0;
 
     const { w } = stageSize();
     const playH = stagePlayHeight();
@@ -616,7 +616,7 @@ function minOverlapForSnap(aLen, bLen){
 
     // Movement
     if (playerBody) {
-      const accel = 0.95;
+      const accel = 0.70;
       const vx = playerBody.velocity.x;
 
       if (keys.a) Body.setVelocity(playerBody, { x: clamp(vx - accel, -7.5, 7.5), y: playerBody.velocity.y });
