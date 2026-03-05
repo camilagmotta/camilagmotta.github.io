@@ -1,745 +1,595 @@
+
 (() => {
-  "use strict";
-
-  // Only run on the home page (index.html)
-  const openBtn = document.getElementById("openGame");
-  const overlay = document.getElementById("gameOverlay");
-  const closeBtn = document.getElementById("closeGame");
-  const startBtn = document.getElementById("startGame");
-  const nextBtn = document.getElementById("nextLevel");
-  const restartBtn = document.getElementById("restartLevel");
-  const statusEl = document.getElementById("gameStatus");
+  const playBtn = document.getElementById("playGameBtn");
+  const exitBtn = document.getElementById("exitGameBtn");
+  const homeTiles = document.getElementById("homeTiles");
+  const gameStage = document.getElementById("gameStage");
   const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-  if (!openBtn || !overlay || !closeBtn || !canvas) return;
+  const hudLevelTitle = document.getElementById("hudLevelTitle");
+  const hudKeys = document.getElementById("hudKeys");
 
-  const ctx = canvas.getContext("2d", { alpha: false });
+  if (!playBtn || !exitBtn || !homeTiles || !gameStage || !canvas || !ctx) return;
 
-  /* =========================================================
-     Small platformer engine (no dependencies)
-     ========================================================= */
-
-  const W = canvas.width;
-  const H = canvas.height;
-
-  const TILE = 64; // all tiles are the same size (requirement)
-
-  const GRAVITY = 1500;
-  const MOVE_SPEED = 280;
-  const JUMP_VEL = 540;
-
-  const keys = new Set();
-  let lastTime = 0;
-  let running = false;
-  let paused = true;
-
-  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
-
-  function rectsOverlap(a, b) {
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  // --- Canvas sizing (fit the board container) ---
+  function resizeCanvasToDisplaySize() {
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(320, Math.floor(rect.width));
+    const h = Math.max(240, Math.floor(rect.height));
+    const need = (canvas.width !== Math.floor(w * dpr)) || (canvas.height !== Math.floor(h * dpr));
+    if (need) {
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    return { w, h, dpr };
   }
 
-  function copyRect(r) { return { x: r.x, y: r.y, w: r.w, h: r.h }; }
+  // --- World constants ---
+  const TILE = 64;
+  const GRAVITY = 2400;
+  const MOVE_ACCEL = 5200;
+  const MAX_SPEED = 520;
+  const JUMP_V = 860;
+  const FRICTION = 0.80;
 
-  function snapToTile(n) { return Math.round(n / TILE) * TILE; }
+  // Hand-drawn-ish palette (uses your site ink variable if present)
+  function getInk() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
+    return v || "#23102d";
+  }
 
-  /* =========================================================
-     Level definitions
-     - Each level has the minimum number of movable tiles needed to finish.
-     - Difficulty ramps with higher ledges, gaps, and multiple keys.
-     ========================================================= */
+  // --- Input ---
+  const keys = new Set();
+  window.addEventListener("keydown", (e) => {
+    // prevent scroll on space when game active
+    if (!isRunning) return;
+    if (["Space", "ArrowUp", "ArrowDown"].includes(e.code)) e.preventDefault();
+    keys.add(e.code);
+    if (e.code === "Escape") stopGame();
+  }, { passive: false });
 
+  window.addEventListener("keyup", (e) => keys.delete(e.code));
+
+  // --- Helpers ---
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const rectsOverlap = (a, b) =>
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+
+  // Swept AABB-ish resolution (axis-separated)
+  function moveAndCollide(body, solids, dt) {
+    // X
+    body.x += body.vx * dt;
+    for (const s of solids) {
+      if (!rectsOverlap(body, s)) continue;
+      if (body.vx > 0) body.x = s.x - body.w;
+      else if (body.vx < 0) body.x = s.x + s.w;
+      body.vx = 0;
+    }
+    // Y
+    body.y += body.vy * dt;
+    body.onGround = false;
+    for (const s of solids) {
+      if (!rectsOverlap(body, s)) continue;
+      if (body.vy > 0) {
+        body.y = s.y - body.h;
+        body.vy = 0;
+        body.onGround = true;
+      } else if (body.vy < 0) {
+        body.y = s.y + s.h;
+        body.vy = 0;
+      }
+    }
+  }
+
+  function snapToGrid(v) {
+    return Math.round(v / TILE) * TILE;
+  }
+
+  // --- Level format ---
+  // World units: origin (0,0) top-left of board.
+  // We keep a roomy world and render with a camera that fits.
   const levels = [
     {
-      name: "Level 1 — Warm-up",
-      hint: "Pick up the tile (E) and use it as a step.",
-      player: { x: 2 * TILE, y: 6 * TILE - 48 },
-      door: { x: 13 * TILE + 8, y: 6 * TILE - 96, w: 48, h: 96 },
-      keys: [{ x: 9 * TILE + 20, y: 4 * TILE + 18 }],
-      solids: [
-        // ground
-        { x: 0, y: 6 * TILE, w: 15 * TILE, h: 3 * TILE },
-        // small ledge
-        { x: 8 * TILE, y: 5 * TILE, w: 3 * TILE, h: TILE },
-        // door platform
-        { x: 12 * TILE, y: 6 * TILE - TILE, w: 3 * TILE, h: TILE },
+      name: "Level 01",
+      w: 15 * TILE,
+      h: 8 * TILE,
+      spawn: { x: 1 * TILE, y: 6 * TILE - 48 },
+      door:  { x: 13 * TILE, y: 6 * TILE - 96, w: 64, h: 96 },
+      keys:  [
+        { x: 6 * TILE + 10, y: 4 * TILE - 10, r: 16 },
+        { x: 9 * TILE + 14, y: 3 * TILE - 10, r: 16 },
+        { x: 12 * TILE + 10, y: 5 * TILE - 10, r: 16 },
       ],
-      movers: [],
+      fixed: [
+        // floor
+        ...Array.from({ length: 15 }, (_, i) => ({ x: i*TILE, y: 7*TILE, w: TILE, h: TILE })),
+        // small ledge to teach jumping
+        { x: 4*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+      ],
       tiles: [
-        { x: 6 * TILE, y: 5 * TILE, w: TILE, h: TILE },
-      ],
+        // minimum: 1 movable tile to reach higher key route comfortably
+        { x: 8*TILE, y: 6*TILE, w: TILE, h: TILE },
+      ]
     },
     {
-      name: "Level 2 — Gap carry",
-      hint: "Carry the tile across the gap, then climb.",
-      player: { x: 1 * TILE, y: 6 * TILE - 48 },
-      door: { x: 13 * TILE + 8, y: 3 * TILE - 96, w: 48, h: 96 },
-      keys: [{ x: 8 * TILE + 18, y: 3 * TILE + 18 }],
-      solids: [
-        // ground left
-        { x: 0, y: 6 * TILE, w: 6 * TILE, h: 3 * TILE },
-        // ground right
-        { x: 9 * TILE, y: 6 * TILE, w: 6 * TILE, h: 3 * TILE },
-        // mid platform for key
-        { x: 7 * TILE, y: 4 * TILE, w: 3 * TILE, h: TILE },
-        // high platform for door
-        { x: 12 * TILE, y: 3 * TILE, w: 3 * TILE, h: TILE },
+      name: "Level 02",
+      w: 16 * TILE,
+      h: 9 * TILE,
+      spawn: { x: 1 * TILE, y: 7 * TILE - 48 },
+      door:  { x: 14 * TILE, y: 7 * TILE - 96, w: 64, h: 96 },
+      keys:  [
+        { x: 7 * TILE + 10, y: 5 * TILE - 10, r: 16 },
+        { x: 10 * TILE + 10, y: 3 * TILE - 10, r: 16 },
       ],
-      movers: [],
+      fixed: [
+        ...Array.from({ length: 16 }, (_, i) => ({ x: i*TILE, y: 8*TILE, w: TILE, h: TILE })),
+        // gap you must solve with tile placement
+        { x: 5*TILE, y: 8*TILE, w: 1*TILE, h: TILE, hole: true }, // marker, removed below
+        { x: 6*TILE, y: 8*TILE, w: 1*TILE, h: TILE, hole: true },
+        // platforms
+        { x: 3*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+        { x: 9*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+        { x: 12*TILE, y: 5*TILE, w: 2*TILE, h: TILE },
+      ],
       tiles: [
-        { x: 3 * TILE, y: 5 * TILE, w: TILE, h: TILE },
-      ],
+        { x: 4*TILE, y: 7*TILE, w: TILE, h: TILE },
+      ]
     },
     {
-      name: "Level 3 — Two keys",
-      hint: "Use the tile twice. Plan where you drop it.",
-      player: { x: 2 * TILE, y: 6 * TILE - 48 },
-      door: { x: 13 * TILE + 8, y: 2 * TILE - 96, w: 48, h: 96 },
-      keys: [
-        { x: 5 * TILE + 18, y: 4 * TILE + 18 },
-        { x: 10 * TILE + 18, y: 2 * TILE + 18 },
+      name: "Level 03",
+      w: 17 * TILE,
+      h: 9 * TILE,
+      spawn: { x: 1 * TILE, y: 7 * TILE - 48 },
+      door:  { x: 15 * TILE, y: 7 * TILE - 96, w: 64, h: 96 },
+      keys:  [
+        { x: 6 * TILE + 10, y: 6 * TILE - 10, r: 16 },
+        { x: 9 * TILE + 10, y: 4 * TILE - 10, r: 16 },
+        { x: 12 * TILE + 10, y: 2 * TILE - 10, r: 16 },
       ],
-      solids: [
-        { x: 0, y: 6 * TILE, w: 15 * TILE, h: 3 * TILE },
-        // first key platform
-        { x: 4 * TILE, y: 5 * TILE, w: 3 * TILE, h: TILE },
-        // tall pillar to make a tricky jump
-        { x: 8 * TILE, y: 4 * TILE, w: TILE, h: 2 * TILE },
-        // second key platform (higher)
-        { x: 9 * TILE, y: 3 * TILE, w: 3 * TILE, h: TILE },
-        // door platform (highest)
-        { x: 12 * TILE, y: 2 * TILE, w: 3 * TILE, h: TILE },
+      fixed: [
+        ...Array.from({ length: 17 }, (_, i) => ({ x: i*TILE, y: 8*TILE, w: TILE, h: TILE })),
+        // taller climb
+        { x: 4*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+        { x: 7*TILE, y: 5*TILE, w: 2*TILE, h: TILE },
+        { x: 10*TILE, y: 4*TILE, w: 2*TILE, h: TILE },
+        { x: 13*TILE, y: 3*TILE, w: 2*TILE, h: TILE },
       ],
-      movers: [],
       tiles: [
-        { x: 2 * TILE, y: 5 * TILE, w: TILE, h: TILE },
-      ],
+        { x: 5*TILE, y: 7*TILE, w: TILE, h: TILE },
+      ]
     },
     {
-      name: "Level 4 — Moving lift",
-      hint: "Time the moving platform. The tile helps you stabilize your route.",
-      player: { x: 1 * TILE, y: 6 * TILE - 48 },
-      door: { x: 13 * TILE + 8, y: 1 * TILE - 96, w: 48, h: 96 },
-      keys: [
-        { x: 6 * TILE + 18, y: 2 * TILE + 18 },
-        { x: 10 * TILE + 18, y: 1 * TILE + 18 },
+      name: "Level 04",
+      w: 18 * TILE,
+      h: 9 * TILE,
+      spawn: { x: 1 * TILE, y: 7 * TILE - 48 },
+      door:  { x: 16 * TILE, y: 7 * TILE - 96, w: 64, h: 96 },
+      keys:  [
+        { x: 6 * TILE + 10, y: 4 * TILE - 10, r: 16 },
+        { x: 11 * TILE + 10, y: 3 * TILE - 10, r: 16 },
+        { x: 14 * TILE + 10, y: 5 * TILE - 10, r: 16 },
       ],
-      solids: [
-        // ground with a gap
-        { x: 0, y: 6 * TILE, w: 5 * TILE, h: 3 * TILE },
-        { x: 7 * TILE, y: 6 * TILE, w: 8 * TILE, h: 3 * TILE },
-        // small waiting ledge
-        { x: 5 * TILE, y: 5 * TILE, w: 2 * TILE, h: TILE },
-        // high door platform
-        { x: 12 * TILE, y: 1 * TILE, w: 3 * TILE, h: TILE },
-        // key 2 platform (tiny)
-        { x: 9 * TILE, y: 2 * TILE, w: 2 * TILE, h: TILE },
+      fixed: [
+        ...Array.from({ length: 18 }, (_, i) => ({ x: i*TILE, y: 8*TILE, w: TILE, h: TILE })),
+        // ledges + a moving platform
+        { x: 3*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+        { x: 8*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
+        { x: 13*TILE, y: 6*TILE, w: 2*TILE, h: TILE },
       ],
-      movers: [
-        // horizontal moving platform to cross the big gap
-        { x: 5 * TILE, y: 4 * TILE, w: 2 * TILE, h: TILE, type: "sineX", amp: 2.0 * TILE, speed: 1.0 },
+      moving: [
+        { x: 6*TILE, y: 5*TILE, w: 2*TILE, h: TILE, t: 0, range: 4*TILE, speed: 1.0 }
       ],
       tiles: [
-        { x: 2 * TILE, y: 5 * TILE, w: TILE, h: TILE },
-      ],
+        { x: 9*TILE, y: 7*TILE, w: TILE, h: TILE },
+      ]
     }
   ];
 
-  const state = {
-    levelIndex: 0,
-    solids: [],
-    movers: [],
-    tiles: [],
-    keys: [],
-    door: null,
-    collected: 0,
-    totalKeys: 0,
-    holding: null,
-    t: 0,
-    player: {
-      x: 0, y: 0,
-      w: 40, h: 54,
+  // remove "holes" from level 2 floor
+  levels[1].fixed = levels[1].fixed.filter(r => !r.hole);
+
+  // --- Game state ---
+  let isRunning = false;
+  let rafId = 0;
+
+  let levelIndex = 0;
+  let player, fixed, movable, moving, door, keysLeft;
+
+  // Mouse dragging (for movable tiles)
+  let mouse = { x: 0, y: 0, down: false };
+  let dragging = null; // {tile, offX, offY, startX, startY}
+
+  function resetLevel(i) {
+    levelIndex = clamp(i, 0, levels.length - 1);
+    const L = levels[levelIndex];
+
+    player = {
+      x: L.spawn.x, y: L.spawn.y,
+      w: 34, h: 48,
       vx: 0, vy: 0,
       onGround: false,
-      jumpsUsed: 0,
-      face: 1,
-    }
-  };
+      jumps: 2,
+    };
 
-  function loadLevel(i) {
-    state.levelIndex = clamp(i, 0, levels.length - 1);
-    const L = levels[state.levelIndex];
+    fixed = L.fixed.map(r => ({ ...r }));
+    movable = (L.tiles || []).map((t, idx) => ({ ...t, id: idx }));
+    moving = (L.moving || []).map(m => ({ ...m }));
+    door = { ...L.door };
 
-    state.solids = L.solids.map(copyRect);
-    state.movers = (L.movers || []).map(m => ({...m, baseX: m.x, baseY: m.y }));
-    state.tiles = L.tiles.map(r => ({ ...copyRect(r), vx: 0, vy: 0 }));
-    state.keys = L.keys.map(k => ({...k, r: 14, got: false }));
-    state.door = {...L.door, open: false};
-    state.collected = 0;
-    state.totalKeys = state.keys.length;
-    state.holding = null;
-    state.t = 0;
+    keysLeft = L.keys.map((k, idx) => ({ ...k, id: idx, taken: false }));
 
-    state.player.x = L.player.x;
-    state.player.y = L.player.y;
-    state.player.vx = 0;
-    state.player.vy = 0;
-    state.player.onGround = false;
-    state.player.jumpsUsed = 0;
-
-    setStatus(`${L.name} — Keys: 0/${state.totalKeys}. ${L.hint}`);
-    nextBtn.disabled = true;
+    hudLevelTitle.textContent = L.name;
+    hudKeys.textContent = `Keys: 0/${keysLeft.length}`;
   }
 
-  function setStatus(html) {
-    if (!statusEl) return;
-    statusEl.innerHTML = html;
+  function allSolids() {
+    // moving platforms treated as solids
+    return [...fixed, ...movable, ...moving.map(m => ({ x: m.x, y: m.y, w: m.w, h: m.h }))];
   }
 
-  /* =========================================================
-     Input
-     ========================================================= */
-
-  const input = {
-    left: false, right: false, up: false, down: false,
-    jumpPressed: false,
-    interactPressed: false,
-    restartPressed: false,
-  };
-
-  function onKeyDown(e) {
-    if (!running || paused) return;
-
-    const k = e.key.toLowerCase();
-    if (k === "a") input.left = true;
-    if (k === "d") input.right = true;
-    if (k === "w") input.up = true;
-    if (k === "s") input.down = true;
-
-    if (e.code === "Space") {
-      if (!input.jumpPressed) input.jumpPressed = true; // edge
-      e.preventDefault();
-    }
-
-    if (k === "e") {
-      if (!input.interactPressed) input.interactPressed = true; // edge
-      e.preventDefault();
-    }
-
-    if (k === "r") {
-      if (!input.restartPressed) input.restartPressed = true; // edge
-      e.preventDefault();
-    }
+  function keysCollectedCount() {
+    return keysLeft.filter(k => k.taken).length;
   }
 
-  function onKeyUp(e) {
-    const k = e.key.toLowerCase();
-    if (k === "a") input.left = false;
-    if (k === "d") input.right = false;
-    if (k === "w") input.up = false;
-    if (k === "s") input.down = false;
-    if (e.code === "Space") input.jumpPressed = false;
-    if (k === "e") input.interactPressed = false;
-    if (k === "r") input.restartPressed = false;
+  function mousePosInWorld() {
+    // Convert from canvas CSS pixels -> world via current camera
+    const rect = canvas.getBoundingClientRect();
+    const cx = mouse.x - rect.left;
+    const cy = mouse.y - rect.top;
+    // current camera mapping is stored each frame
+    return screenToWorld(cx, cy);
   }
 
-  window.addEventListener("keydown", onKeyDown, { passive: false });
-  window.addEventListener("keyup", onKeyUp, { passive: true });
-
-  /* =========================================================
-     Physics helpers
-     ========================================================= */
-
-  function getAllSolids() {
-    // movers are treated as solids for collision
-    return state.solids.concat(state.movers).concat(state.tiles);
+  let cam = { scale: 1, ox: 0, oy: 0, vw: 0, vh: 0, ww: 0, wh: 0 };
+  function computeCamera(viewW, viewH, worldW, worldH) {
+    const pad = 20;
+    const s = Math.min((viewW - pad*2) / worldW, (viewH - pad*2) / worldH);
+    const scale = clamp(s, 0.25, 1.0);
+    const ox = (viewW - worldW * scale) / 2;
+    const oy = (viewH - worldH * scale) / 2;
+    cam = { scale, ox, oy, vw: viewW, vh: viewH, ww: worldW, wh: worldH };
+  }
+  function worldToScreen(x, y) {
+    return { x: cam.ox + x * cam.scale, y: cam.oy + y * cam.scale };
+  }
+  function screenToWorld(x, y) {
+    return { x: (x - cam.ox) / cam.scale, y: (y - cam.oy) / cam.scale };
   }
 
-  function resolveAxis(entity, others, axis) {
-    // entity has x,y,w,h and may be moved; axis is "x" or "y"
-    for (const o of others) {
-      if (o === entity) continue;
-      if (!rectsOverlap(entity, o)) continue;
-
-      if (axis === "x") {
-        const leftPen = (entity.x + entity.w) - o.x;
-        const rightPen = (o.x + o.w) - entity.x;
-        // choose smaller penetration depending on direction
-        if (leftPen < rightPen) entity.x -= leftPen;
-        else entity.x += rightPen;
-      } else {
-        const topPen = (entity.y + entity.h) - o.y;
-        const bottomPen = (o.y + o.h) - entity.y;
-        if (topPen < bottomPen) entity.y -= topPen;
-        else entity.y += bottomPen;
-      }
+  // --- Mouse handlers for dragging tiles ---
+  function pickTileAt(worldX, worldY) {
+    for (let i = movable.length - 1; i >= 0; i--) {
+      const t = movable[i];
+      if (worldX >= t.x && worldX <= t.x + t.w && worldY >= t.y && worldY <= t.y + t.h) return t;
     }
+    return null;
   }
 
-  function moveWithCollision(body, dx, dy, colliders, onHit) {
-    // Move X
-    if (dx !== 0) {
-      body.x += dx;
-      for (const c of colliders) {
-        if (c === body) continue;
-        if (!rectsOverlap(body, c)) continue;
+  function isValidTilePlacement(tile, proposed) {
+    // stay in bounds
+    if (proposed.x < 0 || proposed.y < 0 || proposed.x + tile.w > levels[levelIndex].w || proposed.y + tile.h > levels[levelIndex].h) return false;
 
-        const fromLeft = dx > 0;
-        const overlapX = fromLeft
-          ? (body.x + body.w) - c.x
-          : (c.x + c.w) - body.x;
+    // don't overlap fixed or moving or other movable
+    const test = { x: proposed.x, y: proposed.y, w: tile.w, h: tile.h };
 
-        if (onHit) onHit("x", c, overlapX, fromLeft);
-
-        body.x += fromLeft ? -overlapX : overlapX;
-      }
+    for (const s of fixed) if (rectsOverlap(test, s)) return false;
+    for (const m of moving) if (rectsOverlap(test, m)) return false;
+    for (const t of movable) {
+      if (t === tile) continue;
+      if (rectsOverlap(test, t)) return false;
     }
+    // avoid covering the door area
+    if (rectsOverlap(test, door)) return false;
 
-    // Move Y
-    if (dy !== 0) {
-      body.y += dy;
-      for (const c of colliders) {
-        if (c === body) continue;
-        if (!rectsOverlap(body, c)) continue;
-
-        const fromTop = dy > 0;
-        const overlapY = fromTop
-          ? (body.y + body.h) - c.y
-          : (c.y + c.h) - body.y;
-
-        if (onHit) onHit("y", c, overlapY, fromTop);
-
-        body.y += fromTop ? -overlapY : overlapY;
-      }
-    }
-  }
-
-  function tryPushTile(tile, dx) {
-    if (dx === 0) return false;
-    const test = { ...tile, x: tile.x + dx, y: tile.y };
-    const solids = state.solids.concat(state.movers).concat(state.tiles.filter(t => t !== tile));
-    for (const s of solids) {
-      if (rectsOverlap(test, s)) return false;
-    }
-    tile.x = test.x;
     return true;
   }
 
-  function nearestTileToPlayer(maxDist = TILE * 1.25) {
-    const p = state.player;
-    const px = p.x + p.w / 2;
-    const py = p.y + p.h / 2;
+  canvas.addEventListener("mousedown", (e) => {
+    if (!isRunning) return;
+    mouse.down = true;
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
 
-    let best = null;
-    let bestD = Infinity;
-    for (const t of state.tiles) {
-      const tx = t.x + t.w / 2;
-      const ty = t.y + t.h / 2;
-      const d = Math.hypot(tx - px, ty - py);
-      if (d < bestD && d <= maxDist) {
-        bestD = d;
-        best = t;
-      }
+    const p = mousePosInWorld();
+    const t = pickTileAt(p.x, p.y);
+    if (t) {
+      dragging = {
+        tile: t,
+        offX: p.x - t.x,
+        offY: p.y - t.y,
+        startX: t.x,
+        startY: t.y
+      };
     }
-    return best;
-  }
+  });
 
-  function placeHeldTile(t) {
-    // put tile slightly in front of player, snapped to grid for satisfying placement
-    const p = state.player;
-    const dir = p.face || 1;
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    if (!isRunning || !dragging) return;
 
-    let x = p.x + (dir > 0 ? p.w + 10 : -t.w - 10);
-    let y = p.y + p.h - t.h;
+    const p = mousePosInWorld();
+    const proposed = { x: p.x - dragging.offX, y: p.y - dragging.offY };
+    // keep smooth while dragging, but clamp
+    proposed.x = clamp(proposed.x, 0, levels[levelIndex].w - dragging.tile.w);
+    proposed.y = clamp(proposed.y, 0, levels[levelIndex].h - dragging.tile.h);
 
-    x = snapToTile(x);
-    y = snapToTile(y);
+    // allow overlap while dragging for feel, but don't allow going through fixed too much:
+    // We'll accept temporarily and validate on drop.
+    dragging.tile.x = proposed.x;
+    dragging.tile.y = proposed.y;
+  });
 
-    t.x = clamp(x, 0, W - t.w);
-    t.y = clamp(y, 0, H - t.h);
+  window.addEventListener("mouseup", () => {
+    if (!isRunning) return;
+    mouse.down = false;
+    if (!dragging) return;
 
-    // If intersecting, nudge upward until clear (or give up)
-    const solids = state.solids.concat(state.movers).concat(state.tiles.filter(o => o !== t));
-    for (let i = 0; i < 8; i++) {
-      let ok = true;
-      for (const s of solids) {
-        if (rectsOverlap(t, s)) { ok = false; break; }
-      }
-      if (ok) return;
-      t.y -= 8;
+    const t = dragging.tile;
+    // snap + validate, otherwise revert
+    const snapped = { x: snapToGrid(t.x), y: snapToGrid(t.y) };
+    if (isValidTilePlacement(t, snapped)) {
+      t.x = snapped.x;
+      t.y = snapped.y;
+    } else {
+      t.x = dragging.startX;
+      t.y = dragging.startY;
     }
-  }
+    dragging = null;
+  });
 
-  /* =========================================================
-     Update
-     ========================================================= */
+  // --- Main loop ---
+  let last = 0;
+
+  function step(ts) {
+    if (!isRunning) return;
+    rafId = requestAnimationFrame(step);
+
+    const { w: viewW, h: viewH } = resizeCanvasToDisplaySize();
+    const L = levels[levelIndex];
+    computeCamera(viewW, viewH, L.w, L.h);
+
+    const dt = clamp((ts - last) / 1000, 0, 1/30);
+    last = ts;
+
+    update(dt);
+    render(viewW, viewH);
+  }
 
   function update(dt) {
-    state.t += dt;
+    const L = levels[levelIndex];
 
-    // Move platforms
-    for (const m of state.movers) {
-      if (m.type === "sineX") {
-        const prevX = m.x;
-        m.x = m.baseX + Math.sin(state.t * m.speed) * m.amp;
-        m.dx = m.x - prevX;
-      } else {
-        m.dx = 0;
-      }
+    // moving platforms
+    for (const m of moving) {
+      m.t += dt * m.speed;
+      m.x = (6*TILE) + Math.sin(m.t) * (m.range/2); // centered-ish
     }
 
-    const p = state.player;
+    // Input -> acceleration
+    const left = keys.has("KeyA");
+    const right = keys.has("KeyD");
+    const up = keys.has("KeyW"); // optional for climb vibe
+    const wantJump = keys.has("Space");
 
-    // Restart
-    if (input.restartPressed) {
-      input.restartPressed = false;
-      loadLevel(state.levelIndex);
-      return;
-    }
+    let ax = 0;
+    if (left) ax -= MOVE_ACCEL;
+    if (right) ax += MOVE_ACCEL;
 
-    // Horizontal input (WASD)
-    const ax = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-    p.vx = ax * MOVE_SPEED;
-    if (ax !== 0) p.face = ax;
+    player.vx += ax * dt;
+    player.vx = clamp(player.vx, -MAX_SPEED, MAX_SPEED);
 
-    // Jump / double jump
-    if (input.jumpPressed) {
-      input.jumpPressed = false;
-      if (p.onGround) {
-        p.vy = -JUMP_VEL;
-        p.onGround = false;
-        p.jumpsUsed = 1;
-      } else if (p.jumpsUsed < 2) {
-        p.vy = -JUMP_VEL * 0.92;
-        p.jumpsUsed += 1;
-      }
-    }
-
-    // Interact (pick up / drop)
-    if (input.interactPressed) {
-      input.interactPressed = false;
-
-      if (state.holding) {
-        // drop
-        state.holding.vx = 0;
-        state.holding.vy = 0;
-        placeHeldTile(state.holding);
-        state.holding = null;
-      } else {
-        const t = nearestTileToPlayer();
-        if (t) {
-          state.holding = t;
-        }
-      }
-    }
+    // friction if no input
+    if (!left && !right) player.vx *= Math.pow(FRICTION, dt * 60);
 
     // Gravity
-    p.vy += GRAVITY * dt;
+    player.vy += GRAVITY * dt;
+    player.vy = clamp(player.vy, -2000, 2000);
 
-    // If holding, keep tile with player (no collision while held)
-    if (state.holding) {
-      const t = state.holding;
-      const dir = p.face || 1;
-
-      // Hover slightly above ground-line for readability
-      let x = p.x + (dir > 0 ? p.w + 14 : -t.w - 14);
-      let y = p.y + 6;
-
-      t.x = clamp(x, 0, W - t.w);
-      t.y = clamp(y, 0, H - t.h);
-      t.vx = 0;
-      t.vy = 0;
-    } else {
-      // Update tiles physics (they can fall + settle)
-      const tileColliders = state.solids.concat(state.movers).concat(state.tiles);
-      for (const t of state.tiles) {
-        t.vy = (t.vy || 0) + GRAVITY * dt;
-        const dx = (t.vx || 0) * dt;
-        const dy = t.vy * dt;
-
-        moveWithCollision(t, dx, dy, tileColliders, (axis, c, overlap, fromTop) => {
-          if (axis === "y") {
-            if (fromTop) t.vy = 0;
-          }
-          if (axis === "x") {
-            t.vx = 0;
-          }
-        });
-
-        // If a platform moved into the tile, carry it (simple)
-        for (const m of state.movers) {
-          if (m.dx && rectsOverlap({x: t.x, y: t.y + 1, w: t.w, h: t.h}, m)) {
-            // tile is touching mover; attempt carry
-            const can = tryPushTile(t, m.dx);
-            if (!can) {
-              // if can't carry, just ignore
-            }
-          }
-        }
-
-        // Keep tiles inside world
-        if (t.y > H + TILE) {
-          // fell out -> respawn to a safe spot
-          t.x = 2 * TILE;
-          t.y = 2 * TILE;
-          t.vx = 0; t.vy = 0;
-        }
+    // Jump (edge-trigger)
+    if (wantJump && !player._jumpHeld) {
+      if (player.jumps > 0) {
+        player.vy = -JUMP_V;
+        player.jumps -= 1;
       }
     }
+    player._jumpHeld = wantJump;
 
-    // Player collision: include tiles only if not held
-    const colliders = state.holding
-      ? state.solids.concat(state.movers)
-      : state.solids.concat(state.movers).concat(state.tiles);
+    // If dragging a tile, we still simulate player normally.
 
-    // Horizontal move + push tiles
-    const dx = p.vx * dt;
-    let pushedTile = null;
-    moveWithCollision(p, dx, 0, colliders, (axis, c, overlap, fromLeft) => {
-      if (axis !== "x") return;
-      // If we hit a tile, try to push it
-      if (!state.holding && state.tiles.includes(c)) {
-        const push = fromLeft ? overlap : -overlap;
-        const ok = tryPushTile(c, push);
-        if (ok) pushedTile = c;
+    const solids = allSolids();
+
+    // Move + collide player
+    const beforeY = player.y;
+    moveAndCollide(player, solids, dt);
+
+    if (player.onGround) player.jumps = 2;
+
+    // Pushing tiles by walking into them (simple)
+    for (const t of movable) {
+      if (!rectsOverlap(player, t)) continue;
+      // if player is horizontally intersecting, push tile sideways slightly
+      if (player.vx > 0) {
+        const proposed = { x: t.x + 240*dt, y: t.y };
+        if (!dragging && isValidTilePlacement(t, proposed)) t.x = proposed.x;
+      } else if (player.vx < 0) {
+        const proposed = { x: t.x - 240*dt, y: t.y };
+        if (!dragging && isValidTilePlacement(t, proposed)) t.x = proposed.x;
       }
-    });
-
-    // Vertical move
-    p.onGround = false;
-    moveWithCollision(p, 0, p.vy * dt, colliders, (axis, c, overlap, fromTop) => {
-      if (axis !== "y") return;
-      if (fromTop) {
-        // landed
-        p.onGround = true;
-        p.jumpsUsed = 0;
-        p.vy = 0;
-
-        // carry player with moving platforms
-        if (state.movers.includes(c) && c.dx) {
-          p.x = clamp(p.x + c.dx, 0, W - p.w);
-          if (!state.holding) {
-            // also gently carry adjacent tiles sitting on the mover
-            for (const t of state.tiles) {
-              if (rectsOverlap({x: t.x, y: t.y + 2, w: t.w, h: t.h}, c)) {
-                tryPushTile(t, c.dx);
-              }
-            }
-          }
-        }
-      } else {
-        // hit head
-        p.vy = 0;
-      }
-    });
-
-    // Fall reset
-    if (p.y > H + 120) {
-      loadLevel(state.levelIndex);
-      return;
     }
 
     // Collect keys
-    for (const k of state.keys) {
-      if (k.got) continue;
-      const kr = { x: k.x - k.r, y: k.y - k.r, w: k.r * 2, h: k.r * 2 };
-      if (rectsOverlap(p, kr)) {
-        k.got = true;
-        state.collected += 1;
+    for (const k of keysLeft) {
+      if (k.taken) continue;
+      const kr = { x: k.x - k.r, y: k.y - k.r, w: k.r*2, h: k.r*2 };
+      if (rectsOverlap(player, kr)) {
+        k.taken = true;
+        hudKeys.textContent = `Keys: ${keysCollectedCount()}/${keysLeft.length}`;
       }
     }
 
-    // Door open + win
-    state.door.open = state.collected >= state.totalKeys;
-    if (state.door.open && rectsOverlap(p, state.door)) {
-      // Completed
-      const done = state.levelIndex === levels.length - 1;
-      if (done) {
-        setStatus(`✨ Completed all levels! Press <strong>R</strong> to replay or <strong>Next level</strong> to loop.`);
-        nextBtn.disabled = false;
+    // Door check
+    const haveAll = keysCollectedCount() === keysLeft.length;
+    if (haveAll && rectsOverlap(player, door)) {
+      if (levelIndex < levels.length - 1) {
+        resetLevel(levelIndex + 1);
       } else {
-        setStatus(`✅ ${levels[state.levelIndex].name} complete! Press <strong>Next level</strong>.`);
-        nextBtn.disabled = false;
+        // loop back to level 1 for now
+        resetLevel(0);
       }
-    } else {
-      // live status line
-      const L = levels[state.levelIndex];
-      const tileHint = state.holding ? "Holding tile (E to drop)." : "E pick up tile.";
-      const doorHint = state.door.open ? "Door is OPEN." : "Find all keys to open the door.";
-      setStatus(`${L.name} — Keys: ${state.collected}/${state.totalKeys}. ${doorHint} ${tileHint}`);
     }
+
+    // Prevent falling out
+    player.x = clamp(player.x, 0, L.w - player.w);
+    if (player.y > L.h + 200) resetLevel(levelIndex); // respawn if fell far
   }
 
-  /* =========================================================
-     Render
-     ========================================================= */
+  function render(viewW, viewH) {
+    const ink = getInk();
+    ctx.clearRect(0, 0, viewW, viewH);
 
-  function drawGrid() {
-    ctx.globalAlpha = 0.08;
+    // Background
     ctx.fillStyle = "#ffffff";
-    for (let x = 0; x < W; x += TILE) ctx.fillRect(x, 0, 1, H);
-    for (let y = 0; y < H; y += TILE) ctx.fillRect(0, y, W, 1);
-    ctx.globalAlpha = 1;
-  }
+    ctx.fillRect(0, 0, viewW, viewH);
 
-  function draw() {
-    // background
-    ctx.fillStyle = "#111315";
-    ctx.fillRect(0, 0, W, H);
+    // World border
+    const topLeft = worldToScreen(0, 0);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = ink;
+    ctx.strokeRect(topLeft.x, topLeft.y, cam.ww * cam.scale, cam.wh * cam.scale);
 
-    drawGrid();
+    // Draw fixed blocks
+    for (const r of fixed) drawBlock(r, ink, false);
+    for (const m of moving) drawBlock(m, ink, true);
+    for (const t of movable) drawBlock(t, ink, false, true);
 
-    // solids
-    ctx.fillStyle = "#3a3f46";
-    for (const s of state.solids) ctx.fillRect(s.x, s.y, s.w, s.h);
-
-    // movers
-    ctx.fillStyle = "#54606d";
-    for (const m of state.movers) ctx.fillRect(m.x, m.y, m.w, m.h);
-
-    // tiles (movable)
-    ctx.fillStyle = "#f5cd6a";
-    for (const t of state.tiles) {
-      ctx.fillRect(t.x, t.y, t.w, t.h);
-      ctx.globalAlpha = 0.22;
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(t.x + 6, t.y + 6, t.w - 12, t.h - 12);
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "#f5cd6a";
-    }
-
-    // keys
-    for (const k of state.keys) {
-      if (k.got) continue;
-      ctx.fillStyle = "#7ec1ff";
+    // Keys
+    for (const k of keysLeft) {
+      if (k.taken) continue;
+      const p = worldToScreen(k.x, k.y);
+      const rr = k.r * cam.scale;
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = ink;
+      // simple "key" doodle: circle + stem
       ctx.beginPath();
-      ctx.arc(k.x, k.y, k.r, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(k.x + k.r - 2, k.y - 3, 10, 6);
-      ctx.fillRect(k.x + k.r + 6, k.y - 2, 4, 4);
+      ctx.arc(p.x, p.y, rr, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(p.x + rr, p.y);
+      ctx.lineTo(p.x + rr + rr*1.2, p.y);
+      ctx.lineTo(p.x + rr + rr*1.2, p.y + rr*0.6);
+      ctx.stroke();
     }
 
-    // door
-    ctx.fillStyle = state.door.open ? "#a7bd53" : "#f48fc2";
-    ctx.fillRect(state.door.x, state.door.y, state.door.w, state.door.h);
-    ctx.fillStyle = "#111315";
-    ctx.fillRect(state.door.x + 10, state.door.y + 10, state.door.w - 20, state.door.h - 20);
+    // Door
+    const haveAll = keysCollectedCount() === keysLeft.length;
+    const d = worldToScreen(door.x, door.y);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = ink;
+    ctx.fillStyle = haveAll ? "rgba(255, 240, 170, 0.65)" : "rgba(230, 230, 230, 0.65)";
+    ctx.fillRect(d.x, d.y, door.w * cam.scale, door.h * cam.scale);
+    ctx.strokeRect(d.x, d.y, door.w * cam.scale, door.h * cam.scale);
+    // knob
+    ctx.beginPath();
+    ctx.arc(d.x + door.w*cam.scale*0.78, d.y + door.h*cam.scale*0.55, 6, 0, Math.PI*2);
+    ctx.stroke();
 
-    // player
-    const p = state.player;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(p.x, p.y, p.w, p.h);
-    // face dot
-    ctx.fillStyle = "#111315";
-    ctx.fillRect(p.face > 0 ? p.x + p.w - 12 : p.x + 8, p.y + 16, 6, 6);
-
-    // caption
-    ctx.fillStyle = "rgba(255,255,255,0.7)";
-    ctx.font = "14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial";
-    ctx.fillText(`Level ${state.levelIndex + 1}/${levels.length} — ${levels[state.levelIndex].name}`, 14, 22);
+    // Player (stick-ish)
+    drawPlayer(player, ink);
   }
 
-  /* =========================================================
-     Main loop
-     ========================================================= */
+  function drawBlock(r, ink, isMoving=false, isMovable=false) {
+    const p = worldToScreen(r.x, r.y);
+    const w = r.w * cam.scale;
+    const h = r.h * cam.scale;
 
-  function frame(tMs) {
-    if (!running) return;
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = ink;
 
-    const t = tMs / 1000;
-    const dt = clamp(t - lastTime, 0, 1 / 30);
-    lastTime = t;
+    if (isMovable) ctx.fillStyle = "rgba(210, 240, 255, 0.55)";
+    else if (isMoving) ctx.fillStyle = "rgba(255, 220, 230, 0.55)";
+    else ctx.fillStyle = "rgba(245, 245, 245, 0.85)";
 
-    if (!paused) {
-      update(dt);
-      draw();
-    }
-
-    requestAnimationFrame(frame);
+    ctx.fillRect(p.x, p.y, w, h);
+    ctx.strokeRect(p.x, p.y, w, h);
   }
 
-  function start() {
-    running = true;
-    paused = false;
-    lastTime = 0;
-    loadLevel(state.levelIndex);
-    requestAnimationFrame(frame);
+  function drawPlayer(pl, ink) {
+    const p = worldToScreen(pl.x, pl.y);
+    const s = cam.scale;
+
+    // body rect for clarity
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = ink;
+    ctx.fillStyle = "rgba(255,255,255,0.0)";
+    ctx.strokeRect(p.x, p.y, pl.w*s, pl.h*s);
+
+    // stick figure inside the rect
+    const cx = p.x + (pl.w*s)/2;
+    const headY = p.y + 12*s;
+    const headR = 10*s;
+
+    ctx.beginPath();
+    ctx.arc(cx, headY, headR, 0, Math.PI*2);
+    ctx.stroke();
+
+    // torso
+    ctx.beginPath();
+    ctx.moveTo(cx, headY + headR);
+    ctx.lineTo(cx, p.y + 32*s);
+    ctx.stroke();
+
+    // legs
+    ctx.beginPath();
+    ctx.moveTo(cx, p.y + 32*s);
+    ctx.lineTo(cx - 10*s, p.y + 44*s);
+    ctx.moveTo(cx, p.y + 32*s);
+    ctx.lineTo(cx + 10*s, p.y + 44*s);
+    ctx.stroke();
+
+    // arms
+    ctx.beginPath();
+    ctx.moveTo(cx, p.y + 24*s);
+    ctx.lineTo(cx - 12*s, p.y + 30*s);
+    ctx.moveTo(cx, p.y + 24*s);
+    ctx.lineTo(cx + 12*s, p.y + 30*s);
+    ctx.stroke();
   }
 
-  function openOverlay() {
-    overlay.classList.add("is-open");
-    overlay.setAttribute("aria-hidden", "false");
-    paused = true;
-    // prevent page scrolling behind
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+  // --- Start/Stop ---
+  function startGame() {
+    homeTiles.classList.add("is-hidden");
+    gameStage.classList.remove("is-hidden");
+    gameStage.setAttribute("aria-hidden", "false");
+
+    resetLevel(0);
+    isRunning = true;
+    last = performance.now();
+    resizeCanvasToDisplaySize();
+    rafId = requestAnimationFrame(step);
   }
 
-  function closeOverlay() {
-    overlay.classList.remove("is-open");
-    overlay.setAttribute("aria-hidden", "true");
-    paused = true;
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
+  function stopGame() {
+    isRunning = false;
+    cancelAnimationFrame(rafId);
+    homeTiles.classList.remove("is-hidden");
+    gameStage.classList.add("is-hidden");
+    gameStage.setAttribute("aria-hidden", "true");
+    keys.clear();
+    dragging = null;
   }
 
-  /* =========================================================
-     UI bindings
-     ========================================================= */
-
-  openBtn.addEventListener("click", () => {
-    openOverlay();
-    if (!running) {
-      setStatus("Press <strong>Start</strong> to begin Level 1.");
-    } else {
-      paused = false;
-    }
+  playBtn.addEventListener("click", () => {
+    if (isRunning) return;
+    startGame();
   });
 
-  closeBtn.addEventListener("click", closeOverlay);
+  exitBtn.addEventListener("click", () => stopGame());
 
-  overlay.addEventListener("click", (e) => {
-    // Click outside the card closes
-    if (e.target === overlay) closeOverlay();
+  window.addEventListener("resize", () => {
+    if (!isRunning) return;
+    resizeCanvasToDisplaySize();
   });
-
-  startBtn?.addEventListener("click", () => {
-    if (!running) {
-      state.levelIndex = 0;
-      start();
-    }
-    paused = false;
-  });
-
-  restartBtn?.addEventListener("click", () => {
-    if (!running) return;
-    loadLevel(state.levelIndex);
-    paused = false;
-  });
-
-  nextBtn?.addEventListener("click", () => {
-    if (!running) return;
-    const next = (state.levelIndex + 1) % levels.length;
-    loadLevel(next);
-    paused = false;
-  });
-
-  // ESC closes overlay
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlay.classList.contains("is-open")) {
-      closeOverlay();
-    }
-  });
-
-  // Pause/resume when overlay opens/closes (safety)
-  const obs = new MutationObserver(() => {
-    paused = !overlay.classList.contains("is-open");
-  });
-  obs.observe(overlay, { attributes: true, attributeFilter: ["class"] });
-
-  // Preload initial frame
-  loadLevel(0);
-  draw();
 })();

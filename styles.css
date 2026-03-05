@@ -912,100 +912,138 @@ body{
   --expanded-h: attr(data-expanded-h px); /* fallback handled by JS below */
 }
 
-/* =========================================================
-   Game mode overlay (home page)
-   ========================================================= */
-.game-tile{
-  border: none;
-  cursor: pointer;
-  font: inherit;
-}
 
-.game-overlay{
-  position: fixed;
-  inset: 0;
-  z-index: 20000; /* above nav/footer */
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(6px);
-}
-
-.game-overlay.is-open{ display: flex; }
-
-.game-card{
-  width: min(1100px, 100%);
-  border-radius: 22px;
-  border: 1px solid rgba(0,0,0,0.14);
-  background: rgba(242,222,177,0.92);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.35);
-  overflow: hidden;
-}
-
-.game-topbar{
+/* ===== GAME MODE (inside index layout) ===== */
+.tile-nav{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(0,0,0,0.10);
-  background: rgba(242,222,177,0.85);
+  gap: 16px;
+}
+.tile-nav .nav-links{
+  display: inline-flex;
+  gap: 18px;
+  align-items: baseline;
 }
 
-.game-title{
-  display: grid;
-  gap: 2px;
+/* Play button matches hand-drawn style */
+.play-game-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-transform: lowercase;
+  padding: 6px 10px;
+  border-radius: 18px;
 }
-.game-sub{
-  font-size: 13px;
-  opacity: 0.75;
+.play-game-btn:focus{
+  outline: 2px solid rgba(0,0,0,0.25);
+  outline-offset: 3px;
+}
+.play-icon{
+  width: 34px;
+  height: 34px;
+  border: 4px solid var(--ink, #23102d);
+  border-radius: 999px;
+  position: relative;
+  flex: 0 0 auto;
+}
+.play-icon::before{
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 8px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid var(--ink, #23102d);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.play-text{
+  font-size: 22px;
+  letter-spacing: 0.5px;
 }
 
+/* Game stage */
+.game-stage{
+  position: relative;
+  min-height: calc(100vh - 140px);
+  padding: 10px 6px 0;
+}
+.game-stage.is-hidden{
+  display: none;
+}
+#homeTiles.is-hidden{
+  display: none;
+}
+
+/* HUD cards */
+.game-hud{
+  position: absolute;
+  background: rgba(255,255,255,0.95);
+  border: 4px solid var(--ink, #23102d);
+  border-radius: 18px;
+  padding: 14px 16px;
+  max-width: 320px;
+  box-shadow: 0 10px 0 rgba(35,16,45,0.06);
+}
+.game-hud-left{ left: 18px; top: 10px; }
+.game-hud-right{ right: 18px; top: 10px; }
+.game-hud-center{
+  left: 50%;
+  transform: translateX(-50%);
+  top: 10px;
+  padding: 12px 18px;
+}
+.hud-title{
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.hud-list{
+  margin: 0;
+  padding-left: 18px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+.hud-list li{
+  margin: 6px 0;
+}
+
+/* Canvas board (the play area) */
+.game-board{
+  margin-top: 110px; /* leaves room for HUD */
+  border: 5px solid var(--ink, #23102d);
+  border-radius: 22px;
+  background: #fff;
+  height: calc(100% - 130px);
+  min-height: 460px;
+  overflow: hidden;
+  position: relative;
+}
 #gameCanvas{
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  background: #141414;
 }
 
-.game-hud{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
-  border-top: 1px solid rgba(0,0,0,0.10);
-}
-
-.game-status{
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.game-actions{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.game-btn{
-  appearance: none;
-  border: 1px solid rgba(0,0,0,0.18);
-  background: rgba(255,255,255,0.55);
+/* Exit button */
+.game-exit{
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
-  padding: 8px 12px;
+  border: 4px solid var(--ink, #23102d);
+  background: rgba(255,255,255,0.95);
   cursor: pointer;
-  font: inherit;
+  font-size: 28px;
+  line-height: 1;
 }
-
-.game-btn:hover{
+.game-exit:hover{
   transform: translateY(-1px);
-}
-
-.game-btn.primary{
-  background: rgba(245,205,106,0.90);
-  border-color: rgba(0,0,0,0.22);
-  font-weight: 700;
 }
