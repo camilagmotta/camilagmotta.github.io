@@ -9,6 +9,7 @@
   }
 
   document.querySelectorAll(".tile").forEach((tile) => {
+    if (tile.dataset.noRandom === "1" || tile.classList.contains("no-random")) return;
     COLOR_CLASSES.forEach((c) => tile.classList.remove(c));
     tile.classList.add(randomColor());
   });
@@ -24,7 +25,7 @@
   const isMobile = window.matchMedia("(max-width: 860px)").matches;
   if (isMobile) return;
 
-  const tiles = Array.from(stage.querySelectorAll(".tile"));
+  const tiles = Array.from(stage.querySelectorAll(".tile")).filter((el) => !(el.dataset.noDrag === "1" || el.classList.contains("no-drag")));
   if (!tiles.length) return;
 
   stage.style.position = "relative";

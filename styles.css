@@ -911,3 +911,101 @@ body{
 .project-tile[data-expanded-h]{
   --expanded-h: attr(data-expanded-h px); /* fallback handled by JS below */
 }
+
+/* =========================================================
+   Game mode overlay (home page)
+   ========================================================= */
+.game-tile{
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.game-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 20000; /* above nav/footer */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+.game-overlay.is-open{ display: flex; }
+
+.game-card{
+  width: min(1100px, 100%);
+  border-radius: 22px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: rgba(242,222,177,0.92);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.game-topbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  background: rgba(242,222,177,0.85);
+}
+
+.game-title{
+  display: grid;
+  gap: 2px;
+}
+.game-sub{
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+#gameCanvas{
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #141414;
+}
+
+.game-hud{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(0,0,0,0.10);
+}
+
+.game-status{
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.game-actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.game-btn{
+  appearance: none;
+  border: 1px solid rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.55);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.game-btn:hover{
+  transform: translateY(-1px);
+}
+
+.game-btn.primary{
+  background: rgba(245,205,106,0.90);
+  border-color: rgba(0,0,0,0.22);
+  font-weight: 700;
+}
