@@ -1078,3 +1078,34 @@ body{
 
 .play-mode .tile{ cursor: default !important; }
 .play-mode .tile-nav a{ pointer-events: none; opacity: 0.55; }
+
+/* =========================
+   Play mode: tiles become small “pickup blocks”
+   ========================= */
+.play-mode .tile.play-mini{
+  width: 140px !important;
+  height: 140px !important;
+  padding: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.play-mode .tile.play-mini .label{
+  font-size: 18px;
+}
+
+.play-mode .tile.play-mini h2{
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.play-mode .tile.play-mini p,
+.play-mode .tile.play-mini .project-media,
+.play-mode .tile.play-mini .project-desc,
+.play-mode .tile.play-mini video,
+.play-mode .tile.play-mini img{
+  display: none !important;
+}

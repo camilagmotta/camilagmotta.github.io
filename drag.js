@@ -82,6 +82,7 @@
   window.addEventListener("resize", () => {
     if (isMobile) return;
     tiles.forEach((el) => {
+      el.classList.remove("play-mini");
       const left = parseFloat(el.style.left) || 0;
       const top = parseFloat(el.style.top) || 0;
       const { maxX, maxY } = getMaxXY(el);
@@ -105,11 +106,16 @@
   /* =========================
      JUICY MAGNET SNAP (drag mode)
      ========================= */
-  const SNAP_IN = 12;
-  const SNAP_OUT = 40;
+  const SNAP_IN = 16;
+  const SNAP_OUT = 52;
   const MAGNET_GAP = 0;
-  const PULL = 0.50;
-  const OVERLAP_MIN = 26;
+  const PULL = 0.62;
+// Overlap needed for snapping (dynamic, so big/small tiles still snap nicely)
+function minOverlapForSnap(aLen, bLen){
+  // 25% of the smaller dimension, clamped
+  return Math.max(10, Math.min(80, Math.floor(Math.min(aLen, bLen) * 0.25)));
+}
+
 
   function overlap1D(a1, a2, b1, b2) {
     return Math.max(0, Math.min(a2, b2) - Math.max(a1, b1));
@@ -145,7 +151,7 @@
       const vOverlap = overlap1D(me.top, me.bottom, o.top, o.bottom);
       const hOverlap = overlap1D(me.left, me.right, o.left, o.right);
 
-      if (vOverlap >= OVERLAP_MIN) {
+      if (vOverlap >= minOverlapForSnap(me.h, o.h)) {
         const xTargets = [o.left, o.right - me.w, o.right + MAGNET_GAP, (o.left - MAGNET_GAP) - me.w];
         for (const t of xTargets) {
           const dist = Math.abs(me.left - t);
@@ -153,7 +159,7 @@
         }
       }
 
-      if (hOverlap >= OVERLAP_MIN) {
+      if (hOverlap >= minOverlapForSnap(me.w, o.w)) {
         const yTargets = [o.top, o.bottom - me.h, o.bottom + MAGNET_GAP, (o.top - MAGNET_GAP) - me.h];
         for (const t of yTargets) {
           const dist = Math.abs(me.top - t);
@@ -208,6 +214,7 @@
 
   if (!isMobile) {
     tiles.forEach((el) => {
+      el.classList.remove("play-mini");
       el.style.cursor = "grab";
       el.style.userSelect = "none";
       el.style.touchAction = "none";
@@ -339,6 +346,14 @@
   const btn = hud.querySelector("#togglePlay");
   const scoreEl = hud.querySelector("#score");
   const comboEl = hud.querySelector("#combo");
+// Prevent Space/Enter from “clicking” the play button when it has focus
+btn.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.key === "Enter") {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+});
+
 
   let score = 0;
   let combo = 1;
@@ -434,6 +449,8 @@
     document.body.classList.add("play-mode");
 
     btn.textContent = "Play mode: ON";
+    // If the button has focus, Space/Enter can trigger a click. Blur it so Space is free for jumping.
+    try { btn.blur(); } catch(e) {}
     score = 0; combo = 1;
     scoreEl.textContent = "0";
     comboEl.textContent = "x1";
@@ -491,9 +508,16 @@
       el.style.transform = "scale(1)";
     }
 
+
+    // Make tiles into uniform “pickup” blocks in play mode
+    tiles.forEach((el) => {
+      el.classList.add("play-mini");
+    });
+
     // tiles -> bodies
     tileBodies.clear();
     tiles.forEach((el) => {
+      el.classList.remove("play-mini");
       const left = parseFloat(el.style.left) || 0;
       const top = parseFloat(el.style.top) || 0;
       const bw = el.offsetWidth;
@@ -571,6 +595,7 @@
     targetEls.forEach(t => t.style.display = "none");
 
     tiles.forEach((el) => {
+      el.classList.remove("play-mini");
       el.style.pointerEvents = el.dataset._savedPointer || "";
       delete el.dataset._savedPointer;
       el.style.transform = ""; // remove rotation
@@ -692,7 +717,10 @@
     if (e.key === "d" || e.key === "D") keys.d = true;
     if (e.key === "w" || e.key === "W") keys.w = true;
     if (e.key === "s" || e.key === "S") keys.s = true;
-    if (e.code === "Space") keys.space = true;
+    if (e.code === "Space") {
+      keys.space = true;
+      if (playMode) e.preventDefault(); // stop page scroll / focused-button click
+    }
 
     if (!playMode) return;
 
