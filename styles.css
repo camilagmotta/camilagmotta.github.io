@@ -1047,3 +1047,172 @@ body{
 .game-exit:hover{
   transform: translateY(-1px);
 }
+
+
+
+/* =========================================================
+   PROFESSIONAL PALETTE + LAYOUT OVERRIDE (2026-03)
+   Palette provided by Camila:
+   #C7E0C3 #A16D90 #E0C3D7 #5A8B53 #612A4F #13360E
+   ========================================================= */
+
+:root{
+  --bg: #C7E0C3;
+  --c1: #A16D90;   /* mauve */
+  --c2: #E0C3D7;   /* light pink */
+  --c3: #5A8B53;   /* green */
+  --c4: #612A4F;   /* deep purple */
+  --ink: #13360E;  /* dark green ink */
+  --text: var(--ink);
+  --muted: rgba(19,54,14,0.70);
+
+  --tile-border: 3px solid var(--ink);
+  --tile-radius: 22px;
+  --shadow-soft: 0 14px 28px rgba(19,54,14,0.14);
+}
+
+/* Page background */
+body{
+  color: var(--text) !important;
+  background:
+    radial-gradient(900px 520px at 16% 12%, rgba(161,109,144,0.18), transparent 58%),
+    radial-gradient(820px 520px at 86% 84%, rgba(90,139,83,0.16), transparent 60%),
+    radial-gradient(700px 520px at 70% 22%, rgba(224,195,215,0.22), transparent 55%),
+    var(--bg) !important;
+}
+
+/* Top nav */
+.tile-nav{
+  background: rgba(199,224,195,0.82) !important;
+  border-bottom: 1px solid rgba(19,54,14,0.12);
+}
+
+.tile-nav a{
+  color: var(--ink) !important;
+  opacity: 0.9;
+}
+.tile-nav a:hover{ opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Brand block */
+.tile-brand p{ color: var(--muted) !important; }
+
+/* Footer */
+.tile-footer{
+  background: rgba(199,224,195,0.86) !important;
+  color: rgba(19,54,14,0.70) !important;
+  border-top: 1px solid rgba(19,54,14,0.12) !important;
+}
+
+/* Tiles: consistent, clean, portfolio feel */
+.tile{
+  border: var(--tile-border) !important;
+  border-radius: var(--tile-radius) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+.tile:hover{
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 18px 36px rgba(19,54,14,0.18) !important;
+}
+
+/* Content tile typography */
+.tile-content{
+  background: var(--c2) !important;
+  color: var(--ink) !important;
+}
+.tile-content p{ color: rgba(19,54,14,0.88) !important; }
+
+/* Palette-mapped tile colors */
+.c-green{ background: var(--c3) !important; color: var(--bg) !important; }
+.c-pink{ background: var(--c1) !important; color: var(--bg) !important; }
+.c-yellow{ background: var(--c2) !important; color: var(--ink) !important; }
+.c-blue{ background: var(--c4) !important; color: var(--bg) !important; }
+.c-white{ background: var(--c2) !important; color: var(--ink) !important; }
+.c-black{ background: var(--ink) !important; color: var(--bg) !important; }
+
+.tile .label{
+  text-shadow: none !important;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+/* Play button: match palette + keep professional */
+.play-game-btn{
+  border: var(--tile-border);
+  background: rgba(224,195,215,0.30);
+  box-shadow: none;
+}
+.play-game-btn:hover{ background: rgba(224,195,215,0.55); }
+.play-icon{
+  border-color: var(--ink) !important;
+  background: rgba(224,195,215,0.55);
+}
+.play-icon::before{ border-left-color: var(--ink) !important; }
+.play-text{ color: var(--ink) !important; }
+
+/* ===== GAME MODE (fits between header and footer, responsive) ===== */
+.game-stage{
+  min-height: auto !important;
+  padding: 8px 6px 86px !important; /* leave room for fixed footer */
+}
+
+.game-stage .game-top{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: start;
+  margin: 10px 2px 14px;
+}
+
+.game-hud{
+  position: static !important;
+  width: auto !important;
+  max-width: none !important;
+
+  background: rgba(224,195,215,0.85) !important;
+  border: var(--tile-border) !important;
+  border-radius: var(--tile-radius) !important;
+  box-shadow: var(--shadow-soft) !important;
+  color: var(--ink) !important;
+}
+
+.game-hud-center{ justify-self: center; }
+.game-hud-right{ justify-self: end; }
+
+.hud-title{
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.game-exit{
+  border: var(--tile-border) !important;
+  background: rgba(224,195,215,0.65) !important;
+  color: var(--ink) !important;
+}
+
+/* The board should feel like a “big tile” */
+.game-board{
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  border: var(--tile-border) !important;
+  border-radius: var(--tile-radius) !important;
+  background: rgba(224,195,215,0.28) !important;
+  box-shadow: var(--shadow-soft) !important;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+}
+
+/* Canvas fills the board (no giant empty whitespace) */
+#gameCanvas{
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Small screens: stack HUD */
+@media (max-width: 860px){
+  .game-stage .game-top{
+    grid-template-columns: 1fr;
+  }
+  .game-hud-center,
+  .game-hud-right{ justify-self: stretch; }
+}

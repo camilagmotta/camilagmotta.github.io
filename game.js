@@ -36,6 +36,11 @@
   const FRICTION = 0.80;
 
   // Hand-drawn-ish palette (uses your site ink variable if present)
+  function getCSSVar(name, fallback){
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+
   function getInk() {
     const v = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
     return v || "#23102d";
@@ -451,7 +456,7 @@
     ctx.clearRect(0, 0, viewW, viewH);
 
     // Background
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = getCSSVar("--bg", "#C7E0C3");
     ctx.fillRect(0, 0, viewW, viewH);
 
     // World border
@@ -488,7 +493,7 @@
     const d = worldToScreen(door.x, door.y);
     ctx.lineWidth = 5;
     ctx.strokeStyle = ink;
-    ctx.fillStyle = haveAll ? "rgba(255, 240, 170, 0.65)" : "rgba(230, 230, 230, 0.65)";
+    ctx.fillStyle = haveAll ? "rgba(90,139,83,0.45)" : "rgba(224,195,215,0.45)";
     ctx.fillRect(d.x, d.y, door.w * cam.scale, door.h * cam.scale);
     ctx.strokeRect(d.x, d.y, door.w * cam.scale, door.h * cam.scale);
     // knob
@@ -508,9 +513,9 @@
     ctx.lineWidth = 5;
     ctx.strokeStyle = ink;
 
-    if (isMovable) ctx.fillStyle = "rgba(210, 240, 255, 0.55)";
-    else if (isMoving) ctx.fillStyle = "rgba(255, 220, 230, 0.55)";
-    else ctx.fillStyle = "rgba(245, 245, 245, 0.85)";
+    if (isMovable) ctx.fillStyle = "rgba(224,195,215,0.65)";
+    else if (isMoving) ctx.fillStyle = "rgba(161,109,144,0.55)";
+    else ctx.fillStyle = "rgba(199,224,195,0.35)";
 
     ctx.fillRect(p.x, p.y, w, h);
     ctx.strokeRect(p.x, p.y, w, h);
