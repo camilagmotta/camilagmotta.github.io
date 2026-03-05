@@ -1,6 +1,8 @@
 (() => {
 
-/* BASIC SETUP */
+/* =========================================
+   STAGE + TILES
+========================================= */
 
 const stage = document.querySelector(".tile-stage");
 if(!stage) return;
@@ -9,20 +11,19 @@ const tiles = Array.from(stage.querySelectorAll(".tile"));
 
 let playMode = false;
 
-/* GRID + HARD SNAP SETTINGS */
+/* =========================================
+   GRID SNAP (hard click)
+========================================= */
 
 const GRID = 120;
-const SNAP_DISTANCE = 30;
-
-/* TILE DRAGGING */
-
-function clamp(n,min,max){
- return Math.min(max,Math.max(min,n));
-}
 
 function snap(v){
  return Math.round(v/GRID)*GRID;
 }
+
+/* =========================================
+   TILE DRAGGING
+========================================= */
 
 tiles.forEach(tile=>{
 
@@ -49,14 +50,13 @@ tiles.forEach(tile=>{
   let dx=e.clientX-startX;
   let dy=e.clientY-startY;
 
-  let left=startLeft+dx;
-  let top=startTop+dy;
-
-  left=snap(left);
-  top=snap(top);
+  let left=snap(startLeft+dx);
+  let top=snap(startTop+dy);
 
   tile.style.left=left+"px";
   tile.style.top=top+"px";
+
+  if(playMode) updateTileBody(tile);
 
  });
 
@@ -69,9 +69,9 @@ tiles.forEach(tile=>{
 
 });
 
-/* ===============================
-   GAME MODE
-================================ */
+/* =========================================
+   GAME TOGGLE
+========================================= */
 
 document.addEventListener("keydown",(e)=>{
 
@@ -81,9 +81,21 @@ document.addEventListener("keydown",(e)=>{
 
 });
 
-/* ===============================
-   MATTER PHYSICS
-================================ */
+function toggleGame(){
+
+ playMode=!playMode;
+
+ if(playMode){
+  startGame();
+ }else{
+  location.reload();
+ }
+
+}
+
+/* =========================================
+   MATTER ENGINE
+========================================= */
 
 const Engine=Matter.Engine;
 const World=Matter.World;
@@ -92,59 +104,72 @@ const Body=Matter.Body;
 const Events=Matter.Events;
 
 const engine=Engine.create();
-
 const world=engine.world;
 
+/* =========================================
+   PLAYER
+========================================= */
+
 let player;
-let ground;
-let tileBodies=[];
+let playerEl;
 
 let jumpCount=0;
 const MAX_JUMPS=2;
 
-let keys=[];
-let door;
+/* =========================================
+   TILE BODIES
+========================================= */
 
-let level=1;
-let collected=0;
-let totalKeys=1;
+let tileBodies=new Map();
 
-/* ===============================
-   GAME START
-================================ */
+function updateTileBody(tile){
 
-function toggleGame(){
+ const body=tileBodies.get(tile);
+ if(!body) return;
 
- playMode=!playMode;
+ const left=parseFloat(tile.style.left)||0;
+ const top=parseFloat(tile.style.top)||0;
 
- if(playMode){
-
-  startGame();
-
- }else{
-
-  location.reload();
-
- }
+ Body.setPosition(body,{
+  x:left+60,
+  y:top+60
+ });
 
 }
 
-/* ===============================
+/* =========================================
+   KEYS + DOOR
+========================================= */
+
+let keys=[];
+let keyIcons=[];
+let door;
+let doorEl;
+
+let level=1;
+const MAX_LEVELS=10;
+
+let collected=0;
+let totalKeys=1;
+
+/* =========================================
    START GAME
-================================ */
+========================================= */
 
 function startGame(){
 
- tiles.forEach(t=>{
-  t.classList.add("play-mini");
- });
+ tiles.forEach(t=>t.classList.add("play-mini"));
 
- const width=stage.clientWidth;
- const height=stage.clientHeight;
+ const w=stage.clientWidth;
+ const h=stage.clientHeight;
 
  player=Bodies.rectangle(100,100,40,40,{label:"player"});
 
- ground=Bodies.rectangle(width/2,height+40,width,80,{isStatic:true,label:"ground"});
+ playerEl=document.createElement("div");
+ playerEl.className="player";
+ stage.appendChild(playerEl);
+
+ const ground=Bodies.rectangle(w/2,h+40,w,80,{isStatic:true,label:"ground"});
 
  World.add(world,[player,ground]);
 
@@ -158,9 +183,9 @@ function startGame(){
 
 }
 
-/* ===============================
-   TILE COLLISION BODIES
-================================ */
+/* =========================================
+   TILE COLLISION
+========================================= */
 
 function createTileBodies(){
 
@@ -169,15 +194,9 @@ function createTileBodies(){
   const left=parseFloat(tile.style.left)||0;
   const top=parseFloat(tile.style.top)||0;
 
-  const body=Bodies.rectangle(
-   left+60,
-   top+60,
-   120,
-   120,
-   {isStatic:true,label:"tile"}
-  );
+  const body=Bodies.rectangle(left+60,top+60,120,120,{isStatic:true});
 
-  tileBodies.push({tile,body});
+  tileBodies.set(tile,body);
 
   World.add(world,body);
 
@@ -185,9 +204,9 @@ function createTileBodies(){
 
 }
 
-/* ===============================
+/* =========================================
    LEVEL SPAWN
-================================ */
+========================================= */
 
 function spawnLevel(){
 
@@ -201,13 +220,13 @@ function spawnLevel(){
 
 }
 
-/* ===============================
-   SPAWN KEYS
-================================ */
+/* =========================================
+   KEY SPAWN
+========================================= */
 
-function spawnKeys(count){
+function spawnKeys(n){
 
- for(let i=0;i<count;i++){
+ for(let i=0;i<n;i++){
 
   let x,y;
 
@@ -218,9 +237,14 @@ function spawnKeys(count){
 
   }while(positionInsideTile(x,y));
 
-  const key=Bodies.circle(x,y,20,{isSensor:true,label:"key"});
+  const key=Bodies.circle(x,y,18,{isSensor:true,label:"key"});
+
+  const icon=document.createElement("div");
+  icon.className="key";
+  stage.appendChild(icon);
 
   keys.push(key);
+  keyIcons.push(icon);
 
   World.add(world,key);
 
@@ -228,9 +252,9 @@ function spawnKeys(count){
 
 }
 
-/* ===============================
-   SPAWN DOOR
-================================ */
+/* =========================================
+   DOOR SPAWN
+========================================= */
 
 function spawnDoor(){
 
@@ -243,15 +267,19 @@ function spawnDoor(){
 
  }while(positionInsideTile(x,y));
 
- door=Bodies.rectangle(x,y,60,80,{isSensor:true,label:"door"});
+ door=Bodies.rectangle(x,y,60,90,{isSensor:true,label:"door"});
+
+ doorEl=document.createElement("div");
+ doorEl.className="door";
+ stage.appendChild(doorEl);
 
  World.add(world,door);
 
 }
 
-/* ===============================
-   KEY SPAWN CHECK
-================================ */
+/* =========================================
+   SPAWN CHECK
+========================================= */
 
 function positionInsideTile(x,y){
 
@@ -260,14 +288,7 @@ function positionInsideTile(x,y){
   const left=parseFloat(tile.style.left)||0;
   const top=parseFloat(tile.style.top)||0;
 
-  if(
-   x>left &&
-   x<left+120 &&
-   y>top &&
-   y<top+120
-  ){
-   return true;
-  }
+  if(x>left&&x<left+120&&y>top&&y<top+120) return true;
 
  }
 
@@ -275,9 +296,9 @@ function positionInsideTile(x,y){
 
 }
 
-/* ===============================
+/* =========================================
    COLLISIONS
-================================ */
+========================================= */
 
 Events.on(engine,"collisionStart",(event)=>{
 
@@ -298,7 +319,13 @@ Events.on(engine,"collisionStart",(event)=>{
 
    const key=a.label==="key"?a:b;
 
+   const i=keys.indexOf(key);
+
    World.remove(world,key);
+   stage.removeChild(keyIcons[i]);
+
+   keys.splice(i,1);
+   keyIcons.splice(i,1);
 
    collected++;
 
@@ -309,9 +336,13 @@ Events.on(engine,"collisionStart",(event)=>{
 
    if(collected>=totalKeys){
 
-    level++;
+    doorEl.classList.add("open");
 
-    resetLevel();
+    setTimeout(()=>{
+
+     nextLevel();
+
+    },700);
 
    }
 
@@ -321,16 +352,27 @@ Events.on(engine,"collisionStart",(event)=>{
 
 });
 
-/* ===============================
-   RESET LEVEL
-================================ */
+/* =========================================
+   NEXT LEVEL
+========================================= */
 
-function resetLevel(){
+function nextLevel(){
 
  keys.forEach(k=>World.remove(world,k));
+ keyIcons.forEach(el=>el.remove());
+
  keys=[];
+ keyIcons=[];
 
  World.remove(world,door);
+ doorEl.remove();
+
+ level++;
+
+ if(level>MAX_LEVELS){
+  alert("You finished all levels!");
+  location.reload();
+ }
 
  spawnLevel();
 
@@ -338,9 +380,9 @@ function resetLevel(){
 
 }
 
-/* ===============================
+/* =========================================
    PLAYER CONTROLS
-================================ */
+========================================= */
 
 document.addEventListener("keydown",(e)=>{
 
@@ -363,36 +405,38 @@ document.addEventListener("keydown",(e)=>{
 
  if(e.code==="ArrowLeft"){
 
-  Body.setVelocity(player,{
-   x:-5,
-   y:player.velocity.y
-  });
+  Body.setVelocity(player,{x:-5,y:player.velocity.y});
 
  }
 
  if(e.code==="ArrowRight"){
 
-  Body.setVelocity(player,{
-   x:5,
-   y:player.velocity.y
-  });
+  Body.setVelocity(player,{x:5,y:player.velocity.y});
 
  }
 
 });
 
-/* ===============================
+/* =========================================
    GAME LOOP
-================================ */
+========================================= */
 
 function loop(){
 
- const el=document.getElementById("player");
+ playerEl.style.left=(player.position.x-20)+"px";
+ playerEl.style.top=(player.position.y-20)+"px";
 
- if(el){
+ keys.forEach((k,i)=>{
 
-  el.style.left=player.position.x+"px";
-  el.style.top=player.position.y+"px";
+  keyIcons[i].style.left=(k.position.x-12)+"px";
+  keyIcons[i].style.top=(k.position.y-12)+"px";
+
+ });
+
+ if(doorEl){
+
+  doorEl.style.left=(door.position.x-30)+"px";
+  doorEl.style.top=(door.position.y-45)+"px";
 
  }
 
