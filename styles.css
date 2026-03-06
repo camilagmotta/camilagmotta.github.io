@@ -969,7 +969,10 @@ body{
 }
 
 .about-left img{
+  display: block;
   width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 12px;
 }
 
@@ -1005,4 +1008,22 @@ body{
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 
   z-index: 1000;
+}
+
+.tile-stage.is-randomizing .tile {
+  visibility: hidden;
+  opacity: 0;
+  transition: none !important;
+}
+
+.tile {
+  opacity: 0;
+}
+
+.tile.ready {
+  opacity: 1;
+  transition:
+    opacity 0.45s ease,
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
 }

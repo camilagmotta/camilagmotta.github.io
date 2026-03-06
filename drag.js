@@ -15,8 +15,6 @@
 
   /* =========================
      DRAGGABLE + RANDOM POSITIONS
-     - Every page load: tiles start in new random positions
-     - Tiles are clamped so they can't go under the footer
      ========================= */
   const stage = document.querySelector(".tile-stage");
   if (!stage) return;
@@ -28,17 +26,18 @@
   if (!tiles.length) return;
 
   stage.style.position = "relative";
+  stage.classList.add("is-randomizing");
 
-  // How long after a drag we ignore clicks (prevents “release click” opening link)
   const JUST_DRAGGED_MS = 600;
 
-  // Footer boundary (supports: <footer>, .footer, .tile-footer)
   function getFooterHeight() {
     const footer =
       document.querySelector(".tile-footer") ||
       document.querySelector("footer") ||
       document.querySelector(".footer");
+
     if (!footer) return 0;
+
     const rect = footer.getBoundingClientRect();
     return Math.max(0, rect.height || 0);
   }
@@ -48,17 +47,13 @@
   }
 
   function getMaxXY(el) {
-    // Clamp within stage width, and within viewport area above footer.
     const stageRect = stage.getBoundingClientRect();
     const footerH = getFooterHeight();
 
     const maxX = Math.max(0, stage.clientWidth - el.offsetWidth);
 
-    // Viewport bottom, minus footer, converted to stage-local coordinates
     const usableBottomInViewport = (window.innerHeight - footerH) - stageRect.top;
     const maxYViewport = usableBottomInViewport - el.offsetHeight;
-
-    // Also clamp to stage height if the stage is smaller
     const maxYStage = stage.clientHeight - el.offsetHeight;
 
     const maxY = Math.max(0, Math.min(maxYViewport, maxYStage));
@@ -66,70 +61,78 @@
   }
 
   function overlaps(a, b, gap = 24) {
-  return !(
-    a.right + gap <= b.left ||
-    a.left >= b.right + gap ||
-    a.bottom + gap <= b.top ||
-    a.top >= b.bottom + gap
-  );
-}
+    return !(
+      a.right + gap <= b.left ||
+      a.left >= b.right + gap ||
+      a.bottom + gap <= b.top ||
+      a.top >= b.bottom + gap
+    );
+  }
 
-function randomizePositions() {
-  const placed = [];
+  function randomizePositions() {
+    const placed = [];
 
-  tiles.forEach((el, i) => {
-    el.dataset.id = el.dataset.id || "tile-" + i;
-    el.style.position = "absolute";
+    const aboutTile = stage.querySelector(".about-tile");
+    if (aboutTile) {
+      placed.push({
+        left: aboutTile.offsetLeft - 28,
+        top: aboutTile.offsetTop - 28,
+        right: aboutTile.offsetLeft + aboutTile.offsetWidth + 28,
+        bottom: aboutTile.offsetTop + aboutTile.offsetHeight + 28
+      });
+    }
 
-    const { maxX, maxY } = getMaxXY(el);
+    tiles.forEach((el, i) => {
+      el.dataset.id = el.dataset.id || "tile-" + i;
+      el.style.position = "absolute";
 
-    let placedRect = null;
-    let attempts = 0;
-    const maxAttempts = 300;
+      const { maxX, maxY } = getMaxXY(el);
 
-    while (attempts < maxAttempts) {
-      const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
-      const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
+      let placedRect = null;
+      let attempts = 0;
+      const maxAttempts = 300;
 
-      const testRect = {
-        left: x,
-        top: y,
-        right: x + el.offsetWidth,
-        bottom: y + el.offsetHeight
-      };
+      while (attempts < maxAttempts) {
+        const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
+        const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
 
-      const hitsAnotherTile = placed.some((rect) => overlaps(testRect, rect, 28));
+        const testRect = {
+          left: x,
+          top: y,
+          right: x + el.offsetWidth,
+          bottom: y + el.offsetHeight
+        };
 
-      if (!hitsAnotherTile) {
-        placedRect = testRect;
-        break;
+        const hitsBlockedArea = placed.some((rect) => overlaps(testRect, rect, 28));
+
+        if (!hitsBlockedArea) {
+          placedRect = testRect;
+          break;
+        }
+
+        attempts++;
       }
 
-      attempts++;
-    }
+      if (!placedRect) {
+        const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
+        const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
 
-    // fallback: if no perfect space was found, keep the last legal clamped spot
-    if (!placedRect) {
-      const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
-      const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
+        placedRect = {
+          left: x,
+          top: y,
+          right: x + el.offsetWidth,
+          bottom: y + el.offsetHeight
+        };
+      }
 
-      placedRect = {
-        left: x,
-        top: y,
-        right: x + el.offsetWidth,
-        bottom: y + el.offsetHeight
-      };
-    }
+      el.style.left = placedRect.left + "px";
+      el.style.top = placedRect.top + "px";
+      el.dataset.justDraggedUntil = "0";
 
-    el.style.left = placedRect.left + "px";
-    el.style.top = placedRect.top + "px";
-    el.dataset.justDraggedUntil = "0";
+      placed.push(placedRect);
+    });
+  }
 
-    placed.push(placedRect);
-  });
-}
-
-  // Disable default navigation on stage tiles that are <a>
   tiles.forEach((el) => {
     if (el.tagName.toLowerCase() === "a") {
       if (!el.dataset.href) el.dataset.href = el.getAttribute("href") || "";
@@ -140,24 +143,46 @@ function randomizePositions() {
     }
   });
 
-  // New random layout every reload
-  randomizePositions();
+  function revealTiles() {
+    stage.classList.remove("is-randomizing");
 
-  // Keep tiles in-bounds on resize
+    requestAnimationFrame(() => {
+      tiles.forEach((tile, i) => {
+        setTimeout(() => {
+          tile.classList.add("ready");
+        }, i * 70);
+      });
+    });
+  }
+
+  function initializeLayout() {
+    randomizePositions();
+    revealTiles();
+  }
+
+  if (document.readyState === "complete") {
+    initializeLayout();
+  } else {
+    window.addEventListener("load", initializeLayout, { once: true });
+  }
+
   window.addEventListener("resize", () => {
     tiles.forEach((el) => {
       const left = parseFloat(el.style.left) || 0;
       const top = parseFloat(el.style.top) || 0;
       const { maxX, maxY } = getMaxXY(el);
+
       el.style.left = clamp(left, 0, maxX) + "px";
       el.style.top = clamp(top, 0, maxY) + "px";
     });
   });
 
-  function bringToFront(el)  
-  {
-    const maxZ = tiles.reduce((m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 10), 10);
-    el.style.zIndex = String(Math.min(maxZ + 1, 999)); // ✅ never climbs into footer range
+  function bringToFront(el) {
+    const maxZ = tiles.reduce(
+      (m, t) => Math.max(m, parseInt(getComputedStyle(t).zIndex) || 10),
+      10
+    );
+    el.style.zIndex = String(Math.min(maxZ + 1, 999));
   }
 
   function maybeNavigate(el) {
@@ -241,22 +266,19 @@ function randomizePositions() {
       }
     });
   });
-    /* =========================
-     Project hover video + expand height
-     ========================= */
+
   document.querySelectorAll(".project-tile").forEach((tile) => {
-    // Expand height from data-expanded-h (reliable cross-browser)
     const expanded = tile.getAttribute("data-expanded-h");
-    if (expanded) tile.style.setProperty("--expanded-h", `${parseInt(expanded, 10)}px`);
+    if (expanded) {
+      tile.style.setProperty("--expanded-h", `${parseInt(expanded, 10)}px`);
+    }
 
     const video = tile.querySelector(".project-video");
     if (!video) return;
 
-    // Make sure video starts hidden (CSS handles opacity)
     video.pause();
 
     tile.addEventListener("mouseenter", () => {
-      // Some browsers block play unless muted (we set muted in HTML)
       video.currentTime = 0;
       const p = video.play();
       if (p && typeof p.catch === "function") p.catch(() => {});
