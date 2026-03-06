@@ -985,3 +985,24 @@ body{
 .about-right{
   flex: 1;
 }
+
+/* drag tiles hint */
+
+.drag-tip{
+  position: fixed;
+  top: 70px;
+  right: 28px;
+
+  background: #E0C3D7;
+  color: #13360E;
+
+  padding: 10px 14px;
+  border-radius: 16px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+
+  z-index: 1000;
+}
