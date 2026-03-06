@@ -65,22 +65,69 @@
     return { maxX, maxY };
   }
 
-  function randomizePositions() {
-    tiles.forEach((el, i) => {
-      el.dataset.id = el.dataset.id || "tile-" + i;
-      el.style.position = "absolute";
+  function overlaps(a, b, gap = 24) {
+  return !(
+    a.right + gap <= b.left ||
+    a.left >= b.right + gap ||
+    a.bottom + gap <= b.top ||
+    a.top >= b.bottom + gap
+  );
+}
 
-      const { maxX, maxY } = getMaxXY(el);
+function randomizePositions() {
+  const placed = [];
 
-      const pad = 8;
-      const x = Math.floor(Math.random() * Math.max(1, maxX - pad)) + pad / 2;
-      const y = Math.floor(Math.random() * Math.max(1, maxY - pad)) + pad / 2;
+  tiles.forEach((el, i) => {
+    el.dataset.id = el.dataset.id || "tile-" + i;
+    el.style.position = "absolute";
 
-      el.style.left = clamp(x, 0, maxX) + "px";
-      el.style.top = clamp(y, 0, maxY) + "px";
-      el.dataset.justDraggedUntil = "0";
-    });
-  }
+    const { maxX, maxY } = getMaxXY(el);
+
+    let placedRect = null;
+    let attempts = 0;
+    const maxAttempts = 300;
+
+    while (attempts < maxAttempts) {
+      const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
+      const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
+
+      const testRect = {
+        left: x,
+        top: y,
+        right: x + el.offsetWidth,
+        bottom: y + el.offsetHeight
+      };
+
+      const hitsAnotherTile = placed.some((rect) => overlaps(testRect, rect, 28));
+
+      if (!hitsAnotherTile) {
+        placedRect = testRect;
+        break;
+      }
+
+      attempts++;
+    }
+
+    // fallback: if no perfect space was found, keep the last legal clamped spot
+    if (!placedRect) {
+      const x = Math.floor(Math.random() * Math.max(1, maxX + 1));
+      const y = Math.floor(Math.random() * Math.max(1, maxY + 1));
+
+      placedRect = {
+        left: x,
+        top: y,
+        right: x + el.offsetWidth,
+        bottom: y + el.offsetHeight
+      };
+    }
+
+    el.style.left = placedRect.left + "px";
+    el.style.top = placedRect.top + "px";
+    el.dataset.justDraggedUntil = "0";
+
+    placed.push(placedRect);
+  });
+}
 
   // Disable default navigation on stage tiles that are <a>
   tiles.forEach((el) => {
