@@ -911,3 +911,51 @@ body{
 .project-tile[data-expanded-h]{
   --expanded-h: attr(data-expanded-h px); /* fallback handled by JS below */
 }
+
+/* Fixed About tile on homepage */
+
+.about-tile{
+  position: relative;
+  width: 640px;
+  min-height: 360px;
+
+  margin-left: 40px;
+  margin-top: 160px;
+
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+
+  padding: 20px;
+}
+
+/* layout: image left, text right */
+
+.about-layout{
+  display: flex;
+  gap: 20px;
+}
+
+/* image column */
+
+.about-left{
+  width: 220px;
+  text-align: center;
+}
+
+.about-left img{
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* role under picture */
+
+.about-role{
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* text column */
+
+.about-right{
+  flex: 1;
+}
