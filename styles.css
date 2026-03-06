@@ -5,20 +5,18 @@
 
 /* --- Palette --- */
 :root{
-  --bg:#59879b;
-  --gold:#7ec1ff;
-  --mauve:#6d7fbb;
-  --beige:#6b5735;
-  --sage:#7D8F64;
+  --bg: #C7E0C3;
+  --tile-main: #5A8B53;
+  --tile-mid: #A16D90;
+  --tile-light: #E0C3D7;
+  --text-dark: #13360E;
+  --text-accent: #612A4F;
 
-  --text: #191919;
-  --muted: rgba(60, 21, 158, 0.992);
+  --text: var(--text-dark);
+  --muted: rgba(19, 54, 14, 0.72);
 
-  --card: rgba(250, 160, 255, 0.893);
-  --border: rgba(241,230,211,0.18);
-  --shadow: 0 20px 50px rgba(0,0,0,0.28);
-
-  --radius: 18px;
+  --shadow: 0 18px 40px rgba(19, 54, 14, 0.14);
+  --radius: 28px;
 }
 
 /* --- Reset --- */
@@ -641,7 +639,8 @@ body{
 
 /* 1) Global page background + remove the classic header layout */
 body{
-  background: #f2deb1 !important;
+  background: var(--bg) !important;
+  color: var(--text);
 }
 
 /* Hide the sticky header on all pages (we replace it with tile-nav) */
@@ -661,6 +660,7 @@ body{
 .tile-stage{
   position: relative;
   min-height: calc(100vh - 140px);
+  height: 1200px;
   padding: 10px 6px 0;
 }
 
@@ -687,13 +687,13 @@ body{
   gap: 10px;
   flex-wrap: wrap;
   padding: 12px 10px;
-  background: rgba(242,222,177,0.75);
+  background: rgba(199, 224, 195, 0.88);
   backdrop-filter: blur(6px);
 }
 
 .tile-nav a{
-  text-decoration: none;
-  color: #141414;
+  color: #612A4F;
+  font-weight: 700;
 }
 
 /* 6) Base tile style */
@@ -730,13 +730,39 @@ body{
 .t-xs{ width: 140px; height: 140px; }
 
 /* 8) Colors */
-.c-pink{ background:#f48fc2; }
-.c-green{ background:#a7bd53; }
-.c-yellow{ background:#f5cd6a; }
-.c-blue{ background:#7e97db; }
-.c-white{ background:#ffffff; }
-.c-black{ background:#1f1f1f; color:#fff; }
-.c-black .label{ text-shadow:none; }
+.c-pink{
+  background: #A16D90;
+  color: #13360E;
+}
+
+.c-green{
+  background: #5A8B53;
+  color: #612A4F;
+}
+
+.c-yellow{
+  background: #E0C3D7;
+  color: #5A8B53;
+}
+
+.c-blue{
+  background: #C7E0C3;
+  color: #13360E;
+}
+
+.c-white{
+  background: #E0C3D7;
+  color: #13360E;
+}
+
+.c-black{
+  background: #13360E;
+  color: #E0C3D7;
+}
+
+.c-black .label{
+  text-shadow: none;
+}
 
 /* 9) Inside content tile (text blocks) */
 .tile-content{
@@ -825,11 +851,11 @@ body{
   z-index: 9999; /* ✅ was 45 */
 
   padding: 12px 18px;
-  background: rgba(242,222,177,0.80);
+  background: rgba(199, 224, 195, 0.92);
   backdrop-filter: blur(6px);
-  border-top: 1px solid rgba(0,0,0,0.10);
+  border-top: 1px solid rgba(19, 54, 14, 0.10);
   font-size: 14px;
-  color: rgba(20,20,20,0.70);
+  color: rgba(19, 54, 14, 0.72);
 }
 
 .tile { z-index: 10; }
