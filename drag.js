@@ -8,7 +8,7 @@
     return COLOR_CLASSES[Math.floor(Math.random() * COLOR_CLASSES.length)];
   }
 
-  document.querySelectorAll(".tile:not([data-no-random=\"1\"])").forEach((tile) => {
+  document.querySelectorAll(".tile").forEach((tile) => {
     COLOR_CLASSES.forEach((c) => tile.classList.remove(c));
     tile.classList.add(randomColor());
   });
@@ -24,7 +24,7 @@
   const isMobile = window.matchMedia("(max-width: 860px)").matches;
   if (isMobile) return;
 
-  const tiles = Array.from(stage.querySelectorAll(".tile:not([data-no-drag=\"1\"])"));
+  const tiles = Array.from(stage.querySelectorAll(".tile"));
   if (!tiles.length) return;
 
   stage.style.position = "relative";

@@ -10,17 +10,10 @@
 <body class="tile-page">
 
 <nav class="tile-nav">
-  <div class="nav-links">
-    <a href="index.html">home</a>
-    <a href="projects.html">games</a>
-    <a href="art.html">art</a>
-    <a href="thoughts.html">thoughts</a>
-  </div>
-
-  <button id="playGameBtn" class="play-game-btn" type="button" aria-label="Play game">
-    <span class="play-icon" aria-hidden="true"></span>
-    <span class="play-text">play game</span>
-  </button>
+  <a href="index.html">home</a>
+  <a href="projects.html">games</a>
+  <a href="art.html">art</a>
+  <a href="thoughts.html">thoughts</a>
 </nav>
 
 <header class="tile-brand">
@@ -29,8 +22,6 @@
 </header>
 
 <main class="tile-stage">
-
-  <div id="homeTiles">
 
   <section class="tile t-xl c-white tile-content" style="left:80px; top:180px;">
     <h2>Camila Motta</h2>
@@ -59,46 +50,10 @@
     <span class="label">Thoughts</span>
   </a>
 
-  </div>
-
-  <!-- GAME MODE (renders inside the same page between header and footer) -->
-  <section id="gameStage" class="game-stage is-hidden" aria-hidden="true">
-    <button id="exitGameBtn" class="game-exit" type="button" aria-label="Exit game">×</button>
-
-    <div class="game-top">
-    <div class="game-hud game-hud-left">
-      <div class="hud-title" id="hudLevelTitle">Level 01</div>
-      <ul class="hud-list">
-        <li>Collect the keys</li>
-        <li>Open the door</li>
-      </ul>
-    </div>
-
-    <div class="game-hud game-hud-center">
-      <div class="hud-title" id="hudKeys">Keys: 0/0</div>
-    </div>
-
-    <div class="game-hud game-hud-right">
-      <ul class="hud-list">
-        <li><b>Mouse</b> drag tiles</li>
-        <li><b>WASD</b> move</li>
-        <li><b>Space</b> jump / double jump</li>
-        <li><b>Esc</b> exit</li>
-      </ul>
-    </div>
-
-  </div>
-
-    <div class="game-board">
-      <canvas id="gameCanvas" width="960" height="540"></canvas>
-    </div>
-  </section>
-
 </main>
 
 <footer class="tile-footer">© Camila Motta</footer>
 
 <script src="drag.js"></script>
-<script src="game.js"></script>
 </body>
 </html>
