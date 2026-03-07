@@ -19,6 +19,9 @@
   const stage = document.querySelector(".tile-stage");
   if (!stage) return;
 
+  const isHomePage = document.body.classList.contains("tile-home");
+  if (!isHomePage) return;
+
   const isMobile = window.matchMedia("(max-width: 860px)").matches;
   if (isMobile) return;
 
