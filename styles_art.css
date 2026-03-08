@@ -8,17 +8,37 @@
   --lavender:#BFA6FF;
 }
 
+/* =========================
+   FULL PAGE LAYOUT
+   ========================= */
+
+html,
+body{
+  width:100%;
+}
+
 body.art-gallery-page,
 .art-gallery-page.tile-page{
   background:#ffffff !important;
   color:#000000 !important;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding-bottom:0 !important;
 }
 
-.art-gallery-page .tile-nav,
+.art-gallery-page .tile-nav{
+  background:#ffffff !important;
+  color:#000000 !important;
+  border-color:rgba(0,0,0,0.12) !important;
+  flex:0 0 auto;
+}
+
 .art-gallery-page .tile-footer{
   background:#ffffff !important;
   color:#000000 !important;
   border-color:rgba(0,0,0,0.12) !important;
+  flex:0 0 auto;
 }
 
 .art-page-header{
@@ -27,6 +47,7 @@ body.art-gallery-page,
   justify-content:space-between;
   gap:24px;
   margin-bottom:18px;
+  flex:0 0 auto;
 }
 
 .art-page-header h1,
@@ -38,9 +59,17 @@ body.art-gallery-page,
 }
 
 .art-gallery-shell{
-  width:min(1280px, calc(100% - 16px));
-  margin:0 8px 70px;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0 8px 32px;
+  flex:1 0 auto;
+  display:block;
 }
+
+/* =========================
+   FILTERS
+   ========================= */
 
 .art-filters{
   display:flex;
@@ -84,20 +113,24 @@ body.art-gallery-page,
   color:#000;
 }
 
+/* =========================
+   GALLERY GRID
+   ========================= */
+
 .art-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(240px, 260px));
+  grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
   gap:28px;
   align-items:stretch;
-  justify-content:flex-start;
+  justify-content:stretch;
 }
 
 .art-tile{
   appearance:none;
-  width:260px;
+  width:105%;
   min-height:340px;
-  border:1px solid rgba(0,0,0,0.1);
-  border-radius:28px;
+  border:3px solid rgba(199, 136, 255, 0.26);
+  border-radius:20px;
   background:#fff;
   color:#000;
   box-shadow:0 18px 40px rgba(0,0,0,0.10);
@@ -106,7 +139,7 @@ body.art-gallery-page,
   padding:18px;
   display:grid;
   grid-template-rows:1fr auto;
-  gap:16px;
+  gap:14px;
   cursor:pointer;
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, color .18s ease;
 }
@@ -123,6 +156,10 @@ body.art-gallery-page,
   display:none !important;
 }
 
+/* =========================
+   TILE CONTENT
+   ========================= */
+
 .art-thumb{
   border-radius:22px;
   min-height:220px;
@@ -133,17 +170,24 @@ body.art-gallery-page,
   font-size:28px;
   letter-spacing:0.01em;
   overflow:hidden;
-  border:1px solid rgba(0,0,0,0.08);
+  border:3px solid rgba(199, 136, 255, 0.278);
 }
 
 .art-thumb-dark{
-  background:#000;
+  background:#bfa6ff60;
   color:#fff;
 }
 
 .art-thumb-light{
   background:#fff;
   color:#000;
+}
+
+.art-thumb img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .art-meta{
@@ -154,19 +198,34 @@ body.art-gallery-page,
 }
 
 .art-meta strong{
-  font-size:28px;
-  line-height:1.05;
+  font-size:26px;
+  line-height:1.0;
 }
 
 .art-meta small{
   font-size:14px;
   line-height:1;
   padding:8px 10px;
-  border-radius:999px;
+  border-radius:8px;
   border:1px solid rgba(0,0,0,0.12);
   background:#fff;
   color:#000;
 }
+
+/* black tiles readable */
+.art-tile.c-black,
+.art-tile.c-black strong{
+  color:#E0C3D7 !important;
+}
+
+.art-tile.c-black .art-meta small{
+  background:#fff;
+  color:#BFA6FF;
+}
+
+/* =========================
+   LIGHTBOX
+   ========================= */
 
 .art-lightbox{
   position:fixed;
@@ -184,120 +243,14 @@ body.art-gallery-page,
 .art-lightbox-backdrop{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.88);
+  background:rgba(199, 199, 199, 0.88);
 }
 
 .art-lightbox-panel{
   position:relative;
   z-index:1;
-  width:min(92vw, 1400px);
-  height:min(90vh, 980px);
-  border-radius:26px;
-  background:#fff;
-  color:#000;
-  box-shadow:0 24px 80px rgba(0,0,0,0.35);
-  padding:28px 28px 22px;
-  display:grid;
-  grid-template-rows:1fr auto;
-  gap:18px;
-}
-
-.art-lightbox-close{
-  position:absolute;
-  top:12px;
-  right:12px;
-  width:40px;
-  height:40px;
-  border-radius:999px;
-  border:1px solid #000;
-  background:#fff;
-  color:#000;
-  font-size:26px;
-  line-height:1;
-  cursor:pointer;
-  display:grid;
-  place-items:center;
-}
-
-.art-lightbox-close:hover,
-.art-lightbox-close:focus-visible{
-  background:var(--lavender);
-  outline:none;
-}
-
-.art-lightbox-media-wrap{
-  border-radius:20px;
-  overflow:hidden;
-  background:#f4f4f4;
-  min-height:0;
-  height:100%;
-}
-
-.art-lightbox-media{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#f4f4f4;
-}
-
-.art-lightbox-copy h2{
-  margin:0 0 6px;
-  font-size:28px;
-  color:#000;
-}
-
-.art-lightbox-copy p{
-  margin:0;
-  color:rgba(0,0,0,0.72);
-}
-
-@media (max-width: 860px){
-  .art-page-header{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .art-filters{
-    justify-content:flex-start;
-  }
-
-  .art-gallery-shell{
-    width:min(100%, calc(100% - 16px));
-  }
-
-  .art-grid{
-    grid-template-columns:1fr;
-  }
-
-  .art-tile{
-    width:100%;
-    max-width:360px;
-  }
-
-  .art-lightbox{
-    padding:12px;
-  }
-
-  .art-lightbox-panel{
-    width:100%;
-    height:min(88vh, 900px);
-    padding:18px 18px 16px;
-  }
-}
-
-.art-thumb img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.art-lightbox-panel{
-  position:relative;
-  z-index:1;
-  width:min(92vw, 1400px);
-  height:min(90vh, 980px);
+  width:min(92vw, 1536px);
+  height:min(90vh, 864px);
   border-radius:26px;
   background:#fff;
   color:#000;
@@ -305,33 +258,6 @@ body.art-gallery-page,
   padding:28px 28px 22px;
   overflow-y:auto;
   display:block;
-}
-
-.art-lightbox-copy{
-  margin-bottom:18px;
-  padding-right:56px;
-}
-
-.art-lightbox-gallery{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-.art-lightbox-item{
-  margin:0;
-  border-radius:20px;
-  overflow:hidden;
-  background:#f4f4f4;
-  border:1px solid rgba(0,0,0,0.08);
-}
-
-.art-lightbox-image{
-  display:block;
-  width:100%;
-  height:auto;
-  object-fit:contain;
-  background:#f4f4f4;
 }
 
 .art-lightbox-close{
@@ -359,11 +285,42 @@ body.art-gallery-page,
   outline:none;
 }
 
-.art-lightbox-video{
+.art-lightbox-copy{
+  margin-bottom:18px;
+  padding-right:56px;
+}
+
+.art-lightbox-copy h2{
+  margin:0 0 6px;
+  font-size:28px;
+  color:#000;
+}
+
+.art-lightbox-copy p{
+  margin:0;
+  color:rgba(0,0,0,0.72);
+}
+
+.art-lightbox-gallery{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.art-lightbox-item{
+  margin:0;
+  border-radius:20px;
+  overflow:hidden;
+  background:#f4f4f4;
+  border:1px solid rgba(0,0,0,0.08);
+}
+
+.art-lightbox-image{
+  display:block;
   width:100%;
   height:auto;
-  border-radius:16px;
-  background:#000;
+  object-fit:contain;
+  background:#f4f4f4;
 }
 
 .art-lightbox-video{
@@ -373,6 +330,10 @@ body.art-gallery-page,
   border-radius:16px;
   background:#000;
 }
+
+/* =========================
+   PDF SECTION
+   ========================= */
 
 .art-pdf-section{
   margin-top:24px;
@@ -429,4 +390,66 @@ body.art-gallery-page,
   height:100%;
   border:0;
   background:#fff;
+}
+
+/* =========================
+   FOOTER — FORCE BELOW GALLERY
+   ========================= */
+
+.art-gallery-page .tile-footer{
+  display:block !important;
+  position:static !important;
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  margin-top:24px !important;
+  padding:12px 18px !important;
+  border-top:1px solid rgba(0,0,0,0.10) !important;
+  background:#ffffff !important;
+  color:#000000 !important;
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  clear:both !important;
+  align-self:stretch !important;
+  flex-shrink:0 !important;
+  z-index:1 !important;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 860px){
+  .art-page-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .art-filters{
+    justify-content:flex-start;
+  }
+
+  .art-gallery-shell{
+    padding:0 8px 24px;
+  }
+
+  .art-grid{
+    grid-template-columns:1fr;
+  }
+
+  .art-tile{
+    width:100%;
+    max-width:360px;
+  }
+
+  .art-lightbox{
+    padding:12px;
+  }
+
+  .art-lightbox-panel{
+    width:100%;
+    height:min(88vh, 900px);
+    padding:18px 18px 16px;
+  }
 }

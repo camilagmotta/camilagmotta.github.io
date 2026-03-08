@@ -147,7 +147,7 @@
         video.src = src;
         video.controls = true;
         video.playsInline = true;
-        preload = 'metadata';
+        video.preload = 'metadata';
         item.appendChild(video);
       } else {
         const img = document.createElement('img');
