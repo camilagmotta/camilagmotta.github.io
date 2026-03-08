@@ -1,43 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Art</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_art.css">
 </head>
+<body class="tile-page art-gallery-page">
 
-<body class="tile-page">
+  <nav class="tile-nav">
+    <a href="index.html">home</a>
+    <a href="projects.html">projects</a>
+    <a href="art.html">art</a>
+    <a href="thoughts.html">thoughts</a>
+  </nav>
 
-<nav class="tile-nav">
-  <a href="index.html">home</a>
-  <a href="projects.html">games</a>
-  <a href="art.html">art</a>
-  <a href="thoughts.html">thoughts</a>
-</nav>
+  <header class="tile-brand art-page-header">
+    <h1>Art &amp; Doodles</h1>
 
-<header class="tile-brand">
-  <h1>Art & Doodles</h1>
-</header>
+    <div class="art-filters" role="toolbar" aria-label="Filter artwork by category">
+      <button class="art-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="art-filter" type="button" data-filter="3d" aria-pressed="false">3D</button>
+      <button class="art-filter" type="button" data-filter="2d" aria-pressed="false">2D</button>
+      <button class="art-filter" type="button" data-filter="ui" aria-pressed="false">UI</button>
+      <button class="art-filter" type="button" data-filter="doodles" aria-pressed="false">Doodles</button>
+    </div>
+  </header>
 
-<main class="tile-stage">
+  <main class="art-gallery-shell">
+    <section class="art-grid" aria-label="Artwork gallery">
 
-  <a class="tile t-md c-white tile-content" style="left:100px; top:180px;" href="#">
-    <h2>Artwork 01</h2>
-  </a>
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Telescope"
+        data-caption="3D"
+        data-images="./images/3D/Telescope/Telescope.png|./images/3D/Telescope/Telescope1.png|
+        ./images/3D/Telescope/Telescope2.png|./images/3D/Telescope/Telescope3.png|">
 
-  <a class="tile t-lg c-pink tile-content" style="left:500px; top:260px;" href="#">
-    <h2>Artwork 02</h2>
-  </a>
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/Telescope/Telescope3.png" alt="3D telescope preview">
+        </span>
 
-  <a class="tile t-sm c-yellow tile-content" style="left:850px; top:100px;" href="#">
-    <h2>Sketches</h2>
-  </a>
+        <span class="art-meta">
+          <strong>Telescope</strong>
+          <small>3D</small>
+        </span>
+      </button>
 
-</main>
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Modular Pipekit"
+        data-caption="3D"
+        data-images="./images/3D/PipeKit/Pipekit.png|">
 
-<footer class="tile-footer">© Camila Motta</footer>
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/PipeKit/Pipekit.png" alt="3D pipekit preview">
+        </span>
 
-<script src="drag.js"></script>
+        <span class="art-meta">
+          <strong>Modular Pipekit</strong>
+          <small>3D</small>
+        </span>
+      </button>
+
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Kitchen"
+        data-caption="3D"
+        data-images="./images/3D/Kitchen/Kitchen1.png|./images/3D/Kitchen/Kitchen2.png|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/Kitchen/Kitchen1.png" alt="3D Kitchen preview">
+        </span>
+
+        <span class="art-meta">
+          <strong>Kitchen</strong>
+          <small>3D</small>
+        </span>
+      </button>
+
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Corridor"
+        data-caption="3D"
+        data-images="./images/3D/Corridor/Corridor1.png|./images/3D/Corridor/Corridor2.png|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/Corridor/Corridor2.png" alt="3D Corridor preview">
+        </span>
+
+        <span class="art-meta">
+          <strong>Corridor</strong>
+          <small>3D</small>
+        </span>
+      </button>
+
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Table"
+        data-caption="Testing 3D procedural animation using Houdini by SideFX."
+        data-images="./images/3D/Table/TableVid.mp4|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/Table/Table1.png" alt="3D procedural animation of table breaking">
+        </span>
+
+        <span class="art-meta">
+          <strong>Table - 3D Procedural Animation</strong>
+          <small>3D</small>
+        </span>
+      </button>
+      
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Cables"
+        data-caption="Testing 3D procedural animation using Houdini by SideFX."
+        data-images="./images/3D/Cables/CablesVid.mp4|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/Cables/Cables1.png" alt="3D procedural animation of cables">
+        </span>
+
+        <span class="art-meta">
+          <strong>Cables - 3D Procedural Animation</strong>
+          <small>3D</small>
+        </span>
+      </button>       
+
+  <div class="art-lightbox" hidden aria-hidden="true">
+    <div class="art-lightbox-backdrop" data-close-lightbox></div>
+
+    <div class="art-lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="art-lightbox-title">
+      <button class="art-lightbox-close" type="button" aria-label="Close artwork view" data-close-lightbox>×</button>
+
+      <div class="art-lightbox-copy">
+        <h2 id="art-lightbox-title"></h2>
+        <p class="art-lightbox-caption"></p>
+      </div>
+
+      <div class="art-lightbox-gallery"></div>
+    </div>
+
+  </div>
+
+
+  <footer class="tile-footer">© Camila Motta</footer>
+
+  <script src="art_gallery.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
   /* =========================
      RANDOMIZE TILE COLORS
      ========================= */
-  const COLOR_CLASSES = ["c-pink", "c-green", "c-yellow", "c-blue", "c-white", "c-black"];
+  const COLOR_CLASSES = ["c-white", "c-black"];
 
   function randomColor() {
     return COLOR_CLASSES[Math.floor(Math.random() * COLOR_CLASSES.length)];

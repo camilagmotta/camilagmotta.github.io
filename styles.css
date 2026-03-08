@@ -1076,3 +1076,124 @@ body{
   height: auto;
   margin-bottom: 70px;
 }
+
+/* =========================================================
+   BLACK / WHITE PALETTE FIX
+   This block intentionally overrides older pastel rules above.
+   ========================================================= */
+:root{
+  --bg:#ffffff;
+  --text:#000000;
+  --muted:rgba(0,0,0,0.72);
+  --lavender:#BFA6FF;
+}
+
+body,
+.tile-page{
+  background:#ffffff !important;
+  color:#000000 !important;
+}
+
+.tile-nav,
+.tile-footer,
+.drag-tip{
+  background:#ffffff !important;
+  color:#000000 !important;
+  border-color:rgba(0,0,0,0.10) !important;
+  backdrop-filter:none !important;
+}
+
+.tile-brand p,
+.about-role,
+.about-right p,
+.tile-content p,
+.tile-content h2,
+.tile-content h3,
+.tile-nav a,
+.tile-footer,
+.drag-tip{
+  color:#000000 !important;
+}
+
+/* force every old light class to true white */
+.c-white,
+.c-pink,
+.c-green,
+.c-yellow,
+.c-blue,
+.about-tile.c-white{
+  background:#ffffff !important;
+  color:#000000 !important;
+}
+
+.c-white *,
+.c-pink *,
+.c-green *,
+.c-yellow *,
+.c-blue *,
+.about-tile.c-white *{
+  color:#000000 !important;
+}
+
+/* true black tile */
+.c-black{
+  background:#000000 !important;
+  color:#ffffff !important;
+}
+
+.c-black *,
+.c-black .label,
+.tile.c-black .label{
+  color:#ffffff !important;
+  text-shadow:none !important;
+}
+
+/* interaction states */
+a:hover,
+a:focus,
+a:active,
+a:focus-visible,
+button:hover,
+button:focus,
+button:active,
+button:focus-visible,
+.tile-nav a:hover,
+.tile-nav a:focus,
+.tile-nav a:active,
+.tile-nav a:focus-visible,
+.about-right a:hover,
+.about-right a:focus,
+.about-right a:active,
+.about-right a:focus-visible{
+  color:var(--lavender) !important;
+}
+
+.tile:hover,
+.tile:active,
+.tile:focus-visible{
+  box-shadow:0 0 0 2px var(--lavender), 0 18px 40px rgba(0,0,0,0.12) !important;
+}
+
+.tile:hover .label,
+.tile:active .label,
+.tile:focus-visible .label{
+  color:var(--lavender) !important;
+  text-shadow:none !important;
+}
+
+.c-black:hover,
+.c-black:active,
+.c-black:focus-visible,
+.c-black:hover *,
+.c-black:active *,
+.c-black:focus-visible *,
+.c-black:hover .label,
+.c-black:active .label,
+.c-black:focus-visible .label{
+  color:var(--lavender) !important;
+}
+
+/* keep homepage usable even if JS fails */
+.tile-home .tile{
+  opacity:1;
+}
