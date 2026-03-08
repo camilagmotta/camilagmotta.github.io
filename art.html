@@ -31,6 +31,31 @@
   <main class="art-gallery-shell">
     <section class="art-grid" aria-label="Artwork gallery">
 
+
+
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3d ui"
+        data-title="Defend the Löyly"
+        data-caption="This is a tower defense prototype developed in 2024 as part of a university project. 
+                      The project was created by a small team consisting of a programmer and myself. I did all the 3D art, UI,
+                      and sound effects for the game prototype."
+        data-media="./images/3D/DTL/Gameplay.png|./images/3D/DTL/UI.png|./images/3D/DTL/Outhouse.jpg|./images/3D/DTL/Outhouse2.jpg|./images/3D/DTL/Path.jpg|./images/3D/DTL/Path2.jpg|
+        ./images/3D/DTL/Sauna.jpg|./images/3D/DTL/Sauna2.jpg|./images/3D/DTL/Tonttu.jpg|./images/3D/DTL/Tonttu2.jpg|
+        ./images/3D/DTL/Tree.jpg|./images/3D/DTL/Tree2.jpg|"
+        data-pdfs="Art Book::./images/3D/DTL/DTL_ArtBook.pdf|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/DTL/Gameplay.png" alt="Tower Defense gameplay">
+        </span>
+
+        <span class="art-meta">
+          <strong>Defend the Löyly</strong>
+          <small>3D · UI</small>
+        </span>
+      </button>
+
       <button
         class="art-tile c-black"
         type="button"
@@ -138,7 +163,27 @@
           <strong>Cables - 3D Procedural Animation</strong>
           <small>3D</small>
         </span>
-      </button>       
+      </button>  
+      
+      <button
+        class="art-tile c-black"
+        type="button"
+        data-category="3D"
+        data-title="Building Simulation"
+        data-caption="Testing 3D procedural animation using Houdini by SideFX."
+        data-images="./images/3D/BuildingSim/BuildingVid.mp4|">
+
+        <span class="art-thumb art-thumb-dark">
+          <img src="./images/3D/BuildingSim/Building1.png" alt="3D procedural animation of a building exploding">
+        </span>
+
+        <span class="art-meta">
+          <strong>Building - 3D Procedural Animation</strong>
+          <small>3D</small>
+        </span>
+      </button>     
+      
+       
 
   <div class="art-lightbox" hidden aria-hidden="true">
     <div class="art-lightbox-backdrop" data-close-lightbox></div>
@@ -152,8 +197,20 @@
       </div>
 
       <div class="art-lightbox-gallery"></div>
-    </div>
 
+      <div class="art-pdf-section" hidden>
+        <h3 class="art-pdf-heading">Project files</h3>
+        <div class="art-pdf-toggle-list"></div>
+        <div class="art-pdf-viewer-wrap" hidden>
+          <iframe
+            class="art-pdf-viewer"
+            title="PDF viewer"
+            src=""
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
   </div>
 
 
