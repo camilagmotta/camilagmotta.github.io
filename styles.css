@@ -1197,3 +1197,149 @@ button:focus-visible,
 .tile-home .tile{
   opacity:1;
 }
+
+.project-lightbox{
+  position:fixed;
+  inset:0;
+  z-index:20000;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.project-lightbox[hidden]{
+  display:none !important;
+}
+
+.project-lightbox-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.88);
+}
+
+.project-lightbox-panel{
+  position:relative;
+  z-index:1;
+  width:min(92vw, 1400px);
+  height:min(90vh, 980px);
+  border-radius:26px;
+  background:#fff;
+  color:#000;
+  box-shadow:0 24px 80px rgba(0,0,0,0.35);
+  padding:28px 28px 22px;
+  overflow-y:auto;
+  display:block;
+}
+
+.project-lightbox-close{
+  position:sticky;
+  top:0;
+  margin-left:auto;
+  margin-bottom:12px;
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  border:1px solid #000;
+  background:#fff;
+  color:#000;
+  font-size:26px;
+  line-height:1;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  z-index:3;
+}
+
+.project-lightbox-close:hover,
+.project-lightbox-close:focus-visible{
+  background:var(--lavender);
+  outline:none;
+}
+
+.project-lightbox-copy{
+  margin-bottom:18px;
+  padding-right:56px;
+}
+
+.project-lightbox-gallery{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.project-lightbox-item{
+  margin:0;
+  border-radius:20px;
+  overflow:hidden;
+  background:#f4f4f4;
+  border:1px solid rgba(0,0,0,0.08);
+}
+
+.project-lightbox-image,
+.project-lightbox-video{
+  display:block;
+  width:100%;
+  height:auto;
+  background:#f4f4f4;
+}
+
+.project-lightbox-video{
+  background:#000;
+}
+
+.project-pdf-section{
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid rgba(0,0,0,0.12);
+}
+
+.project-pdf-heading{
+  margin:0 0 12px;
+  font-size:1rem;
+  color:#000;
+}
+
+.project-pdf-toggle-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.project-pdf-toggle{
+  appearance:none;
+  border:1px solid #000;
+  background:#fff;
+  color:#000;
+  border-radius:999px;
+  padding:10px 16px;
+  font:inherit;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+.project-pdf-toggle:hover,
+.project-pdf-toggle:focus-visible,
+.project-pdf-toggle.is-active{
+  background:var(--lavender);
+  border-color:var(--lavender);
+  color:#000;
+  outline:none;
+}
+
+.project-pdf-viewer-wrap{
+  width:100%;
+  height:75vh;
+  border:1px solid rgba(0,0,0,0.12);
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.project-pdf-viewer{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#fff;
+}
