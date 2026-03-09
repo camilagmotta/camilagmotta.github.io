@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles_art.css">
 </head>
+
 <body class="tile-page art-gallery-page">
 
   <nav class="tile-nav">
@@ -29,6 +31,7 @@
   </header>
 
   <main class="art-gallery-shell">
+
     <section class="art-grid" aria-label="Artwork gallery">
 
       <!-- Valtsieni -->
@@ -231,36 +234,36 @@
       </button>  
       
       
-      
+    </main>
        
 
-  <div class="art-lightbox" hidden aria-hidden="true">
+    <div class="art-lightbox" hidden aria-hidden="true">
     <div class="art-lightbox-backdrop" data-close-lightbox></div>
 
     <div class="art-lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="art-lightbox-title">
-      <button class="art-lightbox-close" type="button" aria-label="Close artwork view" data-close-lightbox>×</button>
+    <button class="art-lightbox-close" type="button" aria-label="Close artwork view" data-close-lightbox>×</button>
 
-      <div class="art-lightbox-copy">
-        <h2 id="art-lightbox-title"></h2>
-        <p class="art-lightbox-caption"></p>
-      </div>
-
-      <div class="art-lightbox-gallery"></div>
-
-      <div class="art-pdf-section" hidden>
-        <h3 class="art-pdf-heading">Project files</h3>
-        <div class="art-pdf-toggle-list"></div>
-        <div class="art-pdf-viewer-wrap" hidden>
-          <iframe
-            class="art-pdf-viewer"
-            title="PDF viewer"
-            src=""
-            loading="lazy">
-          </iframe>
-        </div>
-      </div>
+    <div class="art-lightbox-copy">
+      <h2 id="art-lightbox-title"></h2>
+      <p class="art-lightbox-caption"></p>
     </div>
-  </div>
+
+    <div class="art-lightbox-gallery"></div>
+
+    <div class="art-pdf-section" hidden>
+    <h3 class="art-pdf-heading">Project files</h3>
+    <div class="art-pdf-toggle-list"></div>
+    <div class="art-pdf-viewer-wrap" hidden>
+      <iframe
+        class="art-pdf-viewer"
+        title="PDF viewer"
+        src=""
+        loading="lazy">
+      </iframe>
+    </div>
+    </div>
+    </div>
+    </div>
 
 
   
