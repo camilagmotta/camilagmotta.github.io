@@ -161,7 +161,7 @@ body.art-gallery-page,
    ========================= */
 
 .art-thumb{
-  border-radius:22px;
+  border-radius:10px;
   min-height:220px;
   display:flex;
   align-items:center;
